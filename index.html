@@ -44,12 +44,19 @@
       cursor: pointer;
     }
 
-    .box {
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .card {
       background: #020617;
-      max-width: 360px;
-      margin: 20px auto;
       padding: 20px;
       border-radius: 10px;
+      font-size: 16px;
     }
 
     footer {
@@ -65,8 +72,8 @@
 
 <header>Dark Success</header>
 
-<!-- ثبت نام و ورود -->
-<section>
+<!-- فرم ورود و ثبت نام -->
+<section id="auth">
   <h2>ثبت‌نام / ورود</h2>
 
   <input id="username" placeholder="نام کاربری">
@@ -74,54 +81,12 @@
   <input id="password" type="password" placeholder="رمز عبور">
   <br>
 
-  <button onclick="registerUser()">ثبت‌نام</button>
-  <button onclick="loginUser()">ورود</button>
+  <button onclick="register()">ثبت‌نام</button>
+  <button onclick="login()">ورود</button>
 
-  <p id="message"></p>
+  <p id="msg"></p>
 </section>
 
-<!-- درباره من -->
-<section>
-  <div class="box">
-    <h2>درباره ما</h2>
-    <p>طراحی شده توسط گروه <b>Dark Success</b></p>
-  </div>
-</section>
-
-<footer>
-  © 2025 Dark Success
-</footer>
-
-<script>
-  function registerUser() {
-    const user = document.getElementById("username").value;
-    const pass = document.getElementById("password").value;
-
-    if (user === "" || pass === "") {
-      document.getElementById("message").innerText = "لطفاً نام کاربری و رمز عبور را وارد کنید";
-      return;
-    }
-
-    localStorage.setItem("ds_user", user);
-    localStorage.setItem("ds_pass", pass);
-
-    document.getElementById("message").innerText = "ثبت‌نام با موفقیت انجام شد ✅";
-  }
-
-  function loginUser() {
-    const user = document.getElementById("username").value;
-    const pass = document.getElementById("password").value;
-
-    const savedUser = localStorage.getItem("ds_user");
-    const savedPass = localStorage.getItem("ds_pass");
-
-    if (user === savedUser && pass === savedPass) {
-      document.getElementById("message").innerText = "خوش آمدید 🌟";
-    } else {
-      document.getElementById("message").innerText = "اطلاعات ورود اشتباه است ❌";
-    }
-  }
-</script>
-
-</body>
-</html>
+<!-- داشبورد بعد از ورود -->
+<section id="dashboard" style="display:none;">
+  <h2>خوش آمدید 🌟</h
