@@ -12,7 +12,7 @@
 body{
   margin:0;
   font-family:'Vazirmatn',sans-serif;
-  background:radial-gradient(circle at top,#1e1b4b,#020617);
+  background:linear-gradient(180deg,#020617,#020617,#0f172a);
   color:#fff;
   min-height:100vh;
 }
@@ -20,39 +20,34 @@ body{
 header{
   position:sticky;
   top:0;
-  z-index:10;
-  background:rgba(0,0,0,.6);
-  backdrop-filter:blur(10px);
-  padding:18px;
+  background:#020617;
+  padding:16px;
   text-align:center;
-  font-size:24px;
+  font-size:22px;
   font-weight:700;
-  letter-spacing:1px;
+  border-bottom:1px solid #312e81;
 }
 
-.container{padding:25px;max-width:1100px;margin:auto}
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
 
 .glass{
-  background:rgba(255,255,255,.08);
-  backdrop-filter:blur(15px);
-  border-radius:18px;
-  padding:20px;
-  margin-bottom:20px;
-  box-shadow:0 10px 40px rgba(0,0,0,.4);
-  animation:fade .6s ease;
-}
-
-@keyframes fade{
-  from{opacity:0;transform:translateY(10px)}
-  to{opacity:1;transform:none}
+  background:rgba(255,255,255,.06);
+  border:1px solid #312e81;
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:18px;
 }
 
 input,textarea,button{
   width:100%;
-  padding:14px;
-  margin:8px 0;
+  padding:12px;
+  margin:6px 0;
+  border-radius:10px;
   border:none;
-  border-radius:12px;
   font-family:inherit;
 }
 
@@ -67,35 +62,41 @@ button{
   color:#fff;
   font-size:16px;
   cursor:pointer;
-  transition:.3s;
 }
-button:hover{transform:scale(1.03)}
+button:hover{opacity:.9}
+
+.hidden{display:none}
 
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-  gap:16px;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
 }
 
 .card{
-  padding:18px;
-  border-radius:16px;
-  background:linear-gradient(160deg,#0f172a,#020617);
+  background:#020617;
   border:1px solid #312e81;
+  border-radius:14px;
+  padding:16px;
   transition:.3s;
 }
-.card:hover{transform:translateY(-5px)}
+.card:hover{transform:translateY(-4px)}
 
-.hidden{display:none}
-.admin-badge{color:#22c55e;font-weight:700}
-.vip{color:#facc15}
+.vip{color:#facc15;font-weight:700}
+.admin{color:#22c55e;font-weight:700}
 
-<footer>
-  <b>درباره ما</b><br><br>
-  برنامه‌نویسی شده توسط <b>Hessam Alami</b><br>
-  ارتباط با مدیریت:<br>
-  <b>Telegram:</b> @cvvx441
-</footer>
+footer{
+  margin-top:40px;
+  padding:20px;
+  text-align:center;
+  font-size:14px;
+  color:#c7d2fe;
+  border-top:1px solid #312e81;
+}
+</style>
+</head>
+
+<body>
 
 <header>🌑 Dark Success</header>
 
@@ -115,7 +116,7 @@ button:hover{transform:scale(1.03)}
 <div id="dashboard" class="hidden">
 
   <div class="glass">
-    <h2 id="welcome"></h2>
+    <h2 id="welcome">خوش آمدید</h2>
     <p id="roleBox"></p>
     <button onclick="logout()">خروج</button>
   </div>
@@ -127,7 +128,6 @@ button:hover{transform:scale(1.03)}
     <div class="card vip">🔥 سیگنال VIP</div>
   </div>
 
-  <!-- ADMIN -->
   <div id="adminPanel" class="glass hidden">
     <h3>پنل مدیریت</h3>
     <textarea id="postText" placeholder="تحلیل یا خبر جدید..."></textarea>
@@ -140,9 +140,10 @@ button:hover{transform:scale(1.03)}
 </div>
 
 <footer>
-<b>درباره ما</b><br>
-این سایت توسط گروه <b>Dark Success</b> طراحی شده<br>
-مدیریت: <b>HESSAM ALAMI</b>
+<b>درباره ما</b><br><br>
+برنامه‌نویسی شده توسط <b>Hessam Alami</b><br>
+ارتباط با مدیریت:<br>
+<b>Telegram:</b> @cvvx441
 </footer>
 
 <script type="module">
@@ -168,47 +169,44 @@ const db = getFirestore(app);
 const emailEl = document.getElementById("email");
 const passEl = document.getElementById("password");
 const msg = document.getElementById("msg");
-
 const authBox = document.getElementById("authBox");
 const dashboard = document.getElementById("dashboard");
-const welcome = document.getElementById("welcome");
 const roleBox = document.getElementById("roleBox");
 const adminPanel = document.getElementById("adminPanel");
 const postsBox = document.getElementById("posts");
 
 window.register = async ()=>{
   try{
-    const res = await createUserWithEmailAndPassword(auth,emailEl.value,passEl.value);
-    await setDoc(doc(db,"users",res.user.uid),{
-      email:res.user.email,
-      role: res.user.email===ADMIN_EMAIL?"admin":"user",
-      vip: res.user.email===ADMIN_EMAIL,
+    const r = await createUserWithEmailAndPassword(auth,emailEl.value,passEl.value);
+    await setDoc(doc(db,"users",r.user.uid),{
+      email:r.user.email,
+      role:r.user.email===ADMIN_EMAIL?"admin":"user",
+      vip:r.user.email===ADMIN_EMAIL,
       createdAt:new Date().toISOString()
     });
-    msg.innerText="ثبت‌نام موفق بود ✅";
+    msg.innerText="ثبت‌نام موفق بود";
   }catch(e){msg.innerText=e.message}
 }
 
 window.login = async ()=>{
   try{
     await signInWithEmailAndPassword(auth,emailEl.value,passEl.value);
-  }catch(e){msg.innerText="اطلاعات اشتباه است"}
+  }catch(e){msg.innerText="اطلاعات ورود اشتباه است"}
 }
 
 window.logout = async ()=>{
   await signOut(auth);
 }
 
-onAuthStateChanged(auth, async (user)=>{
+onAuthStateChanged(auth, async user=>{
   if(user){
     authBox.classList.add("hidden");
     dashboard.classList.remove("hidden");
-    welcome.innerText="خوش آمدید 🌑";
     const snap = await getDoc(doc(db,"users",user.uid));
     if(snap.exists()){
       const d=snap.data();
       roleBox.innerHTML = d.role==="admin"
-        ? "<span class='admin-badge'>ادمین سیستم</span>"
+        ? "<span class='admin'>ادمین سیستم</span>"
         : "کاربر عادی";
       if(d.role==="admin") adminPanel.classList.remove("hidden");
     }
@@ -220,10 +218,10 @@ onAuthStateChanged(auth, async (user)=>{
 });
 
 window.addPost = async ()=>{
-  const text=document.getElementById("postText").value;
-  if(!text) return;
+  const t=document.getElementById("postText").value;
+  if(!t) return;
   await addDoc(collection(db,"posts"),{
-    text,
+    text:t,
     createdAt:new Date().toISOString()
   });
   document.getElementById("postText").value="";
