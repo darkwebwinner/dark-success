@@ -1,117 +1,112 @@
-
 <!DOCTYPE html>
 <html lang="fa">
 <head>
   <meta charset="UTF-8">
   <title>Dark Success</title>
+
   <style>
-  <script>
-function register() {
-  const user = document.getElementById("username").value;
-  const pass = document.getElementById("password").value;
-
-  if (!user || !pass) {
-    document.getElementById("loginMsg").innerText = "همه فیلدها را پر کن";
-    return;
-  }
-
-  localStorage.setItem("user_" + user, pass);
-  document.getElementById("loginMsg").innerText = "ثبت‌نام انجام شد ✔";
-}
-
-function login() {
-  const user = document.getElementById("username").value;
-  const pass = document.getElementById("password").value;
-  const savedPass = localStorage.getItem("user_" + user);
-
-  if (savedPass === pass) {
-    document.getElementById("loginMsg").innerText = "خوش آمدی " + user + " 🎉";
-  } else {
-    document.getElementById("loginMsg").innerText = "اطلاعات اشتباه است ❌";
-  }
-}
-</script>
-  body {input {
-  padding: 10px;
-  border-radius: 6px;
-  border: none;
-  width: 200px;
-  text-align: center;
-}
-
+    body {
       margin: 0;
+      min-height: 100vh;
       font-family: sans-serif;
       background: #0f172a;
       color: white;
+      text-align: center;
     }
 
     header {
       background: #020617;
       padding: 15px;
-      text-align: center;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: bold;
     }
 
     nav {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
       background: #020617;
-      padding-bottom: 10px;
+      padding: 10px;
     }
 
     nav a {
       color: #38bdf8;
+      margin: 0 10px;
       text-decoration: none;
-      font-size: 16px;
     }
 
     section {
       padding: 40px 20px;
-      text-align: center;
     }
 
-    .box {
-      background: #020617;
-      margin: 15px auto;
-      padding: 20px;
-      max-width: 300px;
-      border-radius: 10px;
+    input {
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      width: 220px;
+      margin: 5px 0;
+      text-align: center;
     }
 
     button {
       background: #22c55e;
       border: none;
-      padding: 12px 20px;
-      font-size: 16px;
-      border-radius: 8px;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 15px;
+      margin: 5px;
       cursor: pointer;
+    }
+
+    .box {
+      background: #020617;
+      max-width: 350px;
+      margin: 15px auto;
+      padding: 20px;
+      border-radius: 10px;
     }
 
     footer {
       background: #020617;
-      text-align: center;
       padding: 15px;
-      font-size: 14px;
       color: #94a3b8;
+      font-size: 14px;
     }
   </style>
 </head>
+
 <body>
 
 <header>Dark Success</header>
 
 <nav>
-  <a href="#home">خانه</a>
-  <section id="login">
+  <a href="#login">ورود</a>
+  <a href="#about">درباره من</a>
+  <a href="#contact">تماس</a>
+</nav>
+
+<!-- ثبت نام و ورود -->
+<section id="login">
   <h2>ثبت‌نام / ورود</h2>
 
-  <input id="username" placeholder="نام کاربری"><br><br>
-  <input id="password" type="password" placeholder="رمز عبور"><br><br>
+  <input id="username" placeholder="نام کاربری">
+  <br>
+  <input id="password" type="password" placeholder="رمز عبور">
+  <br>
 
   <button onclick="register()">ثبت‌نام</button>
   <button onclick="login()">ورود</button>
 
   <p id="loginMsg"></p>
 </section>
+
+<!-- درباره من -->
+<section id="about">
+  <div class="box">
+    <h2>درباره من</h2>
+    <p>
+      این سایت توسط <b>darkwebwinner</b> ساخته شده.
+      هدف من ساخت ابزارهای ساده و کاربردی برای همه است.
+    </p>
+  </div>
+</section>
+
+<!-- تماس با ما -->
+<
