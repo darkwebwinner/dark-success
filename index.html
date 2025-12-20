@@ -17,12 +17,12 @@
     header {
       background: #020617;
       padding: 18px;
-      font-size: 24px;
+      font-size: 26px;
       font-weight: bold;
     }
 
     section {
-      padding: 30px 20px;
+      padding: 40px 20px;
     }
 
     input {
@@ -57,6 +57,25 @@
       padding: 22px;
       border-radius: 12px;
       font-size: 16px;
+    }
+
+    .about {
+      background: #020617;
+      border-radius: 16px;
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 40px 20px;
+    }
+
+    .about h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #22c55e;
+    }
+
+    .about p {
+      font-size: 18px;
+      line-height: 1.8;
     }
 
     footer {
@@ -101,11 +120,20 @@
     <div class="card">ارتباط با گروه Dark Success</div>
     <div class="card">خرید تخصصی</div>
   </div>
+
+  <!-- درباره ما -->
+  <div class="about">
+    <h2>درباره ما</h2>
+    <p>
+      این سایت توسط گروه <b>Dark Success</b> طراحی شده  
+      <br><br>
+      مدیریت: <b>HESSAM ALAMI</b>
+    </p>
+  </div>
 </section>
 
 <footer>
-  <p>این سایت توسط گروه <b>Dark Success</b> ساخته شده</p>
-  <p>مدیریت: <b>HESSAM ALAMI</b></p>
+  © Dark Success
 </footer>
 
 <!-- Firebase -->
@@ -116,4 +144,59 @@
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut
-  } from "https://www.gstatic.com/firebasejs/1
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA-jq4jwAhXEuUevcFs3fsX9c8YbNkHZZI",
+    authDomain: "dark-success.firebaseapp.com",
+    projectId: "dark-success",
+    storageBucket: "dark-success.firebasestorage.app",
+    messagingSenderId: "37974176476",
+    appId: "1:37974176476:web:4f01c47c8c70723eef7a19"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  window.register = function () {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        document.getElementById("msg").innerText =
+          "ثبت‌نام با موفقیت انجام شد ✅ حالا می‌توانید وارد شوید";
+      })
+      .catch((err) => {
+        document.getElementById("msg").innerText = "خطا: " + err.message;
+      });
+  };
+
+  window.login = function () {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        document.getElementById("auth").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+        document.getElementById("welcome").innerText =
+          "خوش آمدید 🌟 " + userCredential.user.email;
+      })
+      .catch(() => {
+        document.getElementById("msg").innerText =
+          "ایمیل یا رمز عبور اشتباه است ❌";
+      });
+  };
+
+  window.logout = function () {
+    signOut(auth).then(() => {
+      document.getElementById("dashboard").style.display = "none";
+      document.getElementById("auth").style.display = "block";
+      document.getElementById("msg").innerText = "شما خارج شدید";
+    });
+  };
+</script>
+
+</body>
+</html>
