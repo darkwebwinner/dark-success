@@ -6,67 +6,110 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;700&display=swap');
+
+*{box-sizing:border-box}
 body{
   margin:0;
-  font-family:tahoma;
-  background:#0b0b0f;
+  font-family:'Vazirmatn',sans-serif;
+  background:radial-gradient(circle at top,#1e1b4b,#020617);
   color:#fff;
+  min-height:100vh;
 }
+
 header{
-  background:#111;
-  padding:15px;
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:rgba(0,0,0,.6);
+  backdrop-filter:blur(10px);
+  padding:18px;
   text-align:center;
-  font-size:22px;
-  font-weight:bold;
+  font-size:24px;
+  font-weight:700;
+  letter-spacing:1px;
 }
-.container{padding:20px}
+
+.container{padding:25px;max-width:1100px;margin:auto}
+
+.glass{
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(15px);
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:0 10px 40px rgba(0,0,0,.4);
+  animation:fade .6s ease;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:none}
+}
+
 input,textarea,button{
   width:100%;
-  padding:12px;
-  margin:6px 0;
+  padding:14px;
+  margin:8px 0;
   border:none;
-  border-radius:8px;
+  border-radius:12px;
+  font-family:inherit;
 }
-input,textarea{background:#222;color:#fff}
+
+input,textarea{
+  background:#020617;
+  color:#fff;
+  border:1px solid #312e81;
+}
+
 button{
-  background:#7c3aed;
+  background:linear-gradient(135deg,#7c3aed,#2563eb);
   color:#fff;
   font-size:16px;
   cursor:pointer;
+  transition:.3s;
 }
-button:hover{opacity:.9}
+button:hover{transform:scale(1.03)}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:16px;
+}
 
 .card{
-  background:#161616;
-  padding:15px;
-  border-radius:12px;
-  margin-bottom:12px;
+  padding:18px;
+  border-radius:16px;
+  background:linear-gradient(160deg,#0f172a,#020617);
+  border:1px solid #312e81;
+  transition:.3s;
 }
+.card:hover{transform:translateY(-5px)}
 
 .hidden{display:none}
+.admin-badge{color:#22c55e;font-weight:700}
+.vip{color:#facc15}
 
 footer{
-  background:#111;
-  padding:15px;
+  margin-top:40px;
+  padding:20px;
   text-align:center;
   font-size:14px;
-  color:#aaa;
-  margin-top:30px;
+  color:#c7d2fe;
+  opacity:.8;
 }
-.admin{border:2px solid #7c3aed}
-.vip{color:#22c55e;font-weight:bold}
 </style>
 </head>
 
 <body>
 
-<header>Dark Success Dashboard</header>
+<header>🌑 Dark Success</header>
 
 <div class="container">
 
 <!-- AUTH -->
-<div id="authBox" class="card">
-  <h3>ورود / ثبت‌نام</h3>
+<div id="authBox" class="glass">
+  <h2>ورود / ثبت‌نام</h2>
   <input id="email" placeholder="ایمیل">
   <input id="password" type="password" placeholder="رمز عبور">
   <button onclick="register()">ثبت‌نام</button>
@@ -77,29 +120,29 @@ footer{
 <!-- DASHBOARD -->
 <div id="dashboard" class="hidden">
 
-  <div class="card">
+  <div class="glass">
     <h2 id="welcome"></h2>
     <p id="roleBox"></p>
     <button onclick="logout()">خروج</button>
   </div>
 
-  <div class="card">📊 فرصت‌های خرید</div>
-  <div class="card">💰 سرمایه‌گذاری طلا یا رمز ارز؟</div>
-  <div class="card">📞 ارتباط با گروه Dark Success</div>
-  <div class="card vip">🔥 خرید تخصصی (VIP)</div>
-
-  <!-- ADMIN PANEL -->
-  <div id="adminPanel" class="card admin hidden">
-    <h3>پنل ادمین</h3>
-    <textarea id="postText" placeholder="تحلیل یا فرصت جدید بنویس"></textarea>
-    <button onclick="addPost()">افزودن محتوا</button>
+  <div class="grid">
+    <div class="card">📊 فرصت‌های خرید</div>
+    <div class="card">💰 طلا یا رمز ارز؟</div>
+    <div class="card">📈 تحلیل بازار</div>
+    <div class="card vip">🔥 سیگنال VIP</div>
   </div>
 
-  <!-- POSTS -->
+  <!-- ADMIN -->
+  <div id="adminPanel" class="glass hidden">
+    <h3>پنل مدیریت</h3>
+    <textarea id="postText" placeholder="تحلیل یا خبر جدید..."></textarea>
+    <button onclick="addPost()">انتشار</button>
+  </div>
+
   <div id="posts"></div>
 
 </div>
-
 </div>
 
 <footer>
@@ -110,7 +153,7 @@ footer{
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -122,7 +165,7 @@ const firebaseConfig = {
   appId: "1:37974176476:web:4f01c47c8c70723eef7a19"
 };
 
-const ADMIN_EMAIL = "ایمیل_خودت_اینجا@google.com"; // 👈 ایمیل خودتو بذار
+const ADMIN_EMAIL = "ایمیل_خودت@gmail.com";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -144,7 +187,7 @@ window.register = async ()=>{
     const res = await createUserWithEmailAndPassword(auth,emailEl.value,passEl.value);
     await setDoc(doc(db,"users",res.user.uid),{
       email:res.user.email,
-      role: res.user.email===ADMIN_EMAIL ? "admin":"user",
+      role: res.user.email===ADMIN_EMAIL?"admin":"user",
       vip: res.user.email===ADMIN_EMAIL,
       createdAt:new Date().toISOString()
     });
@@ -154,29 +197,36 @@ window.register = async ()=>{
 
 window.login = async ()=>{
   try{
-    const res = await signInWithEmailAndPassword(auth,emailEl.value,passEl.value);
-    authBox.classList.add("hidden");
-    dashboard.classList.remove("hidden");
-    welcome.innerText="خوش آمدید 🌑";
-
-    const snap = await getDoc(doc(db,"users",res.user.uid));
-    const data = snap.data();
-
-    roleBox.innerText = data.role==="admin" ? "ادمین سیستم" : "کاربر عادی";
-    if(data.role==="admin") adminPanel.classList.remove("hidden");
-
-    loadPosts();
-  }catch(e){msg.innerText="اطلاعات ورود اشتباه است"}
+    await signInWithEmailAndPassword(auth,emailEl.value,passEl.value);
+  }catch(e){msg.innerText="اطلاعات اشتباه است"}
 }
 
 window.logout = async ()=>{
   await signOut(auth);
-  dashboard.classList.add("hidden");
-  authBox.classList.remove("hidden");
 }
 
+onAuthStateChanged(auth, async (user)=>{
+  if(user){
+    authBox.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+    welcome.innerText="خوش آمدید 🌑";
+    const snap = await getDoc(doc(db,"users",user.uid));
+    if(snap.exists()){
+      const d=snap.data();
+      roleBox.innerHTML = d.role==="admin"
+        ? "<span class='admin-badge'>ادمین سیستم</span>"
+        : "کاربر عادی";
+      if(d.role==="admin") adminPanel.classList.remove("hidden");
+    }
+    loadPosts();
+  }else{
+    dashboard.classList.add("hidden");
+    authBox.classList.remove("hidden");
+  }
+});
+
 window.addPost = async ()=>{
-  const text = document.getElementById("postText").value;
+  const text=document.getElementById("postText").value;
   if(!text) return;
   await addDoc(collection(db,"posts"),{
     text,
@@ -188,10 +238,10 @@ window.addPost = async ()=>{
 
 async function loadPosts(){
   postsBox.innerHTML="";
-  const q = await getDocs(collection(db,"posts"));
+  const q=await getDocs(collection(db,"posts"));
   q.forEach(d=>{
     const div=document.createElement("div");
-    div.className="card";
+    div.className="glass";
     div.innerText=d.data().text;
     postsBox.appendChild(div);
   });
