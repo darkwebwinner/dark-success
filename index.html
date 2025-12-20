@@ -72,7 +72,7 @@
 
 <header>داشبورد</header>
 
-<!-- ورود / ثبت نام -->
+<!-- ثبت نام / ورود -->
 <section id="auth">
   <h2>ثبت‌نام / ورود</h2>
 
@@ -89,9 +89,10 @@
 
 <!-- داشبورد -->
 <section id="dashboard" style="display:none;">
-  <h2>خوش آمدید 🌟</h2>
+  <h2 id="welcome"></h2>
 
   <div class="grid">
+    <div class="card">داشبورد</div>
     <div class="card">فرصت‌های خرید</div>
     <div class="card">سرمایه‌گذاری کدام بهتر است طلا یا رمز ارز</div>
     <div class="card">ارتباط با گروه Dark Success</div>
@@ -103,10 +104,14 @@
   طراحی شده توسط گروه <b>Dark Success</b>
 </footer>
 
-<!-- Firebase Auth -->
+<!-- Firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyA-jq4jwAhXEuUevcFs3fsX9c8YbNkHZZI",
@@ -120,32 +125,38 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
+  // ثبت نام
   window.register = function () {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
     createUserWithEmailAndPassword(auth, email, password)
-      .then(() => showDashboard())
-      .catch(err => {
+      .then(() => {
+        document.getElementById("msg").innerText =
+          "ثبت‌نام با موفقیت انجام شد ✅ حالا می‌توانید وارد شوید";
+      })
+      .catch((err) => {
         document.getElementById("msg").innerText = "خطا: " + err.message;
       });
   };
 
+  // ورود
   window.login = function () {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => showDashboard())
+      .then((userCredential) => {
+        document.getElementById("auth").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+        document.getElementById("welcome").innerText =
+          "خوش آمدید 🌟 " + userCredential.user.email;
+      })
       .catch(() => {
-        document.getElementById("msg").innerText = "ایمیل یا رمز عبور اشتباه است ❌";
+        document.getElementById("msg").innerText =
+          "ایمیل یا رمز عبور اشتباه است ❌";
       });
   };
-
-  function showDashboard() {
-    document.getElementById("auth").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
-  }
 </script>
 
 </body>
