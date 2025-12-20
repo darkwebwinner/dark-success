@@ -2,7 +2,7 @@
 <html lang="fa">
 <head>
 <meta charset="UTF-8">
-<title>Dark Success</title>
+<title>Dark Success VIP</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
@@ -17,8 +17,6 @@ body{
 }
 
 header{
-  position:sticky;
-  top:0;
   background:#020617;
   padding:16px;
   text-align:center;
@@ -36,21 +34,21 @@ header{
 .glass{
   background:rgba(255,255,255,.06);
   border:1px solid #312e81;
-  border-radius:16px;
-  padding:18px;
-  margin-bottom:18px;
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:20px;
 }
 
-input,textarea,button{
+input,button{
   width:100%;
   padding:12px;
   margin:6px 0;
-  border-radius:10px;
+  border-radius:12px;
   border:none;
   font-family:inherit;
 }
 
-input,textarea{
+input{
   background:#020617;
   color:#fff;
   border:1px solid #312e81;
@@ -68,19 +66,29 @@ button:hover{opacity:.9}
 
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:14px;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:18px;
 }
 
 .card{
   background:#020617;
   border:1px solid #312e81;
-  border-radius:14px;
-  padding:16px;
+  border-radius:16px;
+  padding:24px;
+  text-align:center;
+  font-size:18px;
+  cursor:pointer;
+  transition:.3s;
+}
+.card:hover{
+  transform:translateY(-6px);
+  border-color:#7c3aed;
 }
 
-.vip{color:#facc15;font-weight:700}
-.admin{color:#22c55e;font-weight:700}
+.vip-title{
+  color:#facc15;
+  font-weight:700;
+}
 
 footer{
   margin-top:40px;
@@ -111,30 +119,37 @@ footer{
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="hidden">
-
   <div class="glass">
     <h2 id="welcome">خوش آمدید</h2>
-    <p id="roleBox"></p>
+    <button onclick="openVIP()">🔥 ورود به پنل VIP</button>
     <button onclick="logout()">خروج</button>
+  </div>
+</div>
+
+<!-- VIP PAGE -->
+<div id="vipPage" class="hidden">
+  <div class="glass">
+    <h2 class="vip-title">💎 پنل اختصاصی VIP</h2>
+    <p>برای دریافت خدمات تخصصی یکی از گزینه‌ها را انتخاب کنید</p>
   </div>
 
   <div class="grid">
-    <div class="card vip">
-      🔥 اشتراک VIP<br><br>
-      <button onclick="buyVIP()">خرید</button>
+    <div class="card" onclick="goTelegram()">
+      📊 سبد شخصی با توجه به بودجه
     </div>
-    <div class="card">📊 فرصت‌های خرید</div>
-    <div class="card">📈 تحلیل بازار</div>
-    <div class="card">💰 طلا یا رمز ارز؟</div>
+    <div class="card" onclick="goTelegram()">
+      💰 خرید ارز پیشنهادی
+    </div>
+    <div class="card" onclick="goTelegram()">
+      🚀 ارزی که احتمال پامپ دارد
+    </div>
   </div>
 
-  <!-- Orders -->
   <div class="glass">
-    <h3>🧾 تاریخچه خریدهای شما</h3>
-    <div id="ordersBox"></div>
+    <button onclick="backDashboard()">⬅ بازگشت به داشبورد</button>
   </div>
-
 </div>
+
 </div>
 
 <footer>
@@ -147,7 +162,7 @@ footer{
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA-jq4jwAhXEuUevcFs3fsX9c8YbNkHZZI",
@@ -158,94 +173,68 @@ const firebaseConfig = {
   appId: "1:37974176476:web:4f01c47c8c70723eef7a19"
 };
 
-const ADMIN_EMAIL = "email@example.com";
+const TELEGRAM_ID = "https://t.me/cvvx441";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
 let currentUser = null;
+let isVIP = false;
 
-const emailEl = document.getElementById("email");
-const passEl = document.getElementById("password");
-const msg = document.getElementById("msg");
 const authBox = document.getElementById("authBox");
 const dashboard = document.getElementById("dashboard");
-const roleBox = document.getElementById("roleBox");
-const ordersBox = document.getElementById("ordersBox");
+const vipPage = document.getElementById("vipPage");
 
 window.register = async ()=>{
-  try{
-    const r = await createUserWithEmailAndPassword(auth,emailEl.value,passEl.value);
-    await setDoc(doc(db,"users",r.user.uid),{
-      email:r.user.email,
-      role:r.user.email===ADMIN_EMAIL?"admin":"user",
-      createdAt:new Date().toISOString()
-    });
-    msg.innerText="ثبت‌نام موفق بود";
-  }catch(e){msg.innerText=e.message}
-}
+  const email = email.value;
+  const password = password.value;
+  const r = await createUserWithEmailAndPassword(auth,email,password);
+  await setDoc(doc(db,"users",r.user.uid),{email, vip:false});
+};
 
 window.login = async ()=>{
-  try{
-    await signInWithEmailAndPassword(auth,emailEl.value,passEl.value);
-  }catch(e){msg.innerText="اطلاعات ورود اشتباه است"}
-}
+  await signInWithEmailAndPassword(auth,email.value,password.value);
+};
 
-window.logout = async ()=>{ await signOut(auth); }
+window.logout = async ()=>{
+  await signOut(auth);
+};
 
 onAuthStateChanged(auth, async user=>{
   if(user){
     currentUser = user;
     authBox.classList.add("hidden");
     dashboard.classList.remove("hidden");
-    document.getElementById("welcome").innerText = "خوش آمدید " + user.email;
+    document.getElementById("welcome").innerText="خوش آمدید "+user.email;
 
     const snap = await getDoc(doc(db,"users",user.uid));
-    if(snap.exists()){
-      roleBox.innerHTML = snap.data().role==="admin"
-        ? "<span class='admin'>ادمین</span>"
-        : "کاربر عادی";
-    }
-    loadOrders();
+    isVIP = snap.exists() && snap.data().vip === true;
   }else{
     currentUser=null;
-    dashboard.classList.add("hidden");
     authBox.classList.remove("hidden");
+    dashboard.classList.add("hidden");
+    vipPage.classList.add("hidden");
   }
 });
 
-window.buyVIP = async ()=>{
-  if(!currentUser) return;
-  await addDoc(collection(db,"orders"),{
-    userId: currentUser.uid,
-    email: currentUser.email,
-    product: "اشتراک VIP",
-    price: 500000,
-    date: new Date().toLocaleString()
-  });
-  alert("خرید با موفقیت ثبت شد");
-  loadOrders();
-};
-
-async function loadOrders(){
-  ordersBox.innerHTML="";
-  const q = query(collection(db,"orders"), where("userId","==",currentUser.uid));
-  const snap = await getDocs(q);
-
-  if(snap.empty){
-    ordersBox.innerHTML="<p>هنوز خریدی ثبت نشده</p>";
+window.openVIP = ()=>{
+  if(!isVIP){
+    alert("❌ این بخش فقط برای کاربران VIP است");
     return;
   }
+  dashboard.classList.add("hidden");
+  vipPage.classList.remove("hidden");
+};
 
-  snap.forEach(d=>{
-    const o=d.data();
-    const div=document.createElement("div");
-    div.className="glass";
-    div.innerHTML=`<b>${o.product}</b><br>مبلغ: ${o.price} تومان<br>تاریخ: ${o.date}`;
-    ordersBox.appendChild(div);
-  });
-}
+window.backDashboard = ()=>{
+  vipPage.classList.add("hidden");
+  dashboard.classList.remove("hidden");
+};
+
+window.goTelegram = ()=>{
+  window.open(TELEGRAM_ID,"_blank");
+};
 </script>
 
 </body>
