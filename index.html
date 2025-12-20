@@ -89,4 +89,56 @@
 
 <!-- داشبورد بعد از ورود -->
 <section id="dashboard" style="display:none;">
-  <h2>خوش آمدید 🌟</h
+  <h2>خوش آمدید 🌟</h2>
+
+  <div class="grid">
+    <div class="card">فرصت‌های ارز دیجیتال</div>
+    <div class="card">امکان پامپ ارز</div>
+    <div class="card">دامپ ارز چیست؟</div>
+    <div class="card">آیا هولد بهتر است یا ترید؟</div>
+    <div class="card">چگونه بفهمیم چه ارزی ارزش خرید دارد؟</div>
+  </div>
+</section>
+
+<footer>
+  طراحی شده توسط گروه <b>Dark Success</b>
+</footer>
+
+<script>
+  function register() {
+    const u = document.getElementById("username").value;
+    const p = document.getElementById("password").value;
+
+    if (!u || !p) {
+      document.getElementById("msg").innerText = "همه فیلدها را پر کنید";
+      return;
+    }
+
+    localStorage.setItem("user", u);
+    localStorage.setItem("pass", p);
+
+    showDashboard();
+  }
+
+  function login() {
+    const u = document.getElementById("username").value;
+    const p = document.getElementById("password").value;
+
+    if (
+      u === localStorage.getItem("user") &&
+      p === localStorage.getItem("pass")
+    ) {
+      showDashboard();
+    } else {
+      document.getElementById("msg").innerText = "اطلاعات اشتباه است";
+    }
+  }
+
+  function showDashboard() {
+    document.getElementById("auth").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+  }
+</script>
+
+</body>
+</html>
