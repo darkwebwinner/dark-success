@@ -2,35 +2,35 @@
 <html lang="fa">
 <head>
   <meta charset="UTF-8">
-  <title>Dark Success</title>
+  <title>Dark Success Dashboard</title>
 
   <style>
     body {
       margin: 0;
-      min-height: 100vh;
       background: #0f172a;
       color: white;
       font-family: sans-serif;
+      min-height: 100vh;
       text-align: center;
     }
 
     header {
       background: #020617;
-      padding: 15px;
-      font-size: 22px;
+      padding: 18px;
+      font-size: 24px;
       font-weight: bold;
     }
 
     section {
-      padding: 40px 20px;
+      padding: 30px 20px;
     }
 
     input {
       padding: 10px;
-      width: 220px;
-      border: none;
+      width: 240px;
       border-radius: 6px;
-      margin: 5px 0;
+      border: none;
+      margin: 6px 0;
       text-align: center;
     }
 
@@ -40,8 +40,8 @@
       padding: 10px 22px;
       border-radius: 6px;
       font-size: 15px;
-      margin: 5px;
       cursor: pointer;
+      margin: 5px;
     }
 
     .grid {
@@ -54,8 +54,8 @@
 
     .card {
       background: #020617;
-      padding: 20px;
-      border-radius: 10px;
+      padding: 22px;
+      border-radius: 12px;
       font-size: 16px;
     }
 
@@ -70,13 +70,13 @@
 
 <body>
 
-<header>Dark Success</header>
+<header>داشبورد</header>
 
-<!-- فرم ورود و ثبت نام -->
+<!-- ورود / ثبت نام -->
 <section id="auth">
   <h2>ثبت‌نام / ورود</h2>
 
-  <input id="username" placeholder="نام کاربری">
+  <input id="email" type="email" placeholder="ایمیل">
   <br>
   <input id="password" type="password" placeholder="رمز عبور">
   <br>
@@ -87,16 +87,15 @@
   <p id="msg"></p>
 </section>
 
-<!-- داشبورد بعد از ورود -->
+<!-- داشبورد -->
 <section id="dashboard" style="display:none;">
   <h2>خوش آمدید 🌟</h2>
 
   <div class="grid">
-    <div class="card">فرصت‌های ارز دیجیتال</div>
-    <div class="card">امکان پامپ ارز</div>
-    <div class="card">دامپ ارز چیست؟</div>
-    <div class="card">آیا هولد بهتر است یا ترید؟</div>
-    <div class="card">چگونه بفهمیم چه ارزی ارزش خرید دارد؟</div>
+    <div class="card">فرصت‌های خرید</div>
+    <div class="card">سرمایه‌گذاری کدام بهتر است طلا یا رمز ارز</div>
+    <div class="card">ارتباط با گروه Dark Success</div>
+    <div class="card">خرید تخصصی</div>
   </div>
 </section>
 
@@ -104,35 +103,44 @@
   طراحی شده توسط گروه <b>Dark Success</b>
 </footer>
 
-<script>
-  function register() {
-    const u = document.getElementById("username").value;
-    const p = document.getElementById("password").value;
+<!-- Firebase Auth -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    if (!u || !p) {
-      document.getElementById("msg").innerText = "همه فیلدها را پر کنید";
-      return;
-    }
+  const firebaseConfig = {
+    apiKey: "AIzaSyA-jq4jwAhXEuUevcFs3fsX9c8YbNkHZZI",
+    authDomain: "dark-success.firebaseapp.com",
+    projectId: "dark-success",
+    storageBucket: "dark-success.firebasestorage.app",
+    messagingSenderId: "37974176476",
+    appId: "1:37974176476:web:4f01c47c8c70723eef7a19"
+  };
 
-    localStorage.setItem("user", u);
-    localStorage.setItem("pass", p);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-    showDashboard();
-  }
+  window.register = function () {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-  function login() {
-    const u = document.getElementById("username").value;
-    const p = document.getElementById("password").value;
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => showDashboard())
+      .catch(err => {
+        document.getElementById("msg").innerText = "خطا: " + err.message;
+      });
+  };
 
-    if (
-      u === localStorage.getItem("user") &&
-      p === localStorage.getItem("pass")
-    ) {
-      showDashboard();
-    } else {
-      document.getElementById("msg").innerText = "اطلاعات اشتباه است";
-    }
-  }
+  window.login = function () {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => showDashboard())
+      .catch(() => {
+        document.getElementById("msg").innerText = "ایمیل یا رمز عبور اشتباه است ❌";
+      });
+  };
 
   function showDashboard() {
     document.getElementById("auth").style.display = "none";
