@@ -5,7 +5,40 @@
   <meta charset="UTF-8">
   <title>Dark Success</title>
   <style>
-    body {
+  <script>
+function register() {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+
+  if (!user || !pass) {
+    document.getElementById("loginMsg").innerText = "همه فیلدها را پر کن";
+    return;
+  }
+
+  localStorage.setItem("user_" + user, pass);
+  document.getElementById("loginMsg").innerText = "ثبت‌نام انجام شد ✔";
+}
+
+function login() {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+  const savedPass = localStorage.getItem("user_" + user);
+
+  if (savedPass === pass) {
+    document.getElementById("loginMsg").innerText = "خوش آمدی " + user + " 🎉";
+  } else {
+    document.getElementById("loginMsg").innerText = "اطلاعات اشتباه است ❌";
+  }
+}
+</script>
+  body {input {
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  width: 200px;
+  text-align: center;
+}
+
       margin: 0;
       font-family: sans-serif;
       background: #0f172a;
