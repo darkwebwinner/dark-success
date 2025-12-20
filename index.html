@@ -8,9 +8,9 @@
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: sans-serif;
       background: #0f172a;
       color: white;
+      font-family: sans-serif;
       text-align: center;
     }
 
@@ -21,26 +21,15 @@
       font-weight: bold;
     }
 
-    nav {
-      background: #020617;
-      padding: 10px;
-    }
-
-    nav a {
-      color: #38bdf8;
-      margin: 0 10px;
-      text-decoration: none;
-    }
-
     section {
       padding: 40px 20px;
     }
 
     input {
       padding: 10px;
-      border-radius: 6px;
-      border: none;
       width: 220px;
+      border: none;
+      border-radius: 6px;
       margin: 5px 0;
       text-align: center;
     }
@@ -48,65 +37,9 @@
     button {
       background: #22c55e;
       border: none;
-      padding: 10px 20px;
+      padding: 10px 22px;
       border-radius: 6px;
       font-size: 15px;
       margin: 5px;
       cursor: pointer;
     }
-
-    .box {
-      background: #020617;
-      max-width: 350px;
-      margin: 15px auto;
-      padding: 20px;
-      border-radius: 10px;
-    }
-
-    footer {
-      background: #020617;
-      padding: 15px;
-      color: #94a3b8;
-      font-size: 14px;
-    }
-  </style>
-</head>
-
-<body>
-
-<header>Dark Success</header>
-
-<nav>
-  <a href="#login">ورود</a>
-  <a href="#about">درباره من</a>
-  <a href="#contact">تماس</a>
-</nav>
-
-<!-- ثبت نام و ورود -->
-<section id="login">
-  <h2>ثبت‌نام / ورود</h2>
-
-  <input id="username" placeholder="نام کاربری">
-  <br>
-  <input id="password" type="password" placeholder="رمز عبور">
-  <br>
-
-  <button onclick="register()">ثبت‌نام</button>
-  <button onclick="login()">ورود</button>
-
-  <p id="loginMsg"></p>
-</section>
-
-<!-- درباره من -->
-<section id="about">
-  <div class="box">
-    <h2>درباره من</h2>
-    <p>
-      این سایت توسط <b>darkwebwinner</b> ساخته شده.
-      هدف من ساخت ابزارهای ساده و کاربردی برای همه است.
-    </p>
-  </div>
-</section>
-
-<!-- تماس با ما -->
-<
