@@ -1,224 +1,154 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8">
-  <title>Dark Success</title>
+<meta charset="UTF-8">
+<title>Dark Success</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <style>
-    body {
-      margin: 0;
-      background: linear-gradient(135deg, #020617, #0f172a);
-      color: #fff;
-      font-family: sans-serif;
-      text-align: center;
-    }
+<style>
+body{
+  margin:0;
+  font-family:tahoma;
+  background:#0b0b0f;
+  color:#fff;
+}
+header{
+  background:#111;
+  padding:15px;
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
+}
+.container{
+  padding:20px;
+}
+input,button{
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  border:none;
+  border-radius:8px;
+}
+input{background:#222;color:#fff}
+button{
+  background:#7c3aed;
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+}
+button:hover{opacity:.9}
 
-    header {
-      padding: 25px;
-      font-size: 28px;
-      font-weight: bold;
-      letter-spacing: 1px;
-      background: rgba(0,0,0,0.4);
-    }
+.card{
+  background:#161616;
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:12px;
+}
 
-    section {
-      padding: 40px 20px;
-    }
+.hidden{display:none}
 
-    input {
-      width: 250px;
-      padding: 12px;
-      margin: 8px 0;
-      border-radius: 8px;
-      border: none;
-      text-align: center;
-      font-size: 15px;
-    }
-
-    button {
-      padding: 12px 26px;
-      margin: 8px;
-      border-radius: 25px;
-      border: none;
-      cursor: pointer;
-      font-size: 15px;
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: #000;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      transform: scale(1.05);
-    }
-
-    .msg {
-      margin-top: 10px;
-      min-height: 20px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      max-width: 1000px;
-      margin: 30px auto;
-    }
-
-    .card {
-      background: rgba(2,6,23,0.9);
-      padding: 30px 20px;
-      border-radius: 16px;
-      font-size: 17px;
-      transition: 0.3s;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    }
-
-    .card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 0 25px rgba(34,197,94,0.6);
-    }
-
-    .about {
-      background: rgba(2,6,23,0.9);
-      border-radius: 20px;
-      max-width: 900px;
-      margin: 60px auto;
-      padding: 40px 20px;
-    }
-
-    .about h2 {
-      color: #22c55e;
-      font-size: 30px;
-      margin-bottom: 20px;
-    }
-
-    .about p {
-      font-size: 18px;
-      line-height: 1.8;
-    }
-
-    footer {
-      padding: 20px;
-      color: #94a3b8;
-      font-size: 14px;
-    }
-  </style>
+footer{
+  background:#111;
+  padding:15px;
+  text-align:center;
+  font-size:14px;
+  color:#aaa;
+  margin-top:30px;
+}
+</style>
 </head>
 
 <body>
 
-<header>DARK SUCCESS</header>
+<header>Dark Success Dashboard</header>
+
+<div class="container">
 
 <!-- AUTH -->
-<section id="auth">
-  <h2>ثبت‌نام / ورود</h2>
-
-  <input id="email" type="email" placeholder="ایمیل">
-  <br>
+<div id="authBox" class="card">
+  <h3>ورود / ثبت‌نام</h3>
+  <input id="email" placeholder="ایمیل">
   <input id="password" type="password" placeholder="رمز عبور">
-  <br>
-
   <button onclick="register()">ثبت‌نام</button>
   <button onclick="login()">ورود</button>
-
-  <div class="msg" id="msg"></div>
-</section>
+  <p id="msg"></p>
+</div>
 
 <!-- DASHBOARD -->
-<section id="dashboard" style="display:none;">
-  <h2 id="welcome"></h2>
+<div id="dashboard" class="hidden">
 
-  <button onclick="logout()">خروج</button>
-
-  <div class="grid">
-    <div class="card">📊 داشبورد تحلیل بازار</div>
-    <div class="card">🚀 فرصت‌های خرید هوشمند</div>
-    <div class="card">💰 طلا بهتر است یا رمز ارز؟</div>
-    <div class="card">📈 پامپ و دامپ چگونه کار می‌کند؟</div>
-    <div class="card">🧠 استراتژی هولد یا ترید</div>
-    <div class="card">🔒 محتوای ویژه اعضا</div>
+  <div class="card">
+    <h2 id="welcome"></h2>
+    <button onclick="logout()">خروج</button>
   </div>
 
-  <div class="about">
-    <h2>درباره ما</h2>
-    <p>
-      این سایت توسط گروه <b>Dark Success</b> طراحی شده  
-      <br><br>
-      مدیریت: <b>HESSAM ALAMI</b>
-    </p>
-  </div>
-</section>
+  <div class="card">📊 فرصت‌های خرید</div>
+  <div class="card">💰 سرمایه‌گذاری طلا یا رمز ارز؟</div>
+  <div class="card">📞 ارتباط با گروه Dark Success</div>
+  <div class="card">🔥 خرید تخصصی</div>
+
+</div>
+
+</div>
 
 <footer>
-  © Dark Success
+درباره ما<br>
+این سایت توسط گروه <b>Dark Success</b> طراحی شده<br>
+مدیریت: <b>HESSAM ALAMI</b>
 </footer>
 
-<!-- FIREBASE -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyA-jq4jwAhXEuUevcFs3fsX9c8YbNkHZZI",
-    authDomain: "dark-success.firebaseapp.com",
-    projectId: "dark-success",
-    storageBucket: "dark-success.firebasestorage.app",
-    messagingSenderId: "37974176476",
-    appId: "1:37974176476:web:4f01c47c8c70723eef7a19"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyA-jq4jwAhXEuUevcFs3fsX9c8YbNkHZZI",
+  authDomain: "dark-success.firebaseapp.com",
+  projectId: "dark-success",
+  storageBucket: "dark-success.firebasestorage.app",
+  messagingSenderId: "37974176476",
+  appId: "1:37974176476:web:4f01c47c8c70723eef7a19"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-  window.register = function () {
-    const email = emailInput();
-    const password = passwordInput();
+const emailEl = document.getElementById("email");
+const passEl = document.getElementById("password");
+const msg = document.getElementById("msg");
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        msg("ثبت‌نام با موفقیت انجام شد ✅ حالا وارد شو");
-      })
-      .catch(e => msg(e.message));
-  };
+const authBox = document.getElementById("authBox");
+const dashboard = document.getElementById("dashboard");
+const welcome = document.getElementById("welcome");
 
-  window.login = function () {
-    const email = emailInput();
-    const password = passwordInput();
-
-    signInWithEmailAndPassword(auth, email, password)
-      .then(user => {
-        document.getElementById("auth").style.display = "none";
-        document.getElementById("dashboard").style.display = "block";
-        document.getElementById("welcome").innerText =
-          "خوش آمدید 🌟 " + user.user.email;
-      })
-      .catch(() => msg("ایمیل یا رمز عبور اشتباه است ❌"));
-  };
-
-  window.logout = function () {
-    signOut(auth).then(() => {
-      document.getElementById("dashboard").style.display = "none";
-      document.getElementById("auth").style.display = "block";
-      msg("خارج شدید");
+window.register = async ()=>{
+  try{
+    const res = await createUserWithEmailAndPassword(auth,emailEl.value,passEl.value);
+    await setDoc(doc(db,"users",res.user.uid),{
+      email:res.user.email,
+      createdAt:new Date().toISOString(),
+      role:"user"
     });
-  };
+    msg.innerText="ثبت‌نام موفق بود ✅ حالا وارد شو";
+  }catch(e){msg.innerText=e.message}
+}
 
-  function msg(t) {
-    document.getElementById("msg").innerText = t;
-  }
+window.login = async ()=>{
+  try{
+    const res = await signInWithEmailAndPassword(auth,emailEl.value,passEl.value);
+    authBox.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+    welcome.innerText="خوش آمدید 🌑";
+  }catch(e){msg.innerText="اطلاعات ورود اشتباه است"}
+}
 
-  function emailInput() {
-    return document.getElementById("email").value;
-  }
-
-  function passwordInput() {
-    return document.getElementById("password").value;
-  }
+window.logout = async ()=>{
+  await signOut(auth);
+  dashboard.classList.add("hidden");
+  authBox.classList.remove("hidden");
+}
 </script>
 
 </body>
