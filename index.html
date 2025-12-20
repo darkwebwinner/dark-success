@@ -14,7 +14,6 @@ body{
   font-family:'Vazirmatn',sans-serif;
   background:linear-gradient(180deg,#020617,#020617,#0f172a);
   color:#fff;
-  min-height:100vh;
 }
 
 header{
@@ -78,9 +77,7 @@ button:hover{opacity:.9}
   border:1px solid #312e81;
   border-radius:14px;
   padding:16px;
-  transition:.3s;
 }
-.card:hover{transform:translateY(-4px)}
 
 .vip{color:#facc15;font-weight:700}
 .admin{color:#22c55e;font-weight:700}
@@ -122,19 +119,20 @@ footer{
   </div>
 
   <div class="grid">
+    <div class="card vip">
+      🔥 اشتراک VIP<br><br>
+      <button onclick="buyVIP()">خرید</button>
+    </div>
     <div class="card">📊 فرصت‌های خرید</div>
-    <div class="card">💰 طلا یا رمز ارز؟</div>
     <div class="card">📈 تحلیل بازار</div>
-    <div class="card vip">🔥 سیگنال VIP</div>
+    <div class="card">💰 طلا یا رمز ارز؟</div>
   </div>
 
-  <div id="adminPanel" class="glass hidden">
-    <h3>پنل مدیریت</h3>
-    <textarea id="postText" placeholder="تحلیل یا خبر جدید..."></textarea>
-    <button onclick="addPost()">انتشار</button>
+  <!-- Orders -->
+  <div class="glass">
+    <h3>🧾 تاریخچه خریدهای شما</h3>
+    <div id="ordersBox"></div>
   </div>
-
-  <div id="posts"></div>
 
 </div>
 </div>
@@ -149,7 +147,7 @@ footer{
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA-jq4jwAhXEuUevcFs3fsX9c8YbNkHZZI",
@@ -160,11 +158,13 @@ const firebaseConfig = {
   appId: "1:37974176476:web:4f01c47c8c70723eef7a19"
 };
 
-const ADMIN_EMAIL = "ایمیل_خودت@gmail.com";
+const ADMIN_EMAIL = "email@example.com";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+let currentUser = null;
 
 const emailEl = document.getElementById("email");
 const passEl = document.getElementById("password");
@@ -172,8 +172,7 @@ const msg = document.getElementById("msg");
 const authBox = document.getElementById("authBox");
 const dashboard = document.getElementById("dashboard");
 const roleBox = document.getElementById("roleBox");
-const adminPanel = document.getElementById("adminPanel");
-const postsBox = document.getElementById("posts");
+const ordersBox = document.getElementById("ordersBox");
 
 window.register = async ()=>{
   try{
@@ -181,7 +180,6 @@ window.register = async ()=>{
     await setDoc(doc(db,"users",r.user.uid),{
       email:r.user.email,
       role:r.user.email===ADMIN_EMAIL?"admin":"user",
-      vip:r.user.email===ADMIN_EMAIL,
       createdAt:new Date().toISOString()
     });
     msg.innerText="ثبت‌نام موفق بود";
@@ -194,48 +192,58 @@ window.login = async ()=>{
   }catch(e){msg.innerText="اطلاعات ورود اشتباه است"}
 }
 
-window.logout = async ()=>{
-  await signOut(auth);
-}
+window.logout = async ()=>{ await signOut(auth); }
 
 onAuthStateChanged(auth, async user=>{
   if(user){
+    currentUser = user;
     authBox.classList.add("hidden");
     dashboard.classList.remove("hidden");
+    document.getElementById("welcome").innerText = "خوش آمدید " + user.email;
+
     const snap = await getDoc(doc(db,"users",user.uid));
     if(snap.exists()){
-      const d=snap.data();
-      roleBox.innerHTML = d.role==="admin"
-        ? "<span class='admin'>ادمین سیستم</span>"
+      roleBox.innerHTML = snap.data().role==="admin"
+        ? "<span class='admin'>ادمین</span>"
         : "کاربر عادی";
-      if(d.role==="admin") adminPanel.classList.remove("hidden");
     }
-    loadPosts();
+    loadOrders();
   }else{
+    currentUser=null;
     dashboard.classList.add("hidden");
     authBox.classList.remove("hidden");
   }
 });
 
-window.addPost = async ()=>{
-  const t=document.getElementById("postText").value;
-  if(!t) return;
-  await addDoc(collection(db,"posts"),{
-    text:t,
-    createdAt:new Date().toISOString()
+window.buyVIP = async ()=>{
+  if(!currentUser) return;
+  await addDoc(collection(db,"orders"),{
+    userId: currentUser.uid,
+    email: currentUser.email,
+    product: "اشتراک VIP",
+    price: 500000,
+    date: new Date().toLocaleString()
   });
-  document.getElementById("postText").value="";
-  loadPosts();
-}
+  alert("خرید با موفقیت ثبت شد");
+  loadOrders();
+};
 
-async function loadPosts(){
-  postsBox.innerHTML="";
-  const q=await getDocs(collection(db,"posts"));
-  q.forEach(d=>{
+async function loadOrders(){
+  ordersBox.innerHTML="";
+  const q = query(collection(db,"orders"), where("userId","==",currentUser.uid));
+  const snap = await getDocs(q);
+
+  if(snap.empty){
+    ordersBox.innerHTML="<p>هنوز خریدی ثبت نشده</p>";
+    return;
+  }
+
+  snap.forEach(d=>{
+    const o=d.data();
     const div=document.createElement("div");
     div.className="glass";
-    div.innerText=d.data().text;
-    postsBox.appendChild(div);
+    div.innerHTML=`<b>${o.product}</b><br>مبلغ: ${o.price} تومان<br>تاریخ: ${o.date}`;
+    ordersBox.appendChild(div);
   });
 }
 </script>
