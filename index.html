@@ -2,144 +2,210 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Dark Success - گردونه شانس</title>
+<title>Dark Success</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:'Vazirmatn',sans-serif;background:linear-gradient(180deg,#020617,#0f172a);color:#fff;text-align:center;}
-header{padding:16px;font-size:22px;font-weight:700;border-bottom:1px solid #312e81;}
+body{
+  margin:0;
+  font-family:'Vazirmatn',sans-serif;
+  background:linear-gradient(180deg,#020617,#0f172a);
+  color:#fff;
+}
+header{
+  padding:16px;
+  text-align:center;
+  font-size:22px;
+  font-weight:700;
+  border-bottom:1px solid #312e81;
+}
 .container{max-width:1100px;margin:auto;padding:20px}
-.glass{background:rgba(255,255,255,.06);border:1px solid #312e81;border-radius:16px;padding:18px;margin-bottom:18px;position:relative;overflow:hidden;}
+.glass{
+  background:rgba(255,255,255,.06);
+  border:1px solid #312e81;
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:18px;
+}
 .hidden{display:none}
-button{padding:12px 20px;font-size:16px;font-weight:700;cursor:pointer;border:none;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;}
-#wheel-container{position:relative;width:320px;height:320px;margin:20px auto;}
-canvas#wheel{border-radius:50%;background:#1e293b;box-shadow:0 0 20px rgba(0,0,0,0.5);}
-#pointer{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:36px;}
-#winner{margin-top:15px;color:#facc15;font-weight:700;font-size:18px;text-shadow:0 0 10px #facc15;}
-.sparkle{position:absolute;width:6px;height:6px;background:#facc15;border-radius:50%;pointer-events:none;animation:sparkle 0.6s linear forwards;}
-@keyframes sparkle{0%{transform:scale(0) translate(0,0);opacity:1;}100%{transform:scale(2) translate(var(--x),var(--y));opacity:0;}}
+button{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  font-family:inherit;
+  font-weight:700;
+  cursor:pointer;
+  background:linear-gradient(135deg,#7c3aed,#2563eb);
+  color:#fff;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+}
+.card{
+  background:#020617;
+  border:1px solid #312e81;
+  border-radius:14px;
+  padding:18px;
+  text-align:center;
+  cursor:pointer;
+}
+
+/* ===== WHEEL ===== */
+#wheelWrap{text-align:center}
+#wheelBox{
+  position:relative;
+  width:340px;
+  height:340px;
+  margin:20px auto;
+}
+canvas{
+  border-radius:50%;
+  box-shadow:
+    inset 0 0 40px rgba(255,255,255,.15),
+    0 0 40px rgba(0,0,0,.8);
+}
+#pointer{
+  position:absolute;
+  top:-6px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:34px;
+}
+#winner{
+  margin-top:15px;
+  font-size:18px;
+  font-weight:700;
+  color:#facc15;
+}
 </style>
 </head>
+
 <body>
 
-<header>🌑 Dark Success - گردونه شانس</header>
+<header>🌑 Dark Success</header>
+
 <div class="container">
 
-<div class="glass" id="wheelSection">
+<div class="grid">
+  <div class="card">📊 فرصت‌های خرید</div>
+  <div class="card">📈 تحلیل بازار</div>
+  <div class="card">💰 طلا یا رمز ارز؟</div>
+  <div class="card">❓ هولد یا ترید؟</div>
+  <div class="card" onclick="wheelSection.classList.toggle('hidden')">🎯 گردونه شانس</div>
+</div>
+
+<div id="wheelSection" class="glass hidden">
   <h3>🎯 گردونه شانس</h3>
-  <div id="wheel-container">
-    <div id="pointer">⬇️</div>
-    <canvas id="wheel" width="320" height="320"></canvas>
+  <div id="wheelWrap">
+    <div id="wheelBox">
+      <div id="pointer">⬇️</div>
+      <canvas id="wheel" width="340" height="340"></canvas>
+    </div>
+    <button id="spinBtn">چرخش 🎡</button>
+    <div id="winner"></div>
   </div>
-  <button id="spinBtn">چرخش 🎡</button>
-  <div id="winner"></div>
 </div>
 
 </div>
 
-<audio id="spinSound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3"></audio>
-<audio id="winSound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-notification-2013.mp3"></audio>
+<audio id="spinSound" src="https://assets.mixkit.co/sfx/preview/mixkit-fast-small-sweep-transition-166.mp3"></audio>
+<audio id="winSound" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
 
 <script>
-const wheelCanvas = document.getElementById("wheel");
-const ctx = wheelCanvas.getContext("2d");
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
 const spinBtn = document.getElementById("spinBtn");
-const winnerDiv = document.getElementById("winner");
+const winner = document.getElementById("winner");
 const spinSound = document.getElementById("spinSound");
 const winSound = document.getElementById("winSound");
 
-const prizes = ["💵 1 دلار","⭐ 10 روز VIP","❌ پوچ","⭐ 5 روز VIP","❌ پوچ","💎 20 روز VIP","🪙 5 دلار"];
-const colors = ["#7c3aed","#2563eb","#facc15","#f43f5e","#22d3ee","#10b981","#f97316"];
-const numSegments = prizes.length;
-const anglePerSegment = 2*Math.PI/numSegments;
-let currentAngle = 0;
+const prizes = [
+ "💵 1 دلار",
+ "⭐ 10 روز VIP",
+ "❌ پوچ",
+ "⭐ 5 روز VIP",
+ "❌ پوچ",
+ "💎 20 روز VIP",
+ "🪙 5 دلار"
+];
 
-// رسم گردونه
-function drawWheel(){
-  ctx.clearRect(0,0,320,320);
-  for(let i=0;i<numSegments;i++){
+const colors = ["#7c3aed","#2563eb","#facc15","#f43f5e","#22d3ee","#10b981","#f97316"];
+const count = prizes.length;
+const arc = Math.PI * 2 / count;
+let angle = 0;
+
+/* DRAW */
+function draw(){
+  ctx.clearRect(0,0,340,340);
+  for(let i=0;i<count;i++){
     ctx.beginPath();
-    ctx.moveTo(160,160);
-    ctx.arc(160,160,160,i*anglePerSegment,(i+1)*anglePerSegment);
-    ctx.fillStyle = colors[i%colors.length];
+    ctx.moveTo(170,170);
+    ctx.arc(170,170,170,arc*i,arc*(i+1));
+    ctx.fillStyle=colors[i];
     ctx.fill();
+
     ctx.save();
-    ctx.translate(160,160);
-    ctx.rotate(i*anglePerSegment + anglePerSegment/2);
+    ctx.translate(170,170);
+    ctx.rotate(arc*i+arc/2);
     ctx.fillStyle="#fff";
-    ctx.font="14px Vazirmatn";
+    ctx.font="13px Vazirmatn";
     ctx.textAlign="center";
-    ctx.textBaseline="middle";
-    ctx.fillText(prizes[i], 115, 0);
+    ctx.fillText(prizes[i],115,5);
     ctx.restore();
   }
 }
-drawWheel();
+draw();
 
-// افکت جرقه
-function createSparkle(){
-  const sparkle=document.createElement('div');
-  sparkle.className='sparkle';
-  sparkle.style.setProperty('--x',Math.random()*120-60+'px');
-  sparkle.style.setProperty('--y',Math.random()*120-60+'px');
-  sparkle.style.left='160px';
-  sparkle.style.top='160px';
-  document.getElementById('wheelSection').appendChild(sparkle);
-  setTimeout(()=>sparkle.remove(),600);
-}
-
-// شروع چرخش
-spinBtn.onclick = ()=>{
+/* SPIN – بدون خطا */
+spinBtn.onclick=()=>{
   spinBtn.disabled=true;
-  winnerDiv.innerText="";
-  const spins = Math.floor(Math.random()*6 + 6); // تعداد چرخش کامل
-  const prizeIndex = Math.floor(Math.random()*numSegments); // جایزه نهایی
-  const targetAngle = spins*2*Math.PI + prizeIndex*anglePerSegment + anglePerSegment/2;
-  let start = null;
+  winner.innerText="";
 
-  spinSound.currentTime=0; spinSound.play();
+  const index = Math.floor(Math.random()*count); // 🎯 جایزه قطعی
+  const spins = 6;
+  const target =
+    spins*Math.PI*2 +
+    (count-index)*arc -
+    arc/2;
 
-  function animate(timestamp){
-    if(!start) start=timestamp;
-    const elapsed = timestamp-start;
-    const duration = 4500;
-    const progress = Math.min(elapsed/duration,1);
-    currentAngle = targetAngle*easeOutCubic(progress);
-    drawWheelWithRotation(currentAngle);
-    if(Math.random()<0.15) createSparkle();
-    if(progress<1){
-      requestAnimationFrame(animate);
-    } else {
+  const start = angle;
+  const diff = target-start;
+  const duration = 4500;
+  const startTime = performance.now();
+
+  spinSound.play();
+
+  function animate(t){
+    const p=Math.min((t-startTime)/duration,1);
+    angle = start + diff*(1-Math.pow(2,-10*p));
+    ctx.save();
+    ctx.translate(170,170);
+    ctx.rotate(angle);
+    ctx.translate(-170,-170);
+    draw();
+    ctx.restore();
+
+    if(p<1) requestAnimationFrame(animate);
+    else{
       spinSound.pause();
-      // محاسبه شاخص جایزه دقیق بر اساس زاویه نهایی
-      const finalAngle = currentAngle % (2*Math.PI);
-      let finalIndex = Math.floor((2*Math.PI - finalAngle + anglePerSegment/2) / anglePerSegment) % numSegments;
-      const prize = prizes[finalIndex];
-      if(prize==="❌ پوچ"){
-        winnerDiv.innerText="پوچ! دفعه بعد موفق باشید";
-      } else {
-        winSound.currentTime=0; winSound.play();
-        winnerDiv.innerText="🎉 برنده شدید: "+prize;
+      const prize=prizes[index];
+      if(prize.includes("پوچ")){
+        winner.innerText="پوچ! دفعه بعد موفق باشید";
+      }else{
+        winSound.play();
+        winner.innerText="🎉 برنده شدید: "+prize;
       }
       spinBtn.disabled=false;
     }
   }
   requestAnimationFrame(animate);
-}
-
-// رسم با زاویه چرخیده
-function drawWheelWithRotation(angle){
-  ctx.save();
-  ctx.translate(160,160);
-  ctx.rotate(angle);
-  ctx.translate(-160,-160);
-  drawWheel();
-  ctx.restore();
-}
-
-// easing
-function easeOutCubic(t){ return 1-Math.pow(1-t,3); }
+};
 </script>
+
 </body>
 </html>
