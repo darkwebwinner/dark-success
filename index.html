@@ -132,7 +132,6 @@ canvas#wheel {
 }
 </style>
 </head>
-
 <body>
 
 <header>🌑 Dark Success</header>
@@ -174,7 +173,7 @@ canvas#wheel {
     <button class="vipBtn" onclick="goTelegram()">اشتراک VIP ۹۰ روزه</button>
   </div>
 
-  <!-- LUCKY WHEEL (hidden initially) -->
+  <!-- LUCKY WHEEL (initially hidden) -->
   <div id="wheelSection" class="glass hidden">
     <h3>🎯 گردونه شانس</h3>
     <div id="wheel-container">
@@ -194,25 +193,13 @@ canvas#wheel {
 Telegram: <b>@cvvx441</b>
 </footer>
 
-<!-- صداهای گردونه -->
 <audio id="spinSound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3"></audio>
 <audio id="winSound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-notification-2013.mp3"></audio>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* Firebase */
 const firebaseConfig = {
@@ -224,60 +211,34 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* Register */
+/* Register/Login/Logout/Auth State (همان کد قبلی) */
 registerBtn.onclick = async ()=>{
   const r = await createUserWithEmailAndPassword(auth,email.value,password.value);
-  await setDoc(doc(db,"users",r.user.uid),{
-    vip:false,
-    vipExpire:0,
-    role:"user",
-    createdAt:Date.now()
-  });
+  await setDoc(doc(db,"users",r.user.uid),{vip:false,vipExpire:0,role:"user",createdAt:Date.now()});
 };
-
-/* Login */
 loginBtn.onclick = ()=>signInWithEmailAndPassword(auth,email.value,password.value);
-
-/* Logout */
 logoutBtn.onclick = ()=>signOut(auth);
-
-/* Auth State */
 onAuthStateChanged(auth, async user=>{
-  if(!user){
-    authBox.classList.remove("hidden");
-    dashboard.classList.add("hidden");
-    return;
-  }
-  authBox.classList.add("hidden");
-  dashboard.classList.remove("hidden");
+  if(!user){authBox.classList.remove("hidden");dashboard.classList.add("hidden");return;}
+  authBox.classList.add("hidden");dashboard.classList.remove("hidden");
   welcome.innerText="خوش آمدید "+user.email;
-
   const snap = await getDoc(doc(db,"users",user.uid));
   const data = snap.data();
-
   if(data.vip && Date.now()<data.vipExpire){
     vipInfo.innerHTML=`<span class="badge vip">VIP فعال</span>`;
   }else{
     vipInfo.innerHTML=`<span class="badge free">VIP غیرفعال</span>`;
   }
 });
-
-/* Clock */
 function updateDateTime(){
   const n=new Date();
-  dateTime.innerText =
-    "📅 "+n.toLocaleDateString("fa-IR",{year:"numeric",month:"long",day:"numeric"})+
-    " | ⏰ "+n.toLocaleTimeString("fa-IR");
+  dateTime.innerText = "📅 "+n.toLocaleDateString("fa-IR",{year:"numeric",month:"long",day:"numeric"})+" | ⏰ "+n.toLocaleTimeString("fa-IR");
 }
 setInterval(updateDateTime,1000);
 updateDateTime();
+window.goTelegram = ()=>{window.open("https://t.me/cvvx441","_blank");};
 
-/* Telegram */
-window.goTelegram = ()=>{
-  window.open("https://t.me/cvvx441","_blank");
-};
-
-/* ---------------------- گردونه شانس ---------------------- */
+/* ---------------------- گردونه شانس حرفه‌ای ---------------------- */
 const openWheelBtn = document.getElementById("openWheel");
 const wheelSection = document.getElementById("wheelSection");
 const wheelCanvas = document.getElementById("wheel");
@@ -287,19 +248,14 @@ const winnerDiv = document.getElementById("winner");
 const spinSound = document.getElementById("spinSound");
 const winSound = document.getElementById("winSound");
 
-const prizes = [
-  "💵 جایزه: 1 دلار",
-  "⭐ 10 روز اشتراک VIP",
-  "❌ پوچ",
-  "⭐ 5 روز اشتراک VIP",
-  "❌ پوچ"
-];
+const prizes = ["💵 1 دلار","⭐ 10 روز VIP","❌ پوچ","⭐ 5 روز VIP","❌ پوچ"];
 const colors = ["#7c3aed","#2563eb","#facc15","#f43f5e","#22d3ee"];
 const numSegments = prizes.length;
-const anglePerSegment = 2*Math.PI / numSegments;
+const anglePerSegment = 2*Math.PI/numSegments;
 let currentAngle = 0;
 
 function drawWheel(){
+  ctx.clearRect(0,0,300,300);
   for(let i=0;i<numSegments;i++){
     ctx.beginPath();
     ctx.moveTo(150,150);
@@ -309,22 +265,23 @@ function drawWheel(){
     ctx.save();
     ctx.translate(150,150);
     ctx.rotate(i*anglePerSegment + anglePerSegment/2);
-    ctx.textAlign="right";
     ctx.fillStyle="#fff";
-    ctx.font="16px Vazirmatn";
-    ctx.fillText(prizes[i],140,5);
+    ctx.font="14px Vazirmatn";
+    ctx.textAlign="center";
+    ctx.textBaseline="middle";
+    ctx.fillText(prizes[i], 100, 0); // متن داخل هر بخش، جا شده
     ctx.restore();
   }
 }
 drawWheel();
 
 function createSparkle(){
-  const sparkle = document.createElement('div');
-  sparkle.className = 'sparkle';
-  sparkle.style.setProperty('--x', Math.random()*100 - 50 + 'px');
-  sparkle.style.setProperty('--y', Math.random()*100 - 50 + 'px');
-  sparkle.style.left = 150 + 'px';
-  sparkle.style.top = 150 + 'px';
+  const sparkle=document.createElement('div');
+  sparkle.className='sparkle';
+  sparkle.style.setProperty('--x',Math.random()*100-50+'px');
+  sparkle.style.setProperty('--y',Math.random()*100-50+'px');
+  sparkle.style.left='150px';
+  sparkle.style.top='150px';
   wheelSection.appendChild(sparkle);
   setTimeout(()=>sparkle.remove(),600);
 }
@@ -335,46 +292,45 @@ openWheelBtn.onclick = ()=>{
 }
 
 spinBtn.onclick = ()=>{
-  spinBtn.disabled = true;
+  spinBtn.disabled=true;
   winnerDiv.innerText="";
-  let spins = Math.floor(Math.random()*5 + 5); 
-  let prizeIndex = Math.floor(Math.random()*prizes.length);
-  let targetAngle = (spins*2*Math.PI) + (prizeIndex*anglePerSegment) + anglePerSegment/2;
-  let duration = 4000;
+  // انتخاب کاملاً تصادفی جایزه
+  const prizeIndex = Math.floor(Math.random()*numSegments);
+  const spins = Math.floor(Math.random()*5+5);
+  const targetAngle = spins*2*Math.PI + prizeIndex*anglePerSegment + anglePerSegment/2;
   let start = null;
 
-  spinSound.currentTime = 0;
-  spinSound.play();
+  spinSound.currentTime=0; spinSound.play();
 
   function animate(timestamp){
     if(!start) start=timestamp;
-    let elapsed = timestamp-start;
-    let progress = Math.min(elapsed/duration,1);
-    currentAngle = targetAngle * easeOutCubic(progress);
-    ctx.clearRect(0,0,300,300);
-    ctx.save();
-    ctx.translate(150,150);
-    ctx.rotate(currentAngle);
-    ctx.translate(-150,-150);
-    drawWheel();
-    ctx.restore();
-
+    const elapsed=timestamp-start;
+    const duration=4000;
+    const progress=Math.min(elapsed/duration,1);
+    currentAngle=targetAngle*easeOutCubic(progress);
+    drawWheelWithRotation(currentAngle);
     if(Math.random()<0.1) createSparkle();
-
-    if(progress<1){
-      requestAnimationFrame(animate);
-    } else {
+    if(progress<1){requestAnimationFrame(animate);}
+    else{
       spinSound.pause();
-      winSound.currentTime = 0;
-      winSound.play();
-      winnerDiv.innerText = "🎉 برنده: " + prizes[prizeIndex];
-      spinBtn.disabled = false;
+      winSound.currentTime=0; winSound.play();
+      winnerDiv.innerText="🎉 برنده: "+prizes[prizeIndex];
+      spinBtn.disabled=false;
     }
   }
   requestAnimationFrame(animate);
 }
 
-function easeOutCubic(t){ return 1 - Math.pow(1-t,3); }
+function drawWheelWithRotation(angle){
+  ctx.save();
+  ctx.translate(150,150);
+  ctx.rotate(angle);
+  ctx.translate(-150,-150);
+  drawWheel();
+  ctx.restore();
+}
+
+function easeOutCubic(t){ return 1-Math.pow(1-t,3); }
 </script>
 
 </body>
