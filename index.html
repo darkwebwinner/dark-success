@@ -4,132 +4,34 @@
 <meta charset="UTF-8">
 <title>Dark Success</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:'Vazirmatn',sans-serif;
-  background:linear-gradient(180deg,#020617,#0f172a);
-  color:#fff;
-}
-header{
-  padding:16px;
-  text-align:center;
-  font-size:22px;
-  font-weight:700;
-  border-bottom:1px solid #312e81;
-}
+body{margin:0;font-family:'Vazirmatn',sans-serif;background:linear-gradient(180deg,#020617,#0f172a);color:#fff;text-align:center;}
+header{padding:16px;font-size:22px;font-weight:700;border-bottom:1px solid #312e81;}
 .container{max-width:1100px;margin:auto;padding:20px}
-.glass{
-  background:rgba(255,255,255,.06);
-  border:1px solid #312e81;
-  border-radius:16px;
-  padding:18px;
-  margin-bottom:18px;
-  position:relative;
-  overflow:hidden;
-}
+.glass{background:rgba(255,255,255,.06);border:1px solid #312e81;border-radius:16px;padding:18px;margin-bottom:18px;position:relative;overflow:hidden;}
 .hidden{display:none}
-input,button{
-  width:100%;
-  padding:12px;
-  margin:6px 0;
-  border-radius:10px;
-  border:none;
-  font-family:inherit;
-}
-input{
-  background:#020617;
-  color:#fff;
-  border:1px solid #312e81;
-}
-button{
-  background:linear-gradient(135deg,#7c3aed,#2563eb);
-  color:#fff;
-  cursor:pointer;
-  font-weight:700;
-}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:14px;
-}
-.card{
-  background:#020617;
-  border:1px solid #312e81;
-  border-radius:14px;
-  padding:18px;
-  text-align:center;
-  cursor:pointer;
-}
-.vipBtn{
-  font-size:16px;
-}
-.badge{
-  display:inline-block;
-  padding:4px 10px;
-  border-radius:20px;
-  font-size:13px;
-}
-.badge.vip{background:#facc15;color:#020617}
-.badge.free{background:#334155}
-footer{
-  margin-top:40px;
-  padding:20px;
-  text-align:center;
-  font-size:14px;
-  border-top:1px solid #312e81;
-}
+input,button{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:none;font-family:inherit;}
+input{background:#020617;color:#fff;border:1px solid #312e81;}
+button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:pointer;font-weight:700;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
+.card{background:#020617;border:1px solid #312e81;border-radius:14px;padding:18px;text-align:center;cursor:pointer;}
+.vipBtn{font-size:16px;}
+.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:13px;}
+.badge.vip{background:#facc15;color:#020617;}
+.badge.free{background:#334155;}
+footer{margin-top:40px;padding:20px;text-align:center;font-size:14px;border-top:1px solid #312e81;}
 
-/* گردونه شانس */
-#wheel-container {
-  position: relative;
-  width: 300px;
-  height: 300px;
-  margin: 20px auto;
-}
-canvas#wheel {
-  border-radius: 50%;
-  background: #1e293b;
-}
-#pointer {
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 30px;
-}
-#spinBtn {
-  margin-top: 15px;
-  padding: 10px 20px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  border: none;
-  border-radius: 10px;
-}
-#winner {
-  margin-top: 15px;
-  color: #facc15;
-  font-weight: 700;
-  font-size: 18px;
-  text-shadow: 0 0 8px #facc15;
-}
-.sparkle {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: #facc15;
-  border-radius: 50%;
-  pointer-events: none;
-  animation: sparkle 0.6s linear forwards;
-}
-@keyframes sparkle {
-  0% {transform: scale(0) translate(0,0); opacity:1;}
-  100% {transform: scale(2) translate(var(--x), var(--y)); opacity:0;}
-}
+/* گردونه */
+#wheel-container{position:relative;width:300px;height:300px;margin:20px auto;}
+canvas#wheel{border-radius:50%;background:#1e293b;}
+#pointer{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:30px;}
+#spinBtn{margin-top:15px;padding:10px 20px;font-size:16px;font-weight:700;cursor:pointer;border:none;border-radius:10px;}
+#winner{margin-top:15px;color:#facc15;font-weight:700;font-size:18px;text-shadow:0 0 8px #facc15;}
+.sparkle{position:absolute;width:6px;height:6px;background:#facc15;border-radius:50%;pointer-events:none;animation:sparkle 0.6s linear forwards;}
+@keyframes sparkle{0%{transform:scale(0) translate(0,0);opacity:1;}100%{transform:scale(2) translate(var(--x),var(--y));opacity:0;}}
 </style>
 </head>
 <body>
@@ -173,7 +75,7 @@ canvas#wheel {
     <button class="vipBtn" onclick="goTelegram()">اشتراک VIP ۹۰ روزه</button>
   </div>
 
-  <!-- LUCKY WHEEL (initially hidden) -->
+  <!-- LUCKY WHEEL -->
   <div id="wheelSection" class="glass hidden">
     <h3>🎯 گردونه شانس</h3>
     <div id="wheel-container">
@@ -211,7 +113,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* Register/Login/Logout/Auth State (همان کد قبلی) */
+/* Register/Login/Logout/Auth State */
 registerBtn.onclick = async ()=>{
   const r = await createUserWithEmailAndPassword(auth,email.value,password.value);
   await setDoc(doc(db,"users",r.user.uid),{vip:false,vipExpire:0,role:"user",createdAt:Date.now()});
@@ -248,8 +150,8 @@ const winnerDiv = document.getElementById("winner");
 const spinSound = document.getElementById("spinSound");
 const winSound = document.getElementById("winSound");
 
-const prizes = ["💵 1 دلار","⭐ 10 روز VIP","❌ پوچ","⭐ 5 روز VIP","❌ پوچ"];
-const colors = ["#7c3aed","#2563eb","#facc15","#f43f5e","#22d3ee"];
+const prizes = ["💵 1 دلار","⭐ 10 روز VIP","❌ پوچ","⭐ 5 روز VIP","❌ پوچ","💎 20 روز VIP","🪙 5 دلار"];
+const colors = ["#7c3aed","#2563eb","#facc15","#f43f5e","#22d3ee","#10b981","#f97316"];
 const numSegments = prizes.length;
 const anglePerSegment = 2*Math.PI/numSegments;
 let currentAngle = 0;
@@ -266,10 +168,10 @@ function drawWheel(){
     ctx.translate(150,150);
     ctx.rotate(i*anglePerSegment + anglePerSegment/2);
     ctx.fillStyle="#fff";
-    ctx.font="14px Vazirmatn";
+    ctx.font="12px Vazirmatn";
     ctx.textAlign="center";
     ctx.textBaseline="middle";
-    ctx.fillText(prizes[i], 100, 0); // متن داخل هر بخش، جا شده
+    ctx.fillText(prizes[i], 105, 0);
     ctx.restore();
   }
 }
@@ -294,11 +196,10 @@ openWheelBtn.onclick = ()=>{
 spinBtn.onclick = ()=>{
   spinBtn.disabled=true;
   winnerDiv.innerText="";
-  // انتخاب کاملاً تصادفی جایزه
-  const prizeIndex = Math.floor(Math.random()*numSegments);
+  const prizeIndex = Math.floor(Math.random()*numSegments); // کاملاً رندوم
   const spins = Math.floor(Math.random()*5+5);
   const targetAngle = spins*2*Math.PI + prizeIndex*anglePerSegment + anglePerSegment/2;
-  let start = null;
+  let start=null;
 
   spinSound.currentTime=0; spinSound.play();
 
