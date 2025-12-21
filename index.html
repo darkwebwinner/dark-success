@@ -5,7 +5,6 @@
 <title>Dark Success</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
-
 <style>
 *{box-sizing:border-box}
 body{
@@ -62,11 +61,6 @@ button{
   text-align:center;
   cursor:pointer;
 }
-.card:hover{
-  transform:translateY(-5px);
-  box-shadow:0 0 20px #7c3aed;
-  transition:0.3s;
-}
 .badge{
   display:inline-block;
   padding:4px 10px;
@@ -79,34 +73,36 @@ button{
 /* ===== Prize Boxes ===== */
 #prizeBoxes{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-  gap:20px;
+  grid-template-columns:repeat(auto-fit,minmax(100px,1fr));
+  gap:15px;
   margin-top:20px;
 }
 .prizeBox{
   background:linear-gradient(135deg,#1f2933,#111827);
   border:2px solid #312e81;
-  border-radius:16px;
-  padding:20px;
+  border-radius:12px;
+  padding:20px 10px;
   text-align:center;
   font-weight:700;
-  font-size:16px;
+  font-size:14px;
   cursor:pointer;
-  box-shadow:0 0 20px rgba(0,0,0,.8);
+  box-shadow:0 0 15px rgba(0,0,0,.7);
   transition:all 0.3s;
+  height:80px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 .prizeBox:hover{
   transform:translateY(-5px) scale(1.05);
-  box-shadow:0 0 30px #7c3aed;
+  box-shadow:0 0 25px #7c3aed;
 }
-#winner{margin-top:20px;font-size:18px;font-weight:700;color:#facc15;text-align:center}
+#winner{margin-top:20px;font-size:16px;font-weight:700;color:#facc15;text-align:center}
 </style>
 </head>
-
 <body>
 
 <header>🌑 Dark Success</header>
-
 <div class="container">
 
 <!-- AUTH -->
@@ -147,13 +143,13 @@ button{
   <div class="glass">
     <h3>🎁 جعبه‌های شانس</h3>
     <div id="prizeBoxes">
-      <div class="prizeBox" data-prize="1 دلار">جعبه ۱</div>
-      <div class="prizeBox" data-prize="VIP 10 روزه">جعبه ۲</div>
-      <div class="prizeBox" data-prize="پوچ">جعبه ۳</div>
-      <div class="prizeBox" data-prize="VIP 5 روزه">جعبه ۴</div>
-      <div class="prizeBox" data-prize="پوچ">جعبه ۵</div>
-      <div class="prizeBox" data-prize="VIP 20 روزه">جعبه ۶</div>
-      <div class="prizeBox" data-prize="5 دلار">جعبه ۷</div>
+      <div class="prizeBox" data-index="0">جعبه ۱</div>
+      <div class="prizeBox" data-index="1">جعبه ۲</div>
+      <div class="prizeBox" data-index="2">جعبه ۳</div>
+      <div class="prizeBox" data-index="3">جعبه ۴</div>
+      <div class="prizeBox" data-index="4">جعبه ۵</div>
+      <div class="prizeBox" data-index="5">جعبه ۶</div>
+      <div class="prizeBox" data-index="6">جعبه ۷</div>
     </div>
     <div id="winner"></div>
   </div>
@@ -168,10 +164,7 @@ Telegram: <b>@cvvx441</b>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getAuth, createUserWithEmailAndPassword,
-  signInWithEmailAndPassword, signOut, onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* Firebase */
@@ -223,17 +216,58 @@ setInterval(updateDateTime,1000); updateDateTime();
 /* Telegram */
 window.goTelegram = ()=>window.open("https://t.me/cvvx441","_blank");
 
-/* ===== Prize Boxes Logic ===== */
+/* ===== Prize Boxes Logic with Random Changing & Daily Limit ===== */
+const prizes = ["1 دلار","VIP 10 روزه","پوچ","VIP 5 روزه","پوچ","VIP 20 روزه","5 دلار"];
 const boxes = document.querySelectorAll(".prizeBox");
+const winnerDiv = document.getElementById("winner");
+const maxDaily = 2; // دفعات مجاز روزانه
+const storageKey = "dailyBoxCount";
+const storageDateKey = "dailyBoxDate";
+
+function canOpenBox(){
+  const today = new Date().toDateString();
+  const lastDate = localStorage.getItem(storageDateKey);
+  if(lastDate !== today){
+    localStorage.setItem(storageDateKey, today);
+    localStorage.setItem(storageKey, "0");
+    return true;
+  }
+  const count = parseInt(localStorage.getItem(storageKey) || "0");
+  return count < maxDaily;
+}
+
+function incrementBoxCount(){
+  const count = parseInt(localStorage.getItem(storageKey) || "0")+1;
+  localStorage.setItem(storageKey, count.toString());
+}
+
 boxes.forEach(box=>{
-  box.addEventListener("click",()=>{
-    const prize = box.getAttribute("data-prize");
-    const winnerDiv = document.getElementById("winner");
+  let interval;
+  box.addEventListener("mouseenter", ()=>{
+    // Start random changing
+    interval = setInterval(()=>{
+      const randomPrize = prizes[Math.floor(Math.random()*prizes.length)];
+      box.textContent = randomPrize;
+    }, 500);
+  });
+  box.addEventListener("mouseleave", ()=>{
+    clearInterval(interval);
+  });
+  box.addEventListener("click", ()=>{
+    if(!canOpenBox()){
+      winnerDiv.textContent="⚠️ شما امروز دوبار جعبه باز کرده‌اید!";
+      return;
+    }
+    clearInterval(interval);
+    const prize = box.textContent;
+    incrementBoxCount();
     if(prize==="پوچ"){
       winnerDiv.textContent="پوچ! دفعه بعد موفق باشید";
     }else{
       winnerDiv.textContent="🎉 برنده شدید: "+prize;
     }
+    // هدایت به صفحه جدید بعد 1.5 ثانیه
+    setTimeout(()=>{ window.location.href="https://t.me/cvvx441"; },1500);
   });
 });
 </script>
