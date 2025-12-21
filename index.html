@@ -11,7 +11,7 @@
 body{
   margin:0;
   font-family:'Vazirmatn',sans-serif;
-  background:linear-gradient(180deg,#020617,#020617,#0f172a);
+  background:linear-gradient(180deg,#020617,#0f172a);
   color:#fff;
 }
 header{
@@ -86,8 +86,8 @@ footer{
   <h2>ورود / ثبت‌نام</h2>
   <input id="email" type="email" placeholder="ایمیل">
   <input id="password" type="password" placeholder="رمز عبور">
-  <button onclick="register()">ثبت‌نام</button>
-  <button onclick="login()">ورود</button>
+  <button id="registerBtn">ثبت‌نام</button>
+  <button id="loginBtn">ورود</button>
   <p id="msg"></p>
 </div>
 
@@ -97,7 +97,7 @@ footer{
   <div class="glass">
     <h2 id="welcome"></h2>
     <div id="dateTime" style="margin-top:10px;font-size:15px;color:#c7d2fe"></div>
-    <button onclick="logout()">خروج</button>
+    <button id="logoutBtn">خروج</button>
   </div>
 
   <div class="grid">
@@ -106,9 +106,8 @@ footer{
     <div class="card">💰 طلا یا رمز ارز؟</div>
     <div class="card">❓ هولد یا ترید؟</div>
 
-    <div class="card vip" onclick="goTelegram()">
-      🔥 اشتراک VIP  
-      <br><br>
+    <div class="card vip" id="vipBtn">
+      🔥 اشتراک VIP<br><br>
       سبد شخصی • خرید ارز • پامپ
     </div>
   </div>
@@ -125,7 +124,7 @@ Telegram: <b>@cvvx441</b>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { 
+import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -149,8 +148,62 @@ const authBox = document.getElementById("authBox");
 const dashboard = document.getElementById("dashboard");
 const msg = document.getElementById("msg");
 
-window.register = async ()=>{
+document.getElementById("registerBtn").onclick = async () => {
   try{
     await createUserWithEmailAndPassword(
       auth,
-      email.value
+      email.value,
+      password.value
+    );
+    msg.innerText = "ثبت‌نام موفق بود";
+  }catch(e){
+    msg.innerText = e.message;
+  }
+};
+
+document.getElementById("loginBtn").onclick = async () => {
+  try{
+    await signInWithEmailAndPassword(
+      auth,
+      email.value,
+      password.value
+    );
+  }catch(e){
+    msg.innerText = "ایمیل یا رمز اشتباه است";
+  }
+};
+
+document.getElementById("logoutBtn").onclick = async ()=>{
+  await signOut(auth);
+};
+
+onAuthStateChanged(auth,user=>{
+  if(user){
+    authBox.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+    document.getElementById("welcome").innerText =
+      "خوش آمدید " + user.email;
+  }else{
+    authBox.classList.remove("hidden");
+    dashboard.classList.add("hidden");
+  }
+});
+
+// ساعت و تاریخ
+function updateDateTime(){
+  const now = new Date();
+  const date = now.toLocaleDateString("fa-IR",{year:"numeric",month:"long",day:"numeric"});
+  const time = now.toLocaleTimeString("fa-IR");
+  document.getElementById("dateTime").innerText = "📅 "+date+" | ⏰ "+time;
+}
+setInterval(updateDateTime,1000);
+updateDateTime();
+
+// VIP → Telegram
+document.getElementById("vipBtn").onclick = ()=>{
+  window.open("https://t.me/cvvx441","_blank");
+};
+</script>
+
+</body>
+</html>
