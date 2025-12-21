@@ -60,7 +60,11 @@ button{
   border-radius:14px;
   padding:18px;
 }
-.vip{color:#facc15;font-weight:700;cursor:pointer}
+.vip{
+  color:#facc15;
+  font-weight:700;
+  cursor:pointer;
+}
 footer{
   margin-top:40px;
   padding:20px;
@@ -77,7 +81,7 @@ footer{
 
 <div class="container">
 
-<!-- LOGIN -->
+<!-- AUTH -->
 <div id="authBox" class="glass">
   <h2>ورود / ثبت‌نام</h2>
   <input id="email" type="email" placeholder="ایمیل">
@@ -92,6 +96,7 @@ footer{
 
   <div class="glass">
     <h2 id="welcome"></h2>
+    <div id="dateTime" style="margin-top:10px;font-size:15px;color:#c7d2fe"></div>
     <button onclick="logout()">خروج</button>
   </div>
 
@@ -114,7 +119,8 @@ footer{
 <footer>
 <b>درباره ما</b><br><br>
 برنامه‌نویسی شده توسط <b>Hessam Alami</b><br>
-Telegram: @cvvx441
+ارتباط با مدیریت:<br>
+Telegram: <b>@cvvx441</b>
 </footer>
 
 <script type="module">
@@ -147,46 +153,4 @@ window.register = async ()=>{
   try{
     await createUserWithEmailAndPassword(
       auth,
-      document.getElementById("email").value,
-      document.getElementById("password").value
-    );
-    msg.innerText="ثبت‌نام موفق بود";
-  }catch(e){
-    msg.innerText=e.message;
-  }
-};
-
-window.login = async ()=>{
-  try{
-    await signInWithEmailAndPassword(
-      auth,
-      document.getElementById("email").value,
-      document.getElementById("password").value
-    );
-  }catch(e){
-    msg.innerText="ایمیل یا رمز اشتباه است";
-  }
-};
-
-window.logout = async ()=>{
-  await signOut(auth);
-};
-
-onAuthStateChanged(auth,user=>{
-  if(user){
-    authBox.classList.add("hidden");
-    dashboard.classList.remove("hidden");
-    document.getElementById("welcome").innerText="خوش آمدید "+user.email;
-  }else{
-    authBox.classList.remove("hidden");
-    dashboard.classList.add("hidden");
-  }
-});
-
-window.goTelegram = ()=>{
-  window.open("https://t.me/cvvx441","_blank");
-};
-</script>
-
-</body>
-</html>
+      email.value
