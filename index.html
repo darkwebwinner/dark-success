@@ -4,30 +4,128 @@
 <meta charset="UTF-8">
 <title>Dark Success</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:'Vazirmatn',sans-serif;background:#020617;color:#fff}
-header{padding:16px;text-align:center;font-size:22px;font-weight:700;border-bottom:1px solid #312e81}
+body{
+  margin:0;
+  font-family:'Vazirmatn',sans-serif;
+  background:linear-gradient(180deg,#020617,#0f172a);
+  color:#fff;
+}
+header{
+  padding:16px;
+  text-align:center;
+  font-size:22px;
+  font-weight:700;
+  border-bottom:1px solid #312e81;
+}
 .container{max-width:1100px;margin:auto;padding:20px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.card{background:#020617;border:1px solid #312e81;border-radius:14px;padding:18px;text-align:center;cursor:pointer}
-.glass{background:rgba(255,255,255,.06);border:1px solid #312e81;border-radius:16px;padding:18px;margin-top:18px}
-button{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:none;font-weight:700;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:pointer}
+.glass{
+  background:rgba(255,255,255,.06);
+  border:1px solid #312e81;
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:18px;
+}
 .hidden{display:none}
+input,button{
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  border-radius:10px;
+  border:none;
+  font-family:inherit;
+}
+input{
+  background:#020617;
+  color:#fff;
+  border:1px solid #312e81;
+}
+button{
+  background:linear-gradient(135deg,#7c3aed,#2563eb);
+  color:#fff;
+  cursor:pointer;
+  font-weight:700;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+}
+.card{
+  background:#020617;
+  border:1px solid #312e81;
+  border-radius:14px;
+  padding:18px;
+  text-align:center;
+  cursor:pointer;
+}
+.badge{
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:20px;
+  font-size:13px;
+}
+.badge.vip{background:#facc15;color:#020617}
+.badge.free{background:#334155}
 
-/* Wheel */
-#wheelBox{position:relative;width:360px;height:360px;margin:20px auto}
-canvas{border-radius:50%;box-shadow:0 0 60px rgba(0,0,0,.9)}
-#pointer{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:34px}
-#winner{margin-top:15px;font-size:18px;font-weight:700;color:#facc15;text-align:center}
+/* ===== Wheel (CSS – پایدار) ===== */
+#wheelWrap{display:flex;flex-direction:column;align-items:center}
+#wheelBox{position:relative;width:360px;height:360px;margin:20px}
+#wheel{
+  width:100%;height:100%;
+  border-radius:50%;
+  background:
+    conic-gradient(
+      #22c55e 0deg 51deg,     /* 1 دلار */
+      #3b82f6 51deg 102deg,  /* VIP 10 */
+      #334155 102deg 153deg, /* پوچ */
+      #8b5cf6 153deg 204deg, /* VIP 5 */
+      #475569 204deg 255deg, /* پوچ */
+      #f59e0b 255deg 306deg, /* VIP 20 */
+      #ef4444 306deg 360deg  /* 5 دلار */
+    );
+  box-shadow:0 0 50px rgba(0,0,0,.8), inset 0 0 30px rgba(255,255,255,.2);
+  transition:transform 4s cubic-bezier(.17,.67,.14,1);
+}
+#wheelLabels span{
+  position:absolute;left:50%;top:50%;
+  transform-origin:0 0;
+  color:#fff;font-size:12px;font-weight:600;
+}
+#pointer{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:34px}
+#winner{margin-top:12px;font-size:18px;font-weight:700;color:#facc15;text-align:center}
 </style>
 </head>
 
 <body>
+
 <header>🌑 Dark Success</header>
 
 <div class="container">
+
+<!-- AUTH -->
+<div id="authBox" class="glass">
+  <h2>ورود / ثبت‌نام</h2>
+  <input id="email" type="email" placeholder="ایمیل">
+  <input id="password" type="password" placeholder="رمز عبور">
+  <button id="registerBtn">ثبت‌نام</button>
+  <button id="loginBtn">ورود</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+
+  <div class="glass">
+    <h3 id="welcome"></h3>
+    <div id="vipInfo"></div>
+    <div id="dateTime" style="margin-top:10px;color:#c7d2fe"></div>
+    <button id="logoutBtn">خروج</button>
+  </div>
+
+  <!-- OPTIONS -->
   <div class="grid">
     <div class="card">📊 فرصت‌های خرید</div>
     <div class="card">📈 تحلیل بازار</div>
@@ -36,34 +134,106 @@ canvas{border-radius:50%;box-shadow:0 0 60px rgba(0,0,0,.9)}
     <div class="card" onclick="wheelSection.classList.toggle('hidden')">🎯 گردونه شانس</div>
   </div>
 
+  <!-- VIP -->
   <div class="glass">
     <h3>⭐ اشتراک VIP</h3>
-    <button onclick="window.open('https://t.me/cvvx441','_blank')">اشتراک VIP ۳۰ روزه</button>
-    <button onclick="window.open('https://t.me/cvvx441','_blank')">اشتراک VIP ۹۰ روزه</button>
+    <button onclick="goTelegram()">اشتراک VIP ۳۰ روزه</button>
+    <button onclick="goTelegram()">اشتراک VIP ۹۰ روزه</button>
   </div>
 
+  <!-- WHEEL -->
   <div id="wheelSection" class="glass hidden">
     <h3>🎯 گردونه شانس</h3>
-    <div id="wheelBox">
-      <div id="pointer">⬇️</div>
-      <canvas id="wheel" width="360" height="360"></canvas>
+    <div id="wheelWrap">
+      <div id="wheelBox">
+        <div id="pointer">⬇️</div>
+        <div id="wheel"></div>
+
+        <!-- Labels -->
+        <div id="wheelLabels">
+          <span style="transform:rotate(25deg) translate(140px)">1 دلار</span>
+          <span style="transform:rotate(75deg) translate(140px)">VIP 10</span>
+          <span style="transform:rotate(125deg) translate(140px)">پوچ</span>
+          <span style="transform:rotate(175deg) translate(140px)">VIP 5</span>
+          <span style="transform:rotate(225deg) translate(140px)">پوچ</span>
+          <span style="transform:rotate(275deg) translate(140px)">VIP 20</span>
+          <span style="transform:rotate(325deg) translate(140px)">5 دلار</span>
+        </div>
+      </div>
+      <button id="spinBtn">چرخش 🎡</button>
+      <div id="winner"></div>
     </div>
-    <button id="spinBtn">چرخش 🎡</button>
-    <div id="winner"></div>
   </div>
+
 </div>
+
+<footer style="margin-top:40px;padding:20px;text-align:center;font-size:14px;border-top:1px solid #312e81">
+<b>درباره ما</b><br><br>
+ساخته شده توسط <b>Hessam Alami</b><br>
+Telegram: <b>@cvvx441</b>
+</footer>
 
 <audio id="spinSound" src="https://assets.mixkit.co/sfx/preview/mixkit-fast-small-sweep-transition-166.mp3"></audio>
 <audio id="winSound" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
 
-<script>
-const canvas = document.getElementById("wheel");
-const ctx = canvas.getContext("2d");
-const spinBtn = document.getElementById("spinBtn");
-const winner = document.getElementById("winner");
-const spinSound = document.getElementById("spinSound");
-const winSound = document.getElementById("winSound");
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth, createUserWithEmailAndPassword,
+  signInWithEmailAndPassword, signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+/* Firebase */
+const firebaseConfig = {
+  apiKey: "AIzaSyA-jq4jwAhXEuUevcFs3fsX9c8YbNkHZZI",
+  authDomain: "dark-success.firebaseapp.com",
+  projectId: "dark-success"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+/* Auth */
+registerBtn.onclick = async ()=>{
+  const r = await createUserWithEmailAndPassword(auth,email.value,password.value);
+  await setDoc(doc(db,"users",r.user.uid),{
+    vip:false,vipExpire:0,role:"user",createdAt:Date.now()
+  });
+};
+loginBtn.onclick = ()=>signInWithEmailAndPassword(auth,email.value,password.value);
+logoutBtn.onclick = ()=>signOut(auth);
+
+onAuthStateChanged(auth, async user=>{
+  if(!user){
+    authBox.classList.remove("hidden");
+    dashboard.classList.add("hidden");
+    return;
+  }
+  authBox.classList.add("hidden");
+  dashboard.classList.remove("hidden");
+  welcome.innerText="خوش آمدید "+user.email;
+
+  const snap = await getDoc(doc(db,"users",user.uid));
+  const data = snap.data();
+  vipInfo.innerHTML = (data.vip && Date.now()<data.vipExpire)
+    ? `<span class="badge vip">VIP فعال</span>`
+    : `<span class="badge free">VIP غیرفعال</span>`;
+});
+
+/* Clock */
+function updateDateTime(){
+  const n=new Date();
+  dateTime.innerText =
+    "📅 "+n.toLocaleDateString("fa-IR",{year:"numeric",month:"long",day:"numeric"})+
+    " | ⏰ "+n.toLocaleTimeString("fa-IR");
+}
+setInterval(updateDateTime,1000); updateDateTime();
+
+/* Telegram */
+window.goTelegram = ()=>window.open("https://t.me/cvvx441","_blank");
+
+/* ===== Wheel Logic (پایدار) ===== */
 const prizes = [
   "1 دلار",
   "VIP 10 روزه",
@@ -73,82 +243,43 @@ const prizes = [
   "VIP 20 روزه",
   "5 دلار"
 ];
+const wheel = document.getElementById("wheel");
+const spinBtn = document.getElementById("spinBtn");
+const winner = document.getElementById("winner");
+const spinSound = document.getElementById("spinSound");
+const winSound = document.getElementById("winSound");
 
-const colors = ["#22c55e","#3b82f6","#334155","#8b5cf6","#475569","#f59e0b","#ef4444"];
-const N = prizes.length;
-const ARC = Math.PI * 2 / N;
-
-let currentRotation = 0; // فقط نمایشی
-
-function draw(rotation=0){
-  ctx.setTransform(1,0,0,1,0,0); // 🔴 reset کامل
-  ctx.clearRect(0,0,360,360);
-  ctx.translate(180,180);
-  ctx.rotate(rotation);
-  ctx.translate(-180,-180);
-
-  for(let i=0;i<N;i++){
-    ctx.beginPath();
-    ctx.moveTo(180,180);
-    ctx.arc(180,180,180,i*ARC,(i+1)*ARC);
-    ctx.fillStyle=colors[i];
-    ctx.fill();
-
-    ctx.save();
-    ctx.translate(180,180);
-    ctx.rotate(i*ARC + ARC/2);
-    ctx.fillStyle="#fff";
-    ctx.font="13px Vazirmatn";
-    ctx.textAlign="center";
-    ctx.fillText(prizes[i],120,5);
-    ctx.restore();
-  }
-}
-draw();
+let rotation = 0;
+let spinning = false;
 
 spinBtn.onclick = ()=>{
-  spinBtn.disabled = true;
-  winner.textContent = "";
+  if(spinning) return;
+  spinning = true;
+  winner.textContent="";
 
-  const selectedIndex = Math.floor(Math.random()*N);
-  const selectedPrize = prizes[selectedIndex];
+  const index = Math.floor(Math.random()*prizes.length);
+  const prize = prizes[index];
+  const slice = 360/prizes.length;
 
-  const spins = 6;
-  const targetRotation =
-    spins * Math.PI * 2 +
-    (N - selectedIndex) * ARC -
-    ARC/2;
+  const target =
+    360*5 + (prizes.length-index)*slice - slice/2;
 
-  const start = currentRotation;
-  const diff = targetRotation - start;
-  const duration = 4000;
-  const startTime = performance.now();
+  rotation += target;
+  spinSound.currentTime=0; spinSound.play();
+  wheel.style.transform = `rotate(${rotation}deg)`;
 
-  spinSound.currentTime = 0;
-  spinSound.play();
-
-  function animate(t){
-    const p = Math.min((t-startTime)/duration,1);
-    const ease = 1 - Math.pow(1-p,3);
-    currentRotation = start + diff * ease;
-    draw(currentRotation);
-
-    if(p<1){
-      requestAnimationFrame(animate);
+  setTimeout(()=>{
+    spinSound.pause();
+    if(prize==="پوچ"){
+      winner.textContent="پوچ! دفعه بعد موفق باشید";
     }else{
-      spinSound.pause();
-      if(selectedPrize==="پوچ"){
-        winner.textContent="پوچ! دفعه بعد موفق باشید";
-      }else{
-        winSound.currentTime=0;
-        winSound.play();
-        winner.textContent="🎉 برنده شدید: "+selectedPrize;
-      }
-      spinBtn.disabled=false;
+      winSound.currentTime=0; winSound.play();
+      winner.textContent="🎉 برنده شدید: "+prize;
     }
-  }
-  requestAnimationFrame(animate);
+    spinning=false;
+  },4200);
 };
 </script>
+
 </body>
 </html>
