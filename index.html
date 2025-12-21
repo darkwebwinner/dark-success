@@ -216,58 +216,27 @@ setInterval(updateDateTime,1000); updateDateTime();
 /* Telegram */
 window.goTelegram = ()=>window.open("https://t.me/cvvx441","_blank");
 
-/* ===== Prize Boxes Logic - Random Fixed Per Click + Daily Limit ===== */
+/* ===== Prize Boxes Logic - Random Fixed on Click, No Limit ===== */
 const prizes = ["1 دلار","VIP 10 روزه","پوچ","VIP 5 روزه","پوچ","VIP 20 روزه","5 دلار"];
 const boxes = document.querySelectorAll(".prizeBox");
 const winnerDiv = document.getElementById("winner");
-const maxDaily = 2; // دفعات مجاز روزانه
-const storageKeyCount = "dailyBoxCount";
-const storageKeyPrize = "dailyBoxPrize";
-const storageKeyDate = "dailyBoxDate";
-
-function canOpenBox(){
-  const today = new Date().toDateString();
-  if(localStorage.getItem(storageKeyDate) !== today){
-    localStorage.setItem(storageKeyDate, today);
-    localStorage.setItem(storageKeyCount, "0");
-    localStorage.setItem(storageKeyPrize, JSON.stringify({})); // پاک کردن جوایز قبلی
-    return true;
-  }
-  const count = parseInt(localStorage.getItem(storageKeyCount) || "0");
-  return count < maxDaily;
-}
-
-function incrementBoxCount(){
-  const count = parseInt(localStorage.getItem(storageKeyCount) || "0")+1;
-  localStorage.setItem(storageKeyCount, count.toString());
-}
 
 boxes.forEach(box=>{
   box.addEventListener("click", ()=>{
-    if(!canOpenBox()){
-      winnerDiv.textContent="⚠️ شما امروز دوبار جعبه باز کرده‌اید!";
-      return;
-    }
+    // اگر قبلاً باز شده، کاری نکن
+    if(box.dataset.opened) return;
 
-    // بررسی اگر قبلاً جایزه این جعبه انتخاب شده
-    let prizeData = JSON.parse(localStorage.getItem(storageKeyPrize)||"{}");
-    const index = box.dataset.index;
-    let prize = prizeData[index];
-    if(!prize){
-      // انتخاب رندوم جایزه
-      prize = prizes[Math.floor(Math.random()*prizes.length)];
-      prizeData[index] = prize;
-      localStorage.setItem(storageKeyPrize, JSON.stringify(prizeData));
-    }
+    // انتخاب رندوم جایزه
+    const prize = prizes[Math.floor(Math.random()*prizes.length)];
+    box.dataset.opened = "true";
 
-    incrementBoxCount();
     if(prize==="پوچ"){
       winnerDiv.textContent="پوچ! دفعه بعد موفق باشید";
     }else{
       winnerDiv.textContent="🎉 برنده شدید: "+prize;
     }
 
-    // غیرقابل کلیک کردن جعبه بعد از باز شدن
+    // غیرقابل کلیک کردن و نیمه شفاف شدن جعبه
     box.style.pointerEvents="none";
     box.style.opacity="0.6";
 
