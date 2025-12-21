@@ -47,6 +47,7 @@ button{
   background:linear-gradient(135deg,#7c3aed,#2563eb);
   color:#fff;
   cursor:pointer;
+  font-weight:700;
 }
 .grid{
   display:grid;
@@ -58,10 +59,10 @@ button{
   border:1px solid #312e81;
   border-radius:14px;
   padding:18px;
+  text-align:center;
 }
 .vipBtn{
-  font-size:17px;
-  font-weight:700;
+  font-size:16px;
 }
 .badge{
   display:inline-block;
@@ -94,7 +95,6 @@ footer{
   <input id="password" type="password" placeholder="رمز عبور">
   <button id="registerBtn">ثبت‌نام</button>
   <button id="loginBtn">ورود</button>
-  <div id="msg"></div>
 </div>
 
 <!-- DASHBOARD -->
@@ -107,6 +107,15 @@ footer{
     <button id="logoutBtn">خروج</button>
   </div>
 
+  <!-- OPTIONS -->
+  <div class="grid">
+    <div class="card">📊 فرصت‌های خرید</div>
+    <div class="card">📈 تحلیل بازار</div>
+    <div class="card">💰 طلا یا رمز ارز؟</div>
+    <div class="card">❓ هولد یا ترید؟</div>
+  </div>
+
+  <!-- VIP -->
   <div class="glass">
     <h3>⭐ اشتراک VIP</h3>
     <button class="vipBtn" onclick="goTelegram()">اشتراک VIP ۳۰ روزه</button>
@@ -197,7 +206,7 @@ function updateDateTime(){
 setInterval(updateDateTime,1000);
 updateDateTime();
 
-/* Telegram Redirect */
+/* Telegram */
 window.goTelegram = ()=>{
   window.open("https://t.me/cvvx441","_blank");
 };
