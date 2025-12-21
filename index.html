@@ -140,7 +140,7 @@ setInterval(updateDateTime,1000);
 updateDateTime();
 window.goTelegram = ()=>{window.open("https://t.me/cvvx441","_blank");};
 
-/* ---------------------- گردونه شانس حرفه‌ای ---------------------- */
+/* ---------------------- گردونه شانس دقیق ---------------------- */
 const openWheelBtn = document.getElementById("openWheel");
 const wheelSection = document.getElementById("wheelSection");
 const wheelCanvas = document.getElementById("wheel");
@@ -214,8 +214,12 @@ spinBtn.onclick = ()=>{
     if(progress<1){requestAnimationFrame(animate);}
     else{
       spinSound.pause();
-      winSound.currentTime=0; winSound.play();
-      winnerDiv.innerText="🎉 برنده: "+prizes[prizeIndex];
+      if(prizes[prizeIndex]==="❌ پوچ"){
+        winnerDiv.innerText="راند تمام شد، موفق باشید!";
+      } else {
+        winSound.currentTime=0; winSound.play();
+        winnerDiv.innerText="🎉 برنده: "+prizes[prizeIndex];
+      }
       spinBtn.disabled=false;
     }
   }
