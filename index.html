@@ -29,10 +29,10 @@ header{
   padding:18px;
   margin-bottom:18px;
 }
-.hidden{display:none}
 button{
   width:100%;
   padding:12px;
+  margin-top:8px;
   border-radius:10px;
   border:none;
   font-family:inherit;
@@ -56,6 +56,7 @@ button{
 }
 
 /* ===== WHEEL ===== */
+.hidden{display:none}
 #wheelWrap{text-align:center}
 #wheelBox{
   position:relative;
@@ -91,6 +92,7 @@ canvas{
 
 <div class="container">
 
+<!-- OPTIONS -->
 <div class="grid">
   <div class="card">📊 فرصت‌های خرید</div>
   <div class="card">📈 تحلیل بازار</div>
@@ -99,6 +101,14 @@ canvas{
   <div class="card" onclick="wheelSection.classList.toggle('hidden')">🎯 گردونه شانس</div>
 </div>
 
+<!-- VIP -->
+<div class="glass">
+  <h3>⭐ اشتراک VIP</h3>
+  <button onclick="goTelegram()">اشتراک VIP ۳۰ روزه</button>
+  <button onclick="goTelegram()">اشتراک VIP ۹۰ روزه</button>
+</div>
+
+<!-- WHEEL -->
 <div id="wheelSection" class="glass hidden">
   <h3>🎯 گردونه شانس</h3>
   <div id="wheelWrap">
@@ -117,6 +127,10 @@ canvas{
 <audio id="winSound" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
 
 <script>
+function goTelegram(){
+  window.open("https://t.me/cvvx441","_blank");
+}
+
 const canvas = document.getElementById("wheel");
 const ctx = canvas.getContext("2d");
 const spinBtn = document.getElementById("spinBtn");
@@ -166,23 +180,28 @@ spinBtn.onclick=()=>{
   spinBtn.disabled=true;
   winner.innerText="";
 
-  const index = Math.floor(Math.random()*count); // 🎯 جایزه قطعی
-  const spins = 6;
-  const target =
+  const selectedIndex = Math.floor(Math.random()*count);
+  const selectedPrize = prizes[selectedIndex];
+
+  const spins = 7;
+  const targetAngle =
     spins*Math.PI*2 +
-    (count-index)*arc -
+    (count-selectedIndex)*arc -
     arc/2;
 
-  const start = angle;
-  const diff = target-start;
-  const duration = 4500;
+  const startAngle = angle;
+  const diff = targetAngle-startAngle;
+  const duration = 4800;
   const startTime = performance.now();
 
+  spinSound.currentTime=0;
   spinSound.play();
 
   function animate(t){
     const p=Math.min((t-startTime)/duration,1);
-    angle = start + diff*(1-Math.pow(2,-10*p));
+    const ease=1-Math.pow(2,-10*p);
+    angle=startAngle+diff*ease;
+
     ctx.save();
     ctx.translate(170,170);
     ctx.rotate(angle);
@@ -193,12 +212,12 @@ spinBtn.onclick=()=>{
     if(p<1) requestAnimationFrame(animate);
     else{
       spinSound.pause();
-      const prize=prizes[index];
-      if(prize.includes("پوچ")){
+      if(selectedPrize.includes("پوچ")){
         winner.innerText="پوچ! دفعه بعد موفق باشید";
       }else{
+        winSound.currentTime=0;
         winSound.play();
-        winner.innerText="🎉 برنده شدید: "+prize;
+        winner.innerText="🎉 برنده شدید: "+selectedPrize;
       }
       spinBtn.disabled=false;
     }
