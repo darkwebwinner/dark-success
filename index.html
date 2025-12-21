@@ -7,7 +7,6 @@
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;700&display=swap');
-
 *{box-sizing:border-box}
 body{
   margin:0;
@@ -15,10 +14,7 @@ body{
   background:linear-gradient(180deg,#020617,#020617,#0f172a);
   color:#fff;
 }
-
 header{
-  position:sticky;
-  top:0;
   background:#020617;
   padding:16px;
   text-align:center;
@@ -26,13 +22,7 @@ header{
   font-weight:700;
   border-bottom:1px solid #312e81;
 }
-
-.container{
-  max-width:1100px;
-  margin:auto;
-  padding:20px;
-}
-
+.container{max-width:1100px;margin:auto;padding:20px}
 .glass{
   background:rgba(255,255,255,.06);
   border:1px solid #312e81;
@@ -40,64 +30,42 @@ header{
   padding:18px;
   margin-bottom:18px;
 }
-
 input,button{
   width:100%;
   padding:12px;
   margin:6px 0;
   border-radius:10px;
   border:none;
-  font-family:inherit;
 }
-
 input{
   background:#020617;
   color:#fff;
   border:1px solid #312e81;
 }
-
 button{
   background:linear-gradient(135deg,#7c3aed,#2563eb);
   color:#fff;
   font-size:16px;
   cursor:pointer;
 }
-button:hover{opacity:.9}
-
 .hidden{display:none}
-
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:14px;
 }
-
 .card{
   background:#020617;
   border:1px solid #312e81;
   border-radius:14px;
   padding:18px;
-  font-size:16px;
-  transition:.3s;
 }
-
-.card:hover{
-  transform:translateY(-4px);
-  border-color:#7c3aed;
-}
-
-.vip{
-  color:#facc15;
-  font-weight:700;
-  cursor:pointer;
-}
-
+.vip{color:#facc15;font-weight:700;cursor:pointer}
 footer{
   margin-top:40px;
   padding:20px;
   text-align:center;
   font-size:14px;
-  color:#c7d2fe;
   border-top:1px solid #312e81;
 }
 </style>
@@ -109,10 +77,10 @@ footer{
 
 <div class="container">
 
-<!-- AUTH -->
+<!-- LOGIN -->
 <div id="authBox" class="glass">
   <h2>ورود / ثبت‌نام</h2>
-  <input id="email" placeholder="ایمیل">
+  <input id="email" type="email" placeholder="ایمیل">
   <input id="password" type="password" placeholder="رمز عبور">
   <button onclick="register()">ثبت‌نام</button>
   <button onclick="login()">ورود</button>
@@ -123,35 +91,21 @@ footer{
 <div id="dashboard" class="hidden">
 
   <div class="glass">
-    <h2 id="welcome">خوش آمدید</h2>
+    <h2 id="welcome"></h2>
     <button onclick="logout()">خروج</button>
   </div>
 
   <div class="grid">
+    <div class="card">📊 فرصت‌های خرید</div>
+    <div class="card">📈 تحلیل بازار</div>
+    <div class="card">💰 طلا یا رمز ارز؟</div>
+    <div class="card">❓ هولد یا ترید؟</div>
 
-    <div class="card">
-      📊 فرصت‌های خرید
-    </div>
-
-    <div class="card">
-      📈 تحلیل بازار
-    </div>
-
-    <div class="card">
-      💰 سرمایه‌گذاری طلا یا رمز ارز؟
-    </div>
-
-    <div class="card">
-      ❓ آیا هولد بهتر است یا ترید؟
-    </div>
-
-    <!-- VIP فقط لینک به تلگرام -->
     <div class="card vip" onclick="goTelegram()">
       🔥 اشتراک VIP  
       <br><br>
-      سبد شخصی • خرید ارز پیشنهادی • پامپ
+      سبد شخصی • خرید ارز • پامپ
     </div>
-
   </div>
 
 </div>
@@ -160,13 +114,18 @@ footer{
 <footer>
 <b>درباره ما</b><br><br>
 برنامه‌نویسی شده توسط <b>Hessam Alami</b><br>
-ارتباط با مدیریت:<br>
-<b>Telegram:</b> @cvvx441
+Telegram: @cvvx441
 </footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { 
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA-jq4jwAhXEuUevcFs3fsX9c8YbNkHZZI",
@@ -177,11 +136,57 @@ const firebaseConfig = {
   appId: "1:37974176476:web:4f01c47c8c70723eef7a19"
 };
 
-const TELEGRAM_LINK = "https://t.me/cvvx441";
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 const authBox = document.getElementById("authBox");
 const dashboard = document.getElementById("dashboard");
-const msg = document.getElementById
+const msg = document.getElementById("msg");
+
+window.register = async ()=>{
+  try{
+    await createUserWithEmailAndPassword(
+      auth,
+      document.getElementById("email").value,
+      document.getElementById("password").value
+    );
+    msg.innerText="ثبت‌نام موفق بود";
+  }catch(e){
+    msg.innerText=e.message;
+  }
+};
+
+window.login = async ()=>{
+  try{
+    await signInWithEmailAndPassword(
+      auth,
+      document.getElementById("email").value,
+      document.getElementById("password").value
+    );
+  }catch(e){
+    msg.innerText="ایمیل یا رمز اشتباه است";
+  }
+};
+
+window.logout = async ()=>{
+  await signOut(auth);
+};
+
+onAuthStateChanged(auth,user=>{
+  if(user){
+    authBox.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+    document.getElementById("welcome").innerText="خوش آمدید "+user.email;
+  }else{
+    authBox.classList.remove("hidden");
+    dashboard.classList.add("hidden");
+  }
+});
+
+window.goTelegram = ()=>{
+  window.open("https://t.me/cvvx441","_blank");
+};
+</script>
+
+</body>
+</html>
