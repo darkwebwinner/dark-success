@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Dark Success</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;700&display=swap" rel="stylesheet">
 
 <style>
@@ -49,7 +48,6 @@ button{
   color:#fff;
   cursor:pointer;
 }
-button:disabled{opacity:.6}
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -61,7 +59,10 @@ button:disabled{opacity:.6}
   border-radius:14px;
   padding:18px;
 }
-.vipCard{color:#facc15;font-weight:700;cursor:pointer}
+.vipBtn{
+  font-size:17px;
+  font-weight:700;
+}
 .badge{
   display:inline-block;
   padding:4px 10px;
@@ -70,9 +71,6 @@ button:disabled{opacity:.6}
 }
 .badge.vip{background:#facc15;color:#020617}
 .badge.free{background:#334155}
-.admin{
-  border:2px dashed #facc15;
-}
 footer{
   margin-top:40px;
   padding:20px;
@@ -109,29 +107,10 @@ footer{
     <button id="logoutBtn">خروج</button>
   </div>
 
-  <div class="grid">
-    <div class="card">📊 فرصت‌های خرید</div>
-    <div class="card">📈 تحلیل بازار</div>
-    <div class="card">💰 طلا یا رمز ارز؟</div>
-    <div class="card">❓ هولد یا ترید؟</div>
-
-    <div class="card vipCard" id="vipBtn">
-      🔥 اشتراک VIP<br><br>
-      سیگنال • آموزش • پشتیبانی
-    </div>
-  </div>
-
-  <!-- BUY VIP -->
   <div class="glass">
-    <h3>💳 خرید VIP</h3>
-    <button onclick="requestVip(30)">VIP 30 روزه</button>
-    <button onclick="requestVip(90)">VIP 90 روزه</button>
-  </div>
-
-  <!-- ADMIN PANEL -->
-  <div id="adminPanel" class="glass admin hidden">
-    <h3>👑 پنل ادمین</h3>
-    <div id="usersList"></div>
+    <h3>⭐ اشتراک VIP</h3>
+    <button class="vipBtn" onclick="goTelegram()">اشتراک VIP ۳۰ روزه</button>
+    <button class="vipBtn" onclick="goTelegram()">اشتراک VIP ۹۰ روزه</button>
   </div>
 
 </div>
@@ -156,14 +135,10 @@ import {
   getFirestore,
   doc,
   setDoc,
-  getDoc,
-  updateDoc,
-  collection,
-  addDoc,
-  getDocs
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* Firebase Config */
+/* Firebase */
 const firebaseConfig = {
   apiKey: "AIzaSyA-jq4jwAhXEuUevcFs3fsX9c8YbNkHZZI",
   authDomain: "dark-success.firebaseapp.com",
@@ -174,38 +149,19 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* Elements */
-const authBox = document.getElementById("authBox");
-const dashboard = document.getElementById("dashboard");
-const msg = document.getElementById("msg");
-const vipInfo = document.getElementById("vipInfo");
-const adminPanel = document.getElementById("adminPanel");
-const usersList = document.getElementById("usersList");
-
 /* Register */
 registerBtn.onclick = async ()=>{
-  try{
-    const r = await createUserWithEmailAndPassword(auth,email.value,password.value);
-    await setDoc(doc(db,"users",r.user.uid),{
-      vip:false,
-      vipExpire:0,
-      role:"user",
-      createdAt:Date.now()
-    });
-    msg.innerText="ثبت‌نام موفق";
-  }catch(e){
-    msg.innerText="خطا در ثبت‌نام";
-  }
+  const r = await createUserWithEmailAndPassword(auth,email.value,password.value);
+  await setDoc(doc(db,"users",r.user.uid),{
+    vip:false,
+    vipExpire:0,
+    role:"user",
+    createdAt:Date.now()
+  });
 };
 
 /* Login */
-loginBtn.onclick = async ()=>{
-  try{
-    await signInWithEmailAndPassword(auth,email.value,password.value);
-  }catch{
-    msg.innerText="ایمیل یا رمز اشتباه است";
-  }
-};
+loginBtn.onclick = ()=>signInWithEmailAndPassword(auth,email.value,password.value);
 
 /* Logout */
 logoutBtn.onclick = ()=>signOut(auth);
@@ -217,7 +173,6 @@ onAuthStateChanged(auth, async user=>{
     dashboard.classList.add("hidden");
     return;
   }
-
   authBox.classList.add("hidden");
   dashboard.classList.remove("hidden");
   welcome.innerText="خوش آمدید "+user.email;
@@ -225,61 +180,12 @@ onAuthStateChanged(auth, async user=>{
   const snap = await getDoc(doc(db,"users",user.uid));
   const data = snap.data();
 
-  if(data.vip && Date.now() < data.vipExpire){
-    vipInfo.innerHTML=`<span class="badge vip">VIP تا ${new Date(data.vipExpire).toLocaleDateString("fa-IR")}</span>`;
+  if(data.vip && Date.now()<data.vipExpire){
+    vipInfo.innerHTML=`<span class="badge vip">VIP فعال</span>`;
   }else{
     vipInfo.innerHTML=`<span class="badge free">VIP غیرفعال</span>`;
   }
-
-  vipBtn.onclick = ()=>{
-    if(data.vip && Date.now()<data.vipExpire){
-      window.open("https://t.me/cvvx441","_blank");
-    }else{
-      alert("برای فعال‌سازی VIP با مدیریت تماس بگیرید");
-    }
-  };
-
-  if(data.role==="admin"){
-    adminPanel.classList.remove("hidden");
-    loadUsers();
-  }
 });
-
-/* Request VIP */
-async function requestVip(days){
-  const user = auth.currentUser;
-  await addDoc(collection(db,"payments"),{
-    uid:user.uid,
-    email:user.email,
-    plan:days,
-    status:"pending",
-    createdAt:Date.now()
-  });
-  alert("درخواست ثبت شد");
-}
-
-/* Admin Functions */
-async function loadUsers(){
-  const q = await getDocs(collection(db,"users"));
-  usersList.innerHTML="";
-  q.forEach(d=>{
-    usersList.innerHTML += `
-      <div>
-        ${d.id}<br>
-        <button onclick="makeVip('${d.id}',30)">VIP 30 روز</button>
-        <button onclick="makeVip('${d.id}',90)">VIP 90 روز</button>
-      </div><hr>
-    `;
-  });
-}
-
-window.makeVip = async (uid,days)=>{
-  await updateDoc(doc(db,"users",uid),{
-    vip:true,
-    vipExpire:Date.now()+days*86400000
-  });
-  alert("VIP فعال شد");
-};
 
 /* Clock */
 function updateDateTime(){
@@ -290,6 +196,11 @@ function updateDateTime(){
 }
 setInterval(updateDateTime,1000);
 updateDateTime();
+
+/* Telegram Redirect */
+window.goTelegram = ()=>{
+  window.open("https://t.me/cvvx441","_blank");
+};
 </script>
 
 </body>
