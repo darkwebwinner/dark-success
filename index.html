@@ -4,51 +4,47 @@
 <meta charset="UTF-8">
 <title>Dark Success</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:'Vazirmatn',sans-serif;background:linear-gradient(180deg,#020617,#0f172a);color:#fff}
+body{margin:0;font-family:'Vazirmatn',sans-serif;background:#020617;color:#fff}
 header{padding:16px;text-align:center;font-size:22px;font-weight:700;border-bottom:1px solid #312e81}
 .container{max-width:1100px;margin:auto;padding:20px}
-.glass{background:rgba(255,255,255,.06);border:1px solid #312e81;border-radius:16px;padding:18px;margin-bottom:18px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
 .card{background:#020617;border:1px solid #312e81;border-radius:14px;padding:18px;text-align:center;cursor:pointer}
-button{width:100%;padding:12px;margin-top:8px;border-radius:10px;border:none;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff}
+.glass{background:rgba(255,255,255,.06);border:1px solid #312e81;border-radius:16px;padding:18px;margin-top:18px}
+button{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:none;font-weight:700;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:pointer}
 .hidden{display:none}
 
 /* Wheel */
-#wheelWrap{text-align:center}
 #wheelBox{position:relative;width:360px;height:360px;margin:20px auto}
-canvas{border-radius:50%;box-shadow:inset 0 0 40px rgba(255,255,255,.18),0 0 60px rgba(0,0,0,.9)}
-#ring{position:absolute;inset:-8px;border-radius:50%;pointer-events:none;box-shadow:0 0 30px rgba(124,58,237,.6)}
-#pointer{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:34px}
-#winner{margin-top:14px;font-size:18px;font-weight:700;color:#facc15}
+canvas{border-radius:50%;box-shadow:0 0 60px rgba(0,0,0,.9)}
+#pointer{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:34px}
+#winner{margin-top:15px;font-size:18px;font-weight:700;color:#facc15;text-align:center}
 </style>
 </head>
+
 <body>
-
 <header>🌑 Dark Success</header>
+
 <div class="container">
+  <div class="grid">
+    <div class="card">📊 فرصت‌های خرید</div>
+    <div class="card">📈 تحلیل بازار</div>
+    <div class="card">💰 طلا یا رمز ارز؟</div>
+    <div class="card">❓ هولد یا ترید؟</div>
+    <div class="card" onclick="wheelSection.classList.toggle('hidden')">🎯 گردونه شانس</div>
+  </div>
 
-<div class="grid">
-  <div class="card">📊 فرصت‌های خرید</div>
-  <div class="card">📈 تحلیل بازار</div>
-  <div class="card">💰 طلا یا رمز ارز؟</div>
-  <div class="card">❓ هولد یا ترید؟</div>
-  <div class="card" onclick="wheelSection.classList.toggle('hidden')">🎯 گردونه شانس</div>
-</div>
+  <div class="glass">
+    <h3>⭐ اشتراک VIP</h3>
+    <button onclick="window.open('https://t.me/cvvx441','_blank')">اشتراک VIP ۳۰ روزه</button>
+    <button onclick="window.open('https://t.me/cvvx441','_blank')">اشتراک VIP ۹۰ روزه</button>
+  </div>
 
-<div class="glass">
-  <h3>⭐ اشتراک VIP</h3>
-  <button onclick="goTelegram()">اشتراک VIP ۳۰ روزه</button>
-  <button onclick="goTelegram()">اشتراک VIP ۹۰ روزه</button>
-</div>
-
-<div id="wheelSection" class="glass hidden">
-  <h3>🎯 گردونه شانس</h3>
-  <div id="wheelWrap">
+  <div id="wheelSection" class="glass hidden">
+    <h3>🎯 گردونه شانس</h3>
     <div id="wheelBox">
-      <div id="ring"></div>
       <div id="pointer">⬇️</div>
       <canvas id="wheel" width="360" height="360"></canvas>
     </div>
@@ -57,87 +53,101 @@ canvas{border-radius:50%;box-shadow:inset 0 0 40px rgba(255,255,255,.18),0 0 60p
   </div>
 </div>
 
-</div>
-
 <audio id="spinSound" src="https://assets.mixkit.co/sfx/preview/mixkit-fast-small-sweep-transition-166.mp3"></audio>
 <audio id="winSound" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
 
 <script>
-function goTelegram(){window.open("https://t.me/cvvx441","_blank");}
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
+const spinBtn = document.getElementById("spinBtn");
+const winner = document.getElementById("winner");
+const spinSound = document.getElementById("spinSound");
+const winSound = document.getElementById("winSound");
 
-const canvas=document.getElementById('wheel'),ctx=canvas.getContext('2d');
-const spinBtn=document.getElementById('spinBtn'),winner=document.getElementById('winner');
-const spinSound=document.getElementById('spinSound'),winSound=document.getElementById('winSound');
-
-const prizes=[
- {label:"1 دلار",type:"cash"},
- {label:"VIP 10 روزه",type:"vip"},
- {label:"پوچ",type:"none"},
- {label:"VIP 5 روزه",type:"vip"},
- {label:"پوچ",type:"none"},
- {label:"VIP 20 روزه",type:"vip"},
- {label:"5 دلار",type:"cash"}
+const prizes = [
+  "1 دلار",
+  "VIP 10 روزه",
+  "پوچ",
+  "VIP 5 روزه",
+  "پوچ",
+  "VIP 20 روزه",
+  "5 دلار"
 ];
-const colors=["#4f46e5","#2563eb","#334155","#7c3aed","#1f2933","#10b981","#f59e0b"];
-const N=prizes.length,ARC=Math.PI*2/N;
-let angle=0; // فقط نمایش
 
-function draw(){
+const colors = ["#22c55e","#3b82f6","#334155","#8b5cf6","#475569","#f59e0b","#ef4444"];
+const N = prizes.length;
+const ARC = Math.PI * 2 / N;
+
+let currentRotation = 0; // فقط نمایشی
+
+function draw(rotation=0){
+  ctx.setTransform(1,0,0,1,0,0); // 🔴 reset کامل
   ctx.clearRect(0,0,360,360);
+  ctx.translate(180,180);
+  ctx.rotate(rotation);
+  ctx.translate(-180,-180);
+
   for(let i=0;i<N;i++){
-    const a0=i*ARC,a1=a0+ARC;
-    const g=ctx.createRadialGradient(180,180,40,180,180,180);
-    g.addColorStop(0,"rgba(255,255,255,.35)");
-    g.addColorStop(1,colors[i]);
-    ctx.beginPath();ctx.moveTo(180,180);ctx.arc(180,180,180,a0,a1);ctx.fillStyle=g;ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(180,180);
+    ctx.arc(180,180,180,i*ARC,(i+1)*ARC);
+    ctx.fillStyle=colors[i];
+    ctx.fill();
 
     ctx.save();
     ctx.translate(180,180);
-    ctx.rotate(a0+ARC/2);
+    ctx.rotate(i*ARC + ARC/2);
     ctx.fillStyle="#fff";
-    ctx.font="12px Vazirmatn";
+    ctx.font="13px Vazirmatn";
     ctx.textAlign="center";
-    ctx.fillText(prizes[i].label,120,4);
+    ctx.fillText(prizes[i],120,5);
     ctx.restore();
   }
 }
 draw();
 
-spinBtn.onclick=()=>{
-  spinBtn.disabled=true; winner.textContent="";
-  // ✅ یک بار انتخاب، حقیقت واحد
-  const idx=Math.floor(Math.random()*N);
-  const prize=prizes[idx];
+spinBtn.onclick = ()=>{
+  spinBtn.disabled = true;
+  winner.textContent = "";
 
-  // زاویه هدف: فلش بالا → مرکز همان بخش
-  const spins=8; // فقط ساعتگرد
-  const target=spins*Math.PI*2 + (N-idx)*ARC - ARC/2;
+  const selectedIndex = Math.floor(Math.random()*N);
+  const selectedPrize = prizes[selectedIndex];
 
-  const start=angle, diff=target-start;
-  const dur=4200, t0=performance.now();
-  spinSound.currentTime=0; spinSound.play();
+  const spins = 6;
+  const targetRotation =
+    spins * Math.PI * 2 +
+    (N - selectedIndex) * ARC -
+    ARC/2;
 
-  (function anim(t){
-    const p=Math.min((t-t0)/dur,1);
-    const ease=1-Math.pow(1-p,3); // easeOutCubic
-    angle=start+diff*ease;
+  const start = currentRotation;
+  const diff = targetRotation - start;
+  const duration = 4000;
+  const startTime = performance.now();
 
-    ctx.save();
-    ctx.translate(180,180); ctx.rotate(angle); ctx.translate(-180,-180);
-    draw(); ctx.restore();
+  spinSound.currentTime = 0;
+  spinSound.play();
 
-    if(p<1) requestAnimationFrame(anim);
-    else{
+  function animate(t){
+    const p = Math.min((t-startTime)/duration,1);
+    const ease = 1 - Math.pow(1-p,3);
+    currentRotation = start + diff * ease;
+    draw(currentRotation);
+
+    if(p<1){
+      requestAnimationFrame(animate);
+    }else{
       spinSound.pause();
-      if(prize.type==="none"){
+      if(selectedPrize==="پوچ"){
         winner.textContent="پوچ! دفعه بعد موفق باشید";
       }else{
-        winSound.currentTime=0; winSound.play();
-        winner.textContent="🎉 برنده شدید: "+prize.label;
+        winSound.currentTime=0;
+        winSound.play();
+        winner.textContent="🎉 برنده شدید: "+selectedPrize;
       }
       spinBtn.disabled=false;
     }
-  })(performance.now());
+  }
+  requestAnimationFrame(animate);
 };
 </script>
 </body>
