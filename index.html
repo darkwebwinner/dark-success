@@ -216,17 +216,15 @@ setInterval(updateDateTime,1000); updateDateTime();
 /* Telegram */
 window.goTelegram = ()=>window.open("https://t.me/cvvx441","_blank");
 
-/* ===== Prize Boxes Logic - Random Fixed on Click, No Limit ===== */
+/* ===== Prize Boxes Logic - Random Fixed on Click, No Redirect ===== */
 const prizes = ["1 دلار","VIP 10 روزه","پوچ","VIP 5 روزه","پوچ","VIP 20 روزه","5 دلار"];
 const boxes = document.querySelectorAll(".prizeBox");
 const winnerDiv = document.getElementById("winner");
 
 boxes.forEach(box=>{
   box.addEventListener("click", ()=>{
-    // اگر قبلاً باز شده، کاری نکن
     if(box.dataset.opened) return;
 
-    // انتخاب رندوم جایزه
     const prize = prizes[Math.floor(Math.random()*prizes.length)];
     box.dataset.opened = "true";
 
@@ -236,12 +234,10 @@ boxes.forEach(box=>{
       winnerDiv.textContent="🎉 برنده شدید: "+prize;
     }
 
-    // غیرقابل کلیک کردن و نیمه شفاف شدن جعبه
     box.style.pointerEvents="none";
     box.style.opacity="0.6";
 
-    // هدایت بعد 1.5 ثانیه
-    setTimeout(()=>{ window.location.href="https://t.me/cvvx441"; },1500);
+    // هدایت خودکار حذف شد
   });
 });
 </script>
