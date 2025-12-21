@@ -6,9 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;700&display=swap" rel="stylesheet">
 
-<!-- گوگل سرچ کنسول -->
-<meta name="google-site-verification" content="Ma2R-UlbOp5pr1-kgOFlelgnvw-3Te94Qn3v1RGlYgg" />
-
 <style>
 *{box-sizing:border-box}
 body{
@@ -31,6 +28,8 @@ header{
   border-radius:16px;
   padding:18px;
   margin-bottom:18px;
+  position:relative;
+  overflow:hidden;
 }
 .hidden{display:none}
 input,button{
@@ -63,6 +62,7 @@ button{
   border-radius:14px;
   padding:18px;
   text-align:center;
+  cursor:pointer;
 }
 .vipBtn{
   font-size:16px;
@@ -81,6 +81,54 @@ footer{
   text-align:center;
   font-size:14px;
   border-top:1px solid #312e81;
+}
+
+/* گردونه شانس */
+#wheel-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 20px auto;
+}
+canvas#wheel {
+  border-radius: 50%;
+  background: #1e293b;
+}
+#pointer {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 30px;
+}
+#spinBtn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+}
+#winner {
+  margin-top: 15px;
+  color: #facc15;
+  font-weight: 700;
+  font-size: 18px;
+  text-shadow: 0 0 8px #facc15;
+}
+.sparkle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #facc15;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: sparkle 0.6s linear forwards;
+}
+@keyframes sparkle {
+  0% {transform: scale(0) translate(0,0); opacity:1;}
+  100% {transform: scale(2) translate(var(--x), var(--y)); opacity:0;}
 }
 </style>
 </head>
@@ -116,6 +164,7 @@ footer{
     <div class="card">📈 تحلیل بازار</div>
     <div class="card">💰 طلا یا رمز ارز؟</div>
     <div class="card">❓ هولد یا ترید؟</div>
+    <div class="card" id="openWheel">🎯 گردونه شانس</div>
   </div>
 
   <!-- VIP -->
@@ -123,6 +172,17 @@ footer{
     <h3>⭐ اشتراک VIP</h3>
     <button class="vipBtn" onclick="goTelegram()">اشتراک VIP ۳۰ روزه</button>
     <button class="vipBtn" onclick="goTelegram()">اشتراک VIP ۹۰ روزه</button>
+  </div>
+
+  <!-- LUCKY WHEEL (hidden initially) -->
+  <div id="wheelSection" class="glass hidden">
+    <h3>🎯 گردونه شانس</h3>
+    <div id="wheel-container">
+      <div id="pointer">⬇️</div>
+      <canvas id="wheel" width="300" height="300"></canvas>
+    </div>
+    <button id="spinBtn">چرخش 🎡</button>
+    <div id="winner"></div>
   </div>
 
 </div>
@@ -133,6 +193,10 @@ footer{
 ساخته شده توسط <b>Hessam Alami</b><br>
 Telegram: <b>@cvvx441</b>
 </footer>
+
+<!-- صداهای گردونه -->
+<audio id="spinSound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3"></audio>
+<audio id="winSound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-notification-2013.mp3"></audio>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -156,7 +220,6 @@ const firebaseConfig = {
   authDomain: "dark-success.firebaseapp.com",
   projectId: "dark-success"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -213,6 +276,105 @@ updateDateTime();
 window.goTelegram = ()=>{
   window.open("https://t.me/cvvx441","_blank");
 };
+
+/* ---------------------- گردونه شانس ---------------------- */
+const openWheelBtn = document.getElementById("openWheel");
+const wheelSection = document.getElementById("wheelSection");
+const wheelCanvas = document.getElementById("wheel");
+const ctx = wheelCanvas.getContext("2d");
+const spinBtn = document.getElementById("spinBtn");
+const winnerDiv = document.getElementById("winner");
+const spinSound = document.getElementById("spinSound");
+const winSound = document.getElementById("winSound");
+
+const prizes = [
+  "💵 جایزه: 1 دلار",
+  "⭐ 10 روز اشتراک VIP",
+  "❌ پوچ",
+  "⭐ 5 روز اشتراک VIP",
+  "❌ پوچ"
+];
+const colors = ["#7c3aed","#2563eb","#facc15","#f43f5e","#22d3ee"];
+const numSegments = prizes.length;
+const anglePerSegment = 2*Math.PI / numSegments;
+let currentAngle = 0;
+
+function drawWheel(){
+  for(let i=0;i<numSegments;i++){
+    ctx.beginPath();
+    ctx.moveTo(150,150);
+    ctx.arc(150,150,150,i*anglePerSegment,(i+1)*anglePerSegment);
+    ctx.fillStyle = colors[i%colors.length];
+    ctx.fill();
+    ctx.save();
+    ctx.translate(150,150);
+    ctx.rotate(i*anglePerSegment + anglePerSegment/2);
+    ctx.textAlign="right";
+    ctx.fillStyle="#fff";
+    ctx.font="16px Vazirmatn";
+    ctx.fillText(prizes[i],140,5);
+    ctx.restore();
+  }
+}
+drawWheel();
+
+function createSparkle(){
+  const sparkle = document.createElement('div');
+  sparkle.className = 'sparkle';
+  sparkle.style.setProperty('--x', Math.random()*100 - 50 + 'px');
+  sparkle.style.setProperty('--y', Math.random()*100 - 50 + 'px');
+  sparkle.style.left = 150 + 'px';
+  sparkle.style.top = 150 + 'px';
+  wheelSection.appendChild(sparkle);
+  setTimeout(()=>sparkle.remove(),600);
+}
+
+openWheelBtn.onclick = ()=>{
+  wheelSection.classList.remove("hidden");
+  wheelSection.scrollIntoView({behavior:"smooth"});
+}
+
+spinBtn.onclick = ()=>{
+  spinBtn.disabled = true;
+  winnerDiv.innerText="";
+  let spins = Math.floor(Math.random()*5 + 5); 
+  let prizeIndex = Math.floor(Math.random()*prizes.length);
+  let targetAngle = (spins*2*Math.PI) + (prizeIndex*anglePerSegment) + anglePerSegment/2;
+  let duration = 4000;
+  let start = null;
+
+  spinSound.currentTime = 0;
+  spinSound.play();
+
+  function animate(timestamp){
+    if(!start) start=timestamp;
+    let elapsed = timestamp-start;
+    let progress = Math.min(elapsed/duration,1);
+    currentAngle = targetAngle * easeOutCubic(progress);
+    ctx.clearRect(0,0,300,300);
+    ctx.save();
+    ctx.translate(150,150);
+    ctx.rotate(currentAngle);
+    ctx.translate(-150,-150);
+    drawWheel();
+    ctx.restore();
+
+    if(Math.random()<0.1) createSparkle();
+
+    if(progress<1){
+      requestAnimationFrame(animate);
+    } else {
+      spinSound.pause();
+      winSound.currentTime = 0;
+      winSound.play();
+      winnerDiv.innerText = "🎉 برنده: " + prizes[prizeIndex];
+      spinBtn.disabled = false;
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+function easeOutCubic(t){ return 1 - Math.pow(1-t,3); }
 </script>
 
 </body>
