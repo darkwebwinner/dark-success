@@ -5,6 +5,7 @@
 <title>Dark Success</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+
 <style>
 *{box-sizing:border-box}
 body{
@@ -59,7 +60,6 @@ button{
   border-radius:14px;
   padding:18px;
   text-align:center;
-  cursor:pointer;
 }
 .badge{
   display:inline-block;
@@ -70,39 +70,28 @@ button{
 .badge.vip{background:#facc15;color:#020617}
 .badge.free{background:#334155}
 
-/* ===== Prize Boxes ===== */
+/* Prize Boxes */
 #prizeBoxes{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(100px,1fr));
   gap:15px;
-  margin-top:20px;
 }
 .prizeBox{
-  background:linear-gradient(135deg,#1f2933,#111827);
+  background:#020617;
   border:2px solid #312e81;
   border-radius:12px;
-  padding:20px 10px;
+  padding:20px;
   text-align:center;
-  font-weight:700;
-  font-size:14px;
   cursor:pointer;
-  box-shadow:0 0 15px rgba(0,0,0,.7);
-  transition:all 0.3s;
-  height:80px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
 }
-.prizeBox:hover{
-  transform:translateY(-5px) scale(1.05);
-  box-shadow:0 0 25px #7c3aed;
-}
-#winner{margin-top:20px;font-size:16px;font-weight:700;color:#facc15;text-align:center}
+#winner{margin-top:15px;text-align:center;color:#facc15}
 </style>
 </head>
+
 <body>
 
 <header>🌑 Dark Success</header>
+
 <div class="container">
 
 <!-- AUTH -->
@@ -112,6 +101,7 @@ button{
   <input id="password" type="password" placeholder="رمز عبور">
   <button id="registerBtn">ثبت‌نام</button>
   <button id="loginBtn">ورود</button>
+  <div id="msg"></div>
 </div>
 
 <!-- DASHBOARD -->
@@ -120,11 +110,10 @@ button{
   <div class="glass">
     <h3 id="welcome"></h3>
     <div id="vipInfo"></div>
-    <div id="dateTime" style="margin-top:10px;color:#c7d2fe"></div>
+    <div id="dateTime"></div>
     <button id="logoutBtn">خروج</button>
   </div>
 
-  <!-- OPTIONS -->
   <div class="grid">
     <div class="card">📊 فرصت‌های خرید</div>
     <div class="card">📈 تحلیل بازار</div>
@@ -132,33 +121,28 @@ button{
     <div class="card">❓ هولد یا ترید؟</div>
   </div>
 
-  <!-- VIP -->
   <div class="glass">
     <h3>⭐ اشتراک VIP</h3>
     <button onclick="goTelegram()">اشتراک VIP ۳۰ روزه</button>
     <button onclick="goTelegram()">اشتراک VIP ۹۰ روزه</button>
   </div>
 
-  <!-- Prize Boxes -->
   <div class="glass">
     <h3>🎁 جعبه‌های شانس</h3>
     <div id="prizeBoxes">
-      <div class="prizeBox" data-index="0">جعبه ۱</div>
-      <div class="prizeBox" data-index="1">جعبه ۲</div>
-      <div class="prizeBox" data-index="2">جعبه ۳</div>
-      <div class="prizeBox" data-index="3">جعبه ۴</div>
-      <div class="prizeBox" data-index="4">جعبه ۵</div>
-      <div class="prizeBox" data-index="5">جعبه ۶</div>
-      <div class="prizeBox" data-index="6">جعبه ۷</div>
+      <div class="prizeBox">جعبه ۱</div>
+      <div class="prizeBox">جعبه ۲</div>
+      <div class="prizeBox">جعبه ۳</div>
+      <div class="prizeBox">جعبه ۴</div>
+      <div class="prizeBox">جعبه ۵</div>
     </div>
     <div id="winner"></div>
   </div>
 
 </div>
+</div>
 
-<footer style="margin-top:40px;padding:20px;text-align:center;font-size:14px;border-top:1px solid #312e81">
-<b>درباره ما</b><br><br>
-ساخته شده توسط <b>Hessam Alami</b><br>
+<footer style="text-align:center;padding:20px;border-top:1px solid #312e81">
 Telegram: <b>@cvvx441</b>
 </footer>
 
@@ -177,14 +161,35 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+/* DOM */
+const authBox = document.getElementById("authBox");
+const dashboard = document.getElementById("dashboard");
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+const registerBtn = document.getElementById("registerBtn");
+const loginBtn = document.getElementById("loginBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const welcome = document.getElementById("welcome");
+const vipInfo = document.getElementById("vipInfo");
+const dateTime = document.getElementById("dateTime");
+const msg = document.getElementById("msg");
+
 /* Auth */
 registerBtn.onclick = async ()=>{
-  const r = await createUserWithEmailAndPassword(auth,email.value,password.value);
-  await setDoc(doc(db,"users",r.user.uid),{
-    vip:false,vipExpire:0,role:"user",createdAt:Date.now()
-  });
+  try{
+    const r = await createUserWithEmailAndPassword(auth,email.value,password.value);
+    await setDoc(doc(db,"users",r.user.uid),{
+      vip:false,vipExpire:0,role:"user",createdAt:Date.now()
+    });
+    msg.innerText="ثبت‌نام موفق بود";
+  }catch(e){ msg.innerText=e.message; }
 };
-loginBtn.onclick = ()=>signInWithEmailAndPassword(auth,email.value,password.value);
+
+loginBtn.onclick = async ()=>{
+  try{ await signInWithEmailAndPassword(auth,email.value,password.value); }
+  catch{ msg.innerText="ایمیل یا رمز اشتباه است"; }
+};
+
 logoutBtn.onclick = ()=>signOut(auth);
 
 onAuthStateChanged(auth, async user=>{
@@ -198,47 +203,28 @@ onAuthStateChanged(auth, async user=>{
   welcome.innerText="خوش آمدید "+user.email;
 
   const snap = await getDoc(doc(db,"users",user.uid));
-  const data = snap.data();
-  vipInfo.innerHTML = (data.vip && Date.now()<data.vipExpire)
-    ? `<span class="badge vip">VIP فعال</span>`
-    : `<span class="badge free">VIP غیرفعال</span>`;
+  const d = snap.data();
+  vipInfo.innerHTML =
+    (d.vip && Date.now()<d.vipExpire)
+    ? '<span class="badge vip">VIP فعال</span>'
+    : '<span class="badge free">VIP غیرفعال</span>';
 });
 
 /* Clock */
-function updateDateTime(){
+setInterval(()=>{
   const n=new Date();
   dateTime.innerText =
-    "📅 "+n.toLocaleDateString("fa-IR",{year:"numeric",month:"long",day:"numeric"})+
-    " | ⏰ "+n.toLocaleTimeString("fa-IR");
-}
-setInterval(updateDateTime,1000); updateDateTime();
+    n.toLocaleDateString("fa-IR")+" | "+n.toLocaleTimeString("fa-IR");
+},1000);
 
 /* Telegram */
 window.goTelegram = ()=>window.open("https://t.me/cvvx441","_blank");
 
-/* ===== Prize Boxes Logic - Random Fixed on Click, No Redirect ===== */
-const prizes = ["1 دلار","VIP 10 روزه","پوچ","VIP 5 روزه","پوچ","VIP 20 روزه","5 دلار"];
-const boxes = document.querySelectorAll(".prizeBox");
-const winnerDiv = document.getElementById("winner");
-
-boxes.forEach(box=>{
-  box.addEventListener("click", ()=>{
-    if(box.dataset.opened) return;
-
-    const prize = prizes[Math.floor(Math.random()*prizes.length)];
-    box.dataset.opened = "true";
-
-    if(prize==="پوچ"){
-      winnerDiv.textContent="پوچ! دفعه بعد موفق باشید";
-    }else{
-      winnerDiv.textContent="🎉 برنده شدید: "+prize;
-    }
-
-    box.style.pointerEvents="none";
-    box.style.opacity="0.6";
-
-    // هدایت خودکار حذف شد
-  });
+/* Prize */
+const prizes=["پوچ","VIP 5 روزه","1 دلار","VIP 10 روزه"];
+document.querySelectorAll(".prizeBox").forEach(b=>{
+  b.onclick=()=>document.getElementById("winner").innerText=
+    prizes[Math.floor(Math.random()*prizes.length)];
 });
 </script>
 
