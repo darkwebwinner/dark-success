@@ -143,7 +143,7 @@ button{
 </div>
 
 <footer style="text-align:center;padding:20px;border-top:1px solid #312e81">
-Telegram: <b>@cvvx441</b>
+درباره ما: <b><a href="https://t.me/cvvx441" target="_blank" style="color:#7c3aed;text-decoration:none;">@cvvx441</a></b>
 </footer>
 
 <script type="module">
@@ -192,6 +192,8 @@ registerBtn.onclick = async ()=>{
       msg.innerText = "ایمیل نامعتبر است.";
     } else if(e.code === 'auth/weak-password'){
       msg.innerText = "رمز عبور باید حداقل ۶ کاراکتر باشد.";
+    } else if(e.code === 'auth/network-request-failed'){
+      msg.innerText = "اتصال اینترنت خود را بررسی کنید.";
     } else{
       msg.innerText = e.message;
     }
@@ -205,7 +207,9 @@ loginBtn.onclick = async ()=>{
   catch(e){ 
     if(e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found'){
       msg.innerText="ایمیل یا رمز اشتباه است"; 
-    } else {
+    } else if(e.code === 'auth/network-request-failed'){
+      msg.innerText = "اتصال اینترنت خود را بررسی کنید.";
+    } else{
       msg.innerText = e.message;
     }
   }
