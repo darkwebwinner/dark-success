@@ -185,12 +185,30 @@ registerBtn.onclick = async ()=>{
       vip:false,vipExpire:0,role:"user",createdAt:Date.now()
     });
     msg.innerText="ثبت‌نام موفق بود";
-  }catch(e){ msg.innerText=e.message; }
+  }catch(e){
+    if(e.code === 'auth/email-already-in-use'){
+      msg.innerText = "این ایمیل قبلاً ثبت‌نام شده. لطفاً وارد شوید.";
+    } else if(e.code === 'auth/invalid-email'){
+      msg.innerText = "ایمیل نامعتبر است.";
+    } else if(e.code === 'auth/weak-password'){
+      msg.innerText = "رمز عبور باید حداقل ۶ کاراکتر باشد.";
+    } else{
+      msg.innerText = e.message;
+    }
+  }
 };
 
 loginBtn.onclick = async ()=>{
-  try{ await signInWithEmailAndPassword(auth,email.value,password.value); }
-  catch{ msg.innerText="ایمیل یا رمز اشتباه است"; }
+  try{ 
+    await signInWithEmailAndPassword(auth,email.value,password.value); 
+  }
+  catch(e){ 
+    if(e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found'){
+      msg.innerText="ایمیل یا رمز اشتباه است"; 
+    } else {
+      msg.innerText = e.message;
+    }
+  }
 };
 
 logoutBtn.onclick = ()=>signOut(auth);
