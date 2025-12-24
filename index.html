@@ -48,7 +48,6 @@ button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:poin
 
 <div class="container">
 
-<!-- AUTH -->
 <div id="authBox" class="glass">
   <h2>ورود / ثبت‌نام</h2>
   <input id="email" type="email" placeholder="ایمیل">
@@ -59,9 +58,7 @@ button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:poin
   <div id="msg"></div>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard" class="hidden">
-
   <div class="grid">
     <div class="card">📊 فرصت‌های خرید</div>
     <div class="card">📈 تحلیل بازار</div>
@@ -86,11 +83,9 @@ button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:poin
     </div>
     <div id="winner"></div>
   </div>
-
 </div>
 </div>
 
-<!-- PROFILE MODAL -->
 <div class="overlay" id="overlay"></div>
 <div id="profileModal">
   <h3>👤 پروفایل شما</h3>
@@ -114,7 +109,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* Firebase */
 const firebaseConfig = {
   apiKey: "AIzaSyA-jq4jwAhXEuUevcFs3fsX9c8YbNkHZZI",
   authDomain: "dark-success.firebaseapp.com",
@@ -152,12 +146,15 @@ const saveProfileBtn = document.getElementById("saveProfileBtn");
 
 const winnerBox = document.getElementById("winner");
 
+/* Clock */
+setInterval(()=>{
+  const n = new Date();
+  clock.innerText = n.toLocaleTimeString("fa-IR");
+},1000);
+
 /* Auth */
 registerBtn.onclick = async ()=>{
-  if(!displayNameInput.value.trim()){
-    alert("لطفاً نام کاربری را وارد کنید");
-    return;
-  }
+  if(!displayNameInput.value.trim()){alert("لطفاً نام کاربری را وارد کنید");return;}
   try{
     const r = await createUserWithEmailAndPassword(auth,email.value,password.value);
     await setDoc(doc(db,"users",r.user.uid),{
@@ -169,36 +166,22 @@ registerBtn.onclick = async ()=>{
       photoURL:"",
       prizeHistory:[]
     });
-    alert("ثبت‌نام موفق بود");
-  }catch(e){
-    alert(e.message);
-  }
+    // ورود خودکار بعد از ثبت‌نام
+    await signInWithEmailAndPassword(auth,email.value,password.value);
+  }catch(e){alert(e.message);}
 };
 
 loginBtn.onclick = async ()=>{
-  try{ 
-    await signInWithEmailAndPassword(auth,email.value,password.value); 
-  }catch(e){ 
-    alert(e.message);
-  }
+  try{ await signInWithEmailAndPassword(auth,email.value,password.value);} 
+  catch(e){alert(e.message);}
 };
 
-logoutBtn.onclick = ()=>signOut(auth);
-
-/* Clock */
-setInterval(()=>{
-  const n = new Date();
-  clock.innerText = n.toLocaleTimeString("fa-IR");
-},1000);
-
-/* Profile Modal */
 profileBtn.onclick = ()=>{overlay.style.display="block";profileModal.style.display="block";}
 closeProfile.onclick = ()=>{overlay.style.display="none";profileModal.style.display="none";}
 
 /* Load profile */
 async function loadProfile() {
-  const user = auth.currentUser;
-  if(!user) return;
+  const user = auth.currentUser; if(!user) return;
   const snap = await getDoc(doc(db,"users",user.uid));
   const d = snap.data();
   profileName.innerText = d?.displayName || "";
@@ -211,8 +194,7 @@ async function loadProfile() {
 
 /* Save profile photo */
 saveProfileBtn.onclick = async ()=>{
-  const user = auth.currentUser;
-  if(!user) return;
+  const user = auth.currentUser; if(!user) return;
   await updateDoc(doc(db,"users",user.uid),{photoURL:photoURL.value||""});
   loadProfile();
   alert("عکس پروفایل ذخیره شد");
@@ -222,29 +204,20 @@ saveProfileBtn.onclick = async ()=>{
 const prizes=["پوچ","VIP 5 روزه","1 دلار","VIP 10 روزه"];
 document.querySelectorAll(".prizeBox").forEach((b,i)=>{
   b.onclick=async ()=>{
-    const user = auth.currentUser;
-    if(!user) return;
+    const user = auth.currentUser; if(!user) return;
     const prize = prizes[Math.floor(Math.random()*prizes.length)];
     winnerBox.innerText = prize;
-
-    await updateDoc(doc(db,"users",user.uid),{
-      prizeHistory: arrayUnion({prize,time:new Date().toLocaleString("fa-IR")})
-    });
+    await updateDoc(doc(db,"users",user.uid),{prizeHistory: arrayUnion({prize,time:new Date().toLocaleString("fa-IR")})});
   };
 });
 
 /* Auth state */
 onAuthStateChanged(auth, async user=>{
-  if(!user){
-    authBox.classList.remove("hidden");
-    dashboard.classList.add("hidden");
-    return;
-  }
-  authBox.classList.add("hidden");
-  dashboard.classList.remove("hidden");
-
+  if(!user){authBox.classList.remove("hidden");dashboard.classList.add("hidden");return;}
+  authBox.classList.add("hidden");dashboard.classList.remove("hidden");
   loadProfile();
-  profileBtn.innerText = "👤 "+(await getDoc(doc(db,"users",user.uid))).data()?.displayName;
+  const snap = await getDoc(doc(db,"users",user.uid));
+  profileBtn.innerText = "👤 "+snap.data()?.displayName;
 });
 </script>
 
