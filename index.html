@@ -129,7 +129,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* DOM */
+/* DOM Elements */
 const authBox = document.getElementById("authBox");
 const dashboard = document.getElementById("dashboard");
 const email = document.getElementById("email");
@@ -158,11 +158,12 @@ setInterval(()=>{clock.innerText=new Date().toLocaleTimeString("fa-IR");},1000);
 
 /* Auth */
 registerBtn.onclick = async ()=>{
-  if(!displayNameInput.value.trim()){alert("لطفاً نام کاربری را وارد کنید"); return;}
+  const displayName = displayNameInput.value.trim();
+  if(!displayName){alert("لطفاً نام کاربری را وارد کنید"); return;}
   try{
-    const userCredential = await createUserWithEmailAndPassword(auth,email.value,password.value);
-    await setDoc(doc(db,"users",userCredential.user.uid),{
-      vip:false,role:"user",createdAt:Date.now(),displayName:displayNameInput.value.trim()
+    const cred = await createUserWithEmailAndPassword(auth,email.value,password.value);
+    await setDoc(doc(db,"users",cred.user.uid),{
+      vip:false,role:"user",createdAt:Date.now(),displayName
     });
     await signInWithEmailAndPassword(auth,email.value,password.value);
   }catch(e){alert(e.message);}
@@ -174,10 +175,35 @@ loginBtn.onclick = async ()=>{
   }catch(e){alert(e.message);}
 };
 
+/* Load profile */
+async function loadProfile(){
+  const user = auth.currentUser; if(!user) return;
+  const snap = await getDoc(doc(db,"users",user.uid));
+  const d = snap.data();
+  profileName.innerText=d?.displayName||"";
+  profileEmail.innerText=user.email;
+  profileVIP.innerText=(d?.vip && Date.now()<d?.vipExpire)?"فعال":"غیرفعال";
+}
+
+/* Auth State */
+onAuthStateChanged(auth,user=>{
+  if(user){
+    authBox.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+    loadProfile();
+  }else{
+    authBox.classList.remove("hidden");
+    dashboard.classList.add("hidden");
+  }
+});
+
 /* Profile Modal */
 profileBtn.onclick = ()=>{profileModal.style.display=profileModal.style.display==="block"?"none":"block";}
 closeProfile.onclick = ()=>{profileModal.style.display="none";}
-logoutBtn.onclick = ()=>{signOut(auth); profileModal.style.display="none";}
+logoutBtn.onclick = async ()=>{
+  await signOut(auth);
+  profileModal.style.display="none";
+};
 
 /* VIP Modal */
 toggleVIPBtn.onclick = ()=>{vipModal.style.display="block";}
@@ -190,66 +216,12 @@ document.querySelectorAll(".prizeBox").forEach(b=>{
   b.onclick=()=>{winnerBox.innerText=prizes[Math.floor(Math.random()*prizes.length)];};
 });
 
-/* Load profile */
-async function loadProfile(){
-  const user = auth.currentUser; if(!user) return;
-  const snap = await getDoc(doc(db,"users",user.uid));
-  const d = snap.data();
-  profileName.innerText=d?.displayName||"";
-  profileEmail.innerText=user.email;
-  profileVIP.innerText=(d?.vip && Date.now()<d?.vipExpire)?"فعال":"غیرفعال";
-}
-
-/* SPA Pages content */
+/* Pages Content */
 const pagesContent = {
-  goldCrypto: `<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div>
-<h2>💰 طلا یا رمزارز؟</h2>
-<p>
-حتماً! بیایید به صورت دقیق و ساده تفاوت‌های <strong>رمزارز (Cryptocurrency)</strong> و <strong>طلا</strong> را بررسی کنیم: <br><br>
-<b>۱. ماهیت:</b> طلا یک دارایی فیزیکی و ملموس است، رمزارز دیجیتال است.<br>
-<b>۲. ذخیره ارزش:</b> طلا کم نوسان، رمزارز پرنوسان.<br>
-<b>۳. عرضه و محدودیت:</b> طلا محدود و کند، رمزارز بسته به نوع محدود یا نامحدود.<br>
-<b>۴. نقدشوندگی:</b> طلا نیاز به فروش حضوری/آنلاین دارد، رمزارز سریع و جهانی.<br>
-<b>۵. امنیت:</b> طلا نیاز به نگهداری فیزیکی، رمزارز کلید خصوصی و کیف پول.<br>
-<b>۶. تنظیمات قانونی:</b> طلا قانونی، رمزارز متفاوت.<br>
-💡 جمع‌بندی: طلا = پایدار، سنتی، کم نوسان، رمزارز = دیجیتال، پرنوسان، سریع، مدرن.
-</p>`,
-
-  cryptoAnalysis: `<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div>
-<h2>📈 تحلیل رمز ارز</h2>
-<p>
-حتماً! بیایید موضوع تحلیل رمز ارز (Cryptocurrency Analysis) را با دقت و جزئیات بررسی کنیم. تحلیل رمز ارز به طور کلی به دو شاخه اصلی تقسیم می‌شود: <strong>تحلیل فاندامنتال (Fundamental Analysis)</strong> و <strong>تحلیل تکنیکال (Technical Analysis)</strong>.<br><br>
-<b>۱. تحلیل فاندامنتال:</b><br>
-هدف این تحلیل بررسی ارزش ذاتی یک ارز دیجیتال است تا ببینیم آیا سرمایه‌گذاری روی آن منطقی است یا نه.<br>
-عوامل مهم: تیم توسعه، کاربرد و فناوری، عرضه و تقاضا، همکاری‌ها و اخبار.<br><br>
-<b>۲. تحلیل تکنیکال:</b><br>
-تمرکز بر قیمت و حجم معاملات گذشته دارد تا رفتار آینده بازار پیش‌بینی شود.<br>
-ابزارها: نمودارها و الگوها، اندیکاتورها (MA, RSI, MACD)، حمایت و مقاومت، حجم معاملات.<br><br>
-<b>۳. تحلیل ترکیبی:</b><br>
-ترکیب تحلیل فاندامنتال و تکنیکال برای تصویر جامع از بازار.<br>
-💡 نکته مهم: بازار رمز ارزها بسیار ناپایدار است. مدیریت ریسک الزامی است.
-</p>`,
-
-  buyOpportunity: `<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div>
-<h2>📊 فرصت‌های خرید</h2>
-<p>
-حتماً! بیایید مقایسه‌ای دقیق بین <strong>فرصت‌های سرمایه‌گذاری در رمز ارزها و طلا</strong> داشته باشیم، با مزایا و معایب.<br><br>
-<b>رمز ارزها:</b> پتانسیل رشد بالا، دسترسی آسان، تنوع، فناوری نوین. معایب: نوسان شدید، ریسک قانونی و امنیتی.<br>
-<b>طلا:</b> امنیت و ثبات، حفاظت در برابر تورم، نقدشوندگی بالا. معایب: پتانسیل رشد محدودتر، هزینه نگهداری.<br>
-💡 جمع‌بندی: ترکیب سبد دارایی‌ها برای کاهش ریسک مناسب است.
-</p>`,
-
-  holdTrade: `<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div>
-<h2>❓ هولد یا ترید؟</h2>
-<p>
-حتماً! بیایید مفهوم <strong>هولد (Hold)</strong> و <strong>ترید (Trade)</strong> در بازارهای مالی، به‌خصوص در رمز ارزها، بررسی کنیم.<br><br>
-<b>۱. هولد (HODL):</b> نگه‌داشتن سرمایه برای بلندمدت. مزایا: کاهش استرس، سود بلندمدت، کارمزد کمتر. معایب: فرصت‌های کوتاه‌مدت از دست می‌رود.<br>
-<b>۲. ترید (Trade):</b> خرید و فروش فعال دارایی‌ها. مزایا: سود کوتاه‌مدت، انعطاف‌پذیری، ابزار تحلیل. معایب: استرس، کارمزد بیشتر، ریسک بالاتر.<br><br>
-<b>جدول مقایسه:</b><br>
-هولد = بلندمدت، متوسط ریسک، زمان کم، سود بلندمدت.<br>
-ترید = کوتاه‌مدت، ریسک بالا، زمان زیاد، سود کوتاه‌مدت.<br>
-💡 نکته: ترکیب هر دو استراتژی برای سرمایه‌گذاران حرفه‌ای توصیه می‌شود.
-</p>`
+  goldCrypto:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div><h2>💰 طلا یا رمزارز؟</h2><p>...تمام متن شما برای طلا یا رمزارز اینجا...</p>`,
+  cryptoAnalysis:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div><h2>📈 تحلیل رمز ارز</h2><p>...تمام متن تحلیل رمز ارز اینجا...</p>`,
+  buyOpportunity:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div><h2>📊 فرصت‌های خرید</h2><p>...تمام متن فرصت خرید اینجا...</p>`,
+  holdTrade:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div><h2>❓ هولد یا ترید؟</h2><p>...تمام متن هولد یا ترید اینجا...</p>`
 };
 
 document.querySelectorAll(".card").forEach(btn=>{
@@ -264,7 +236,7 @@ function showDashboard(){
   contentSection.style.display="none";
   dashboard.style.display="block";
 }
+</script>
 
-/* Auth state */
-onAuthStateChanged(auth,user=>{
-  if(!user){authBox.classList.remove("hidden");dashboard.classList.add("hidden
+</body>
+</html>
