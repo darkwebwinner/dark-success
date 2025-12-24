@@ -7,27 +7,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Vazirmatn',sans-serif;}
-body{background:#1b1b2f;color:#fff;}
-header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid #312e81;}
+body{background:linear-gradient(180deg,#1f2937,#111827);color:#fff;}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid #334155;}
 header h1{font-size:20px;font-weight:700;color:#22c55e;}
 header .user-area{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
 header .user-area button{background:none;border:none;color:#fff;cursor:pointer;font-size:16px;padding:4px;}
 header .user-area span{font-size:12px;color:#ccc;}
 .container{max-width:1100px;margin:auto;padding:20px;}
-.glass{background:rgba(255,255,255,.06);border:1px solid #312e81;border-radius:16px;padding:18px;margin-bottom:18px;}
+.glass{background:rgba(255,255,255,.06);border:1px solid #334155;border-radius:16px;padding:18px;margin-bottom:18px;}
 .hidden{display:none;}
-input,button{width:100%;padding:10px;margin:6px 0;border-radius:10px;border:none;font-family:inherit;}
-input{background:#1b1b2f;color:#fff;border:1px solid #312e81;}
+input,button{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:none;font-family:inherit;}
+input{background:#111827;color:#fff;border:1px solid #334155;}
 button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:pointer;font-weight:700;}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:20px;}
-.card{background:#1b1b2f;border:1px solid #312e81;border-radius:14px;padding:18px;text-align:center;transition:0.3s;cursor:pointer;text-decoration:none;color:#fff;display:flex;align-items:center;justify-content:center;}
+.card{background:#111827;border:1px solid #334155;border-radius:14px;padding:18px;text-align:center;transition:0.3s;cursor:pointer;}
 .card:hover{transform:scale(1.05);}
 #prizeSection,#vipModal,#contentSection{display:none;}
 #prizeBoxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:15px;}
-.prizeBox{background:#1b1b2f;border:2px solid #312e81;border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:0.3s;}
+.prizeBox{background:#111827;border:2px solid #334155;border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:0.3s;}
 .prizeBox:hover{transform:scale(1.1);}
 #winner{margin-top:10px;text-align:center;color:#22c55e;}
-#profileModal,#vipModal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:280px;background:rgba(0,0,0,0.95);padding:20px;border-radius:16px;border:1px solid #312e81;display:none;z-index:1000;}
+#profileModal,#vipModal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:320px;background:rgba(0,0,0,0.95);padding:20px;border-radius:16px;border:1px solid #334155;display:none;z-index:1000;}
 #profileModal h3,#vipModal h3{text-align:center;margin-bottom:10px;font-size:16px;}
 #profileModal button.closeModal,#vipModal button.closeModal{background:#7c3aed;margin-top:10px;width:100%;font-size:14px;}
 .profile-row{margin-bottom:6px;}
@@ -40,6 +40,7 @@ footer{margin-top:20px;text-align:center;font-size:13px;color:#aaa;line-height:1
 footer a{color:#3b82f6;text-decoration:none;font-weight:500;}
 </style>
 </head>
+
 <body>
 
 <header>
@@ -56,7 +57,6 @@ footer a{color:#3b82f6;text-decoration:none;font-weight:500;}
   <h2>ورود / ثبت‌نام</h2>
   <input id="email" type="email" placeholder="ایمیل">
   <input id="password" type="password" placeholder="رمز عبور">
-  <input id="displayNameInput" type="text" placeholder="نام کاربری (یکبار انتخاب)">
   <button id="registerBtn">ثبت‌نام</button>
   <button id="loginBtn">ورود</button>
   <div id="msg"></div>
@@ -64,10 +64,10 @@ footer a{color:#3b82f6;text-decoration:none;font-weight:500;}
 
 <div id="dashboard" class="hidden">
   <div class="grid">
-    <button class="card" data-target="goldCrypto">💰 طلا یا رمزارز؟</button>
-    <button class="card" data-target="cryptoAnalysis">📈 تحلیل رمز ارز</button>
-    <button class="card" data-target="buyOpportunity">📊 فرصت‌های خرید</button>
-    <button class="card" data-target="holdTrade">❓ هولد یا ترید؟</button>
+    <div class="card" data-target="goldCrypto">💰 طلا یا رمزارز</div>
+    <div class="card" data-target="cryptoAnalysis">📈 تحلیل رمز ارز</div>
+    <div class="card" data-target="buyOpportunity">📊 فرصت‌های خرید</div>
+    <div class="card" data-target="holdTrade">❓ هولد یا ترید</div>
   </div>
 
   <button class="sectionToggle" id="togglePrizeBtn">🎁 برگ شانس</button>
@@ -118,10 +118,10 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, si
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA-jq4jwAhXEuUevcFs3fsX9c8YbNkHZZI",
-  authDomain: "dark-success.firebaseapp.com",
-  projectId: "dark-success",
-  storageBucket: "dark-success.appspot.com",
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
   messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
   appId: "YOUR_APP_ID"
 };
@@ -129,12 +129,11 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* DOM Elements */
+/* DOM */
 const authBox = document.getElementById("authBox");
 const dashboard = document.getElementById("dashboard");
 const email = document.getElementById("email");
 const password = document.getElementById("password");
-const displayNameInput = document.getElementById("displayNameInput");
 const registerBtn = document.getElementById("registerBtn");
 const loginBtn = document.getElementById("loginBtn");
 const profileBtn = document.getElementById("profileBtn");
@@ -158,29 +157,30 @@ setInterval(()=>{clock.innerText=new Date().toLocaleTimeString("fa-IR");},1000);
 
 /* Auth */
 registerBtn.onclick = async ()=>{
-  const displayName = displayNameInput.value.trim();
-  if(!displayName){alert("لطفاً نام کاربری را وارد کنید"); return;}
   try{
-    const cred = await createUserWithEmailAndPassword(auth,email.value,password.value);
-    await setDoc(doc(db,"users",cred.user.uid),{
-      vip:false,role:"user",createdAt:Date.now(),displayName
-    });
-    await signInWithEmailAndPassword(auth,email.value,password.value);
+    const r = await createUserWithEmailAndPassword(auth,email.value,password.value);
+    await setDoc(doc(db,"users",r.user.uid),{vip:false,role:"user",createdAt:Date.now(),displayName:"کاربر"});
   }catch(e){alert(e.message);}
 };
 
 loginBtn.onclick = async ()=>{
-  try{
-    await signInWithEmailAndPassword(auth,email.value,password.value);
-  }catch(e){alert(e.message);}
+  try{ await signInWithEmailAndPassword(auth,email.value,password.value); }
+  catch(e){alert(e.message);}
 };
 
-/* Load profile */
+logoutBtn.onclick = async ()=>{
+  await signOut(auth);
+  profileModal.style.display="none";
+};
+
+/* Profile */
+profileBtn.onclick = ()=>{profileModal.style.display=profileModal.style.display==="block"?"none":"block";}
+closeProfile.onclick = ()=>{profileModal.style.display="none";}
 async function loadProfile(){
   const user = auth.currentUser; if(!user) return;
   const snap = await getDoc(doc(db,"users",user.uid));
   const d = snap.data();
-  profileName.innerText=d?.displayName||"";
+  profileName.innerText=d?.displayName||"کاربر";
   profileEmail.innerText=user.email;
   profileVIP.innerText=(d?.vip && Date.now()<d?.vipExpire)?"فعال":"غیرفعال";
 }
@@ -197,57 +197,88 @@ onAuthStateChanged(auth,user=>{
   }
 });
 
-/* Profile Modal */
-profileBtn.onclick = ()=>{profileModal.style.display=profileModal.style.display==="block"?"none":"block";}
-closeProfile.onclick = ()=>{profileModal.style.display="none";}
-logoutBtn.onclick = async ()=>{
-  await signOut(auth);
-  profileModal.style.display="none";
-};
-
-/* VIP Modal */
+/* VIP & Prize */
 toggleVIPBtn.onclick = ()=>{vipModal.style.display="block";}
 closeVIP.onclick = ()=>{vipModal.style.display="none";}
-
-/* Prize */
 togglePrizeBtn.onclick = ()=>{prizeSection.style.display = prizeSection.style.display==="block"?"none":"block";}
 const prizes=["پوچ","VIP 5 روزه","1 دلار","VIP 10 روزه"];
-document.querySelectorAll(".prizeBox").forEach(b=>{
-  b.onclick=()=>{winnerBox.innerText=prizes[Math.floor(Math.random()*prizes.length)];};
-});
+document.querySelectorAll(".prizeBox").forEach(b=>{b.onclick=()=>winnerBox.innerText=prizes[Math.floor(Math.random()*prizes.length)];});
 
-/* Pages Content with full text */
+/* Pages Content (Full texts) */
 const pagesContent = {
-  goldCrypto:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div>
-<h2>💰 طلا یا رمزارز؟</h2>
-<p>حتماً! بیایید به صورت دقیق و ساده تفاوت‌های <b>رمزارز (Cryptocurrency)</b> و <b>طلا</b> را بررسی کنیم...</p>`,
+goldCrypto:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div>
+<h2>💰 طلا یا رمزارز</h2>
+<p>
+حتماً! بیایید به صورت دقیق و ساده تفاوت‌های <b>رمزارز (Cryptocurrency)</b> و <b>طلا</b> را بررسی کنیم.
 
-  cryptoAnalysis:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div>
+### ۱. ماهیت
+- طلا: یک دارایی فیزیکی و ملموس است؛ می‌توان آن را لمس، وزن و نگهداری کرد.
+- رمزارز: یک دارایی دیجیتال است؛ فقط در قالب کدهای کامپیوتری و دفتر کل بلاک‌چین وجود دارد و هیچ شکل فیزیکی ندارد.
+
+### ۲. ذخیره ارزش
+- طلا: از دیرباز به عنوان ذخیره ارزش و پوشش در برابر تورم شناخته شده است. قیمت آن معمولاً نوسان کمی دارد.
+- رمزارز: می‌تواند ارزش بسیار بالا یا پایین داشته باشد و نوسان شدیدی دارد. برخی رمزارزها به عنوان ذخیره ارزش مطرح شده‌اند، ولی هنوز از ثبات طلا برخوردار نیستند.
+
+### ۳. عرضه و محدودیت
+- طلا: محدودیت طبیعی دارد و استخراج آن سخت و هزینه‌بر است. عرضه آن کند رشد می‌کند.
+- رمزارز: بسته به نوع رمزارز، عرضه می‌تواند محدود یا نامحدود باشد. تولید و انتقال آن سریع است.
+
+### ۴. نقدشوندگی و استفاده
+- طلا: نقد کردن آن نیاز به فروش حضوری یا آنلاین دارد و معمولاً هزینه و زمان دارد.
+- رمزارز: بسیار سریع قابل انتقال و معامله است، حتی به سراسر جهان بدون واسطه بانکی. می‌توان آن را برای پرداخت‌ها یا خرید آنلاین استفاده کرد.
+
+### ۵. امنیت و ذخیره
+- طلا: باید فیزیکی نگهداری شود (گاوصندوق، بانک). امکان سرقت یا آسیب فیزیکی وجود دارد.
+- رمزارز: باید کلید خصوصی و کیف پول دیجیتال داشته باشید. هک یا از دست دادن کلید می‌تواند دارایی را غیرقابل بازیابی کند، ولی امکان جابه‌جایی امن و سریع هم هست.
+
+### ۶. تنظیمات قانونی
+- طلا: در اکثر کشورها به رسمیت شناخته شده و قوانین مشخص دارد.
+- رمزارز: وضعیت قانونی متفاوت است؛ در برخی کشورها قانونی است، در برخی محدود یا ممنوع.
+
+💡 جمع‌بندی: طلا = فیزیکی، پایدار، سنتی، کم نوسان. رمزارز = دیجیتال، پرنوسان، سریع، مدرن.
+</p>`,
+
+cryptoAnalysis:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div>
 <h2>📈 تحلیل رمز ارز</h2>
-<p>حتماً! بیایید موضوع تحلیل رمز ارز (Cryptocurrency Analysis) را با دقت و جزئیات بررسی کنیم...</p>`,
+<p>
+حتماً! بیایید موضوع تحلیل رمز ارز (Cryptocurrency Analysis) را با دقت و جزئیات بررسی کنیم. تحلیل رمز ارز به طور کلی به دو شاخه اصلی تقسیم می‌شود: تحلیل فاندامنتال و تحلیل تکنیکال.
 
-  buyOpportunity:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div>
+### ۱. تحلیل فاندامنتال (Fundamental Analysis)
+هدف این تحلیل بررسی ارزش ذاتی یک ارز دیجیتال است تا ببینیم آیا سرمایه‌گذاری روی آن منطقی است یا نه. عوامل مهم: تیم توسعه، کاربرد و فناوری، عرضه و تقاضا، همکاری‌ها و اخبار.
+
+### ۲. تحلیل تکنیکال (Technical Analysis)
+تمرکز بر قیمت و حجم معاملات گذشته دارد تا رفتار آینده بازار پیش‌بینی شود. ابزارها: نمودارها، اندیکاتورها (MA، RSI، MACD)، حمایت و مقاومت و حجم معاملات.
+
+### ۳. تحلیل ترکیبی
+ترکیب تحلیل فاندامنتال و تکنیکال برای تصویر جامع‌تر از بازار.
+💡 نکته مهم: بازار رمز ارزها بسیار ناپایدار و پرریسک است. مدیریت ریسک ضروری است.
+</p>`,
+
+buyOpportunity:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div>
 <h2>📊 فرصت‌های خرید</h2>
-<p>حتماً! بیایید مقایسه‌ای دقیق بین <b>فرصت‌های سرمایه‌گذاری در رمز ارزها و طلا</b> داشته باشیم...</p>`,
+<p>
+حتماً! بیایید مقایسه‌ای دقیق بین فرصت‌های سرمایه‌گذاری در رمز ارزها و طلا داشته باشیم.
 
-  holdTrade:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div>
-<h2>❓ هولد یا ترید؟</h2>
-<p>حتماً! بیایید مفهوم <b>هولد (Hold)</b> و <b>ترید (Trade)</b> در بازارهای مالی، به‌خصوص در رمز ارزها، را با جزئیات بررسی کنیم...</p>`
-};
+### ۱. سرمایه‌گذاری در رمز ارزها
+مزایا: پتانسیل رشد بالا، دسترسی آسان و جهانی، تنوع گسترده، فناوری نوین.
+معایب: نوسان شدید قیمت، ریسک قانونی و امنیتی، کمبود سابقه تاریخی.
+زمان مناسب خرید: بازار اصلاح شده، پروژه با تیم قوی و کاربرد واقعی، مدیریت ریسک.
 
-document.querySelectorAll(".card").forEach(btn=>{
-  btn.onclick = ()=>{
-    contentSection.innerHTML = pagesContent[btn.dataset.target];
-    contentSection.style.display = "block";
-    dashboard.style.display = "none";
-  };
-});
+### ۲. سرمایه‌گذاری در طلا
+مزایا: امنیت و ثبات، حفاظت در برابر تورم، نقدشوندگی بالا، کمترین ریسک.
+معایب: پتانسیل رشد محدود، هزینه نگهداری، بازدهی کوتاه‌مدت کمتر.
+زمان مناسب خرید: بازار ناپایدار یا تورم بالا، قیمت‌ها نسبتاً پایین، چشم‌انداز بلندمدت مثبت.
 
-function showDashboard(){
-  contentSection.style.display="none";
-  dashboard.style.display="block";
-}
-</script>
+### ۳. جمع‌بندی و استراتژی ترکیبی
+رمزارز: مناسب برای ریسک‌پذیرها، طلا: برای امنیت و حفظ سرمایه، ترکیب: سبد دارایی‌ها برای کاهش ریسک.
+💡 نکته: فرصت خرید تنها به قیمت فعلی نیست، بلکه به ارزش واقعی، چشم‌انداز بازار و تحمل ریسک وابسته است.
+</p>`,
 
-</body>
-</html>
+holdTrade:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div>
+<h2>❓ هولد یا ترید</h2>
+<p>
+حتماً! بیایید مفهوم هولد (Hold) و ترید (Trade) در بازارهای مالی را بررسی کنیم.
+
+### ۱. هولد (HODL)
+تعریف: نگه‌داشتن سرمایه برای بلندمدت بدون توجه به نوسانات کوتاه‌مدت.
+مزایا: کاهش استرس، پتانسیل سود بلندمد
