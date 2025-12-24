@@ -7,9 +7,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Vazirmatn',sans-serif;}
-body{background:#4B3621;color:#fff;}
+body{background:#1e1e2f;color:#fff;}
 header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid #312e81;}
-header h1{font-size:18px;font-weight:700;color:#22c55e;}
+header h1{font-size:20px;font-weight:700;color:#22c55e;font-family:'Vazirmatn',sans-serif;}
 header .user-area{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
 header .user-area button{background:none;border:none;color:#fff;cursor:pointer;font-size:16px;padding:4px;}
 header .user-area span{font-size:12px;color:#ccc;}
@@ -17,25 +17,24 @@ header .user-area span{font-size:12px;color:#ccc;}
 .glass{background:rgba(255,255,255,.06);border:1px solid #312e81;border-radius:16px;padding:18px;margin-bottom:18px;}
 .hidden{display:none;}
 input,button{width:100%;padding:10px;margin:6px 0;border-radius:10px;border:none;font-family:inherit;}
-input{background:#4B3621;color:#fff;border:1px solid #312e81;}
+input{background:#1e1e2f;color:#fff;border:1px solid #312e81;}
 button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:pointer;font-weight:700;}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:20px;}
-.card{background:#4B3621;border:1px solid #312e81;border-radius:14px;padding:18px;text-align:center;transition:0.3s;cursor:pointer;}
+.card{background:#1e1e2f;border:1px solid #312e81;border-radius:14px;padding:18px;text-align:center;transition:0.3s;cursor:pointer;}
 .card:hover{transform:scale(1.05);}
 #prizeSection,#vipModal{display:none;}
 #prizeBoxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:15px;}
-.prizeBox{background:#4B3621;border:2px solid #312e81;border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:0.3s;}
+.prizeBox{background:#1e1e2f;border:2px solid #312e81;border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:0.3s;}
 .prizeBox:hover{transform:scale(1.1);}
 #winner{margin-top:10px;text-align:center;color:#22c55e;}
-#profileModal,#vipModal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;background:rgba(0,0,0,0.95);padding:20px;border-radius:16px;border:1px solid #312e81;display:none;z-index:1000;}
+#profileModal,#vipModal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:280px;background:rgba(0,0,0,0.95);padding:20px;border-radius:16px;border:1px solid #312e81;display:none;z-index:1000;}
 #profileModal h3,#vipModal h3{text-align:center;margin-bottom:10px;font-size:16px;}
 #profileModal button.closeModal,#vipModal button.closeModal{background:#7c3aed;margin-top:10px;width:100%;font-size:14px;}
 .profile-row{margin-bottom:6px;}
 .profile-row span{display:block;font-weight:500;margin-bottom:2px;font-size:13px;}
-#profilePhoto{width:50px;height:50px;border-radius:50%;border:1px solid #312e81;margin-bottom:8px;}
 .sectionToggle{margin-bottom:10px;}
-footer{margin-top:20px;text-align:center;font-size:12px;color:#aaa;}
-footer a{color:#22c55e;text-decoration:none;}
+footer{margin-top:20px;text-align:center;font-size:13px;color:#aaa;line-height:1.6;}
+footer a{color:#3b82f6;text-decoration:none;font-weight:500;}
 </style>
 </head>
 <body>
@@ -91,14 +90,9 @@ footer a{color:#22c55e;text-decoration:none;}
 <!-- PROFILE MODAL -->
 <div id="profileModal">
   <h3>👤 پروفایل شما</h3>
-  <img id="profilePhoto">
   <div class="profile-row"><span>نام کاربری:</span> <div id="profileName"></div></div>
   <div class="profile-row"><span>ایمیل:</span> <div id="profileEmail"></div></div>
   <div class="profile-row"><span>VIP:</span> <div id="profileVIP"></div></div>
-  <div class="profile-row"><span>تاریخ ثبت‌نام:</span> <div id="profileCreated"></div></div>
-  <div class="profile-row"><span>تاریخچه جعبه‌ها:</span> <div id="profilePrizes"></div></div>
-  <input type="text" id="photoURL" placeholder="آدرس عکس پروفایل">
-  <button id="saveProfileBtn">ذخیره عکس</button>
   <button class="closeModal" id="closeProfile">بستن</button>
 </div>
 
@@ -113,13 +107,14 @@ footer a{color:#22c55e;text-decoration:none;}
 </div>
 
 <footer>
-درباره ما: <a href="https://t.me/cvvx441" target="_blank">@cvvx441</a> | توسعه داده شده توسط HESAM ALAMi
+توسعه داده شده توسط HESAM ALAMi<br>
+تماس با ما: <a href="https://t.me/cvvx441" target="_blank">@cvvx441</a>
 </footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA-jq4jwAhXEuUevcFs3fsX9c8YbNkHZZI",
@@ -154,11 +149,6 @@ const clock = document.getElementById("clock");
 const profileName = document.getElementById("profileName");
 const profileEmail = document.getElementById("profileEmail");
 const profileVIP = document.getElementById("profileVIP");
-const profileCreated = document.getElementById("profileCreated");
-const profilePrizes = document.getElementById("profilePrizes");
-const profilePhoto = document.getElementById("profilePhoto");
-const photoURL = document.getElementById("photoURL");
-const saveProfileBtn = document.getElementById("saveProfileBtn");
 
 const winnerBox = document.getElementById("winner");
 
@@ -170,7 +160,7 @@ registerBtn.onclick = async ()=>{
   if(!displayNameInput.value.trim()){alert("لطفاً نام کاربری را وارد کنید");return;}
   try{
     const r = await createUserWithEmailAndPassword(auth,email.value,password.value);
-    await setDoc(doc(db,"users",r.user.uid),{vip:false,vipExpire:0,role:"user",createdAt:Date.now(),displayName: displayNameInput.value.trim(),photoURL:"",prizeHistory:[]});
+    await setDoc(doc(db,"users",r.user.uid),{vip:false,role:"user",createdAt:Date.now(),displayName: displayNameInput.value.trim()});
     await signInWithEmailAndPassword(auth,email.value,password.value);
   }catch(e){alert(e.message);}
 };
@@ -195,27 +185,14 @@ async function loadProfile(){
   profileName.innerText=d?.displayName||"";
   profileEmail.innerText=user.email;
   profileVIP.innerText=(d?.vip && Date.now()<d?.vipExpire)?"فعال":"غیرفعال";
-  profileCreated.innerText=new Date(d?.createdAt).toLocaleDateString("fa-IR");
-  profilePhoto.src=d?.photoURL||"";
-  profilePrizes.innerHTML=d?.prizeHistory?.map(p=>`${p.time} | ${p.prize}`).join("<br>")||"هیچ جعبه‌ای باز نشده";
-}
-
-/* Save profile photo */
-saveProfileBtn.onclick=async ()=>{
-  const user=auth.currentUser; if(!user)return;
-  await updateDoc(doc(db,"users",user.uid),{photoURL:photoURL.value||""});
-  loadProfile();alert("عکس پروفایل ذخیره شد");
 }
 
 /* Prize */
 const prizes=["پوچ","VIP 5 روزه","1 دلار","VIP 10 روزه"];
 document.querySelectorAll(".prizeBox").forEach(b=>{
-  b.onclick=async ()=>{
-    const user = auth.currentUser; if(!user) return;
+  b.onclick=()=>{
     const prize=prizes[Math.floor(Math.random()*prizes.length)];
     winnerBox.innerText=prize;
-    await updateDoc(doc(db,"users",user.uid),{prizeHistory:arrayUnion({prize,time:new Date().toLocaleString("fa-IR")})});
-    loadProfile();
   };
 });
 
