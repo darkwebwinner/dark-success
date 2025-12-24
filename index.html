@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Vazirmatn',sans-serif;}
-body{background:#0d0d1a;color:#fff;}
+body{background:#1b1b2f;color:#fff;}
 header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid #312e81;}
 header h1{font-size:20px;font-weight:700;color:#22c55e;}
 header .user-area{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
@@ -17,14 +17,14 @@ header .user-area span{font-size:12px;color:#ccc;}
 .glass{background:rgba(255,255,255,.06);border:1px solid #312e81;border-radius:16px;padding:18px;margin-bottom:18px;}
 .hidden{display:none;}
 input,button{width:100%;padding:10px;margin:6px 0;border-radius:10px;border:none;font-family:inherit;}
-input{background:#0d0d1a;color:#fff;border:1px solid #312e81;}
+input{background:#1b1b2f;color:#fff;border:1px solid #312e81;}
 button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:pointer;font-weight:700;}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:20px;}
-.card{background:#0d0d1a;border:1px solid #312e81;border-radius:14px;padding:18px;text-align:center;transition:0.3s;cursor:pointer;text-decoration:none;color:#fff;display:flex;align-items:center;justify-content:center;}
+.card{background:#1b1b2f;border:1px solid #312e81;border-radius:14px;padding:18px;text-align:center;transition:0.3s;cursor:pointer;text-decoration:none;color:#fff;display:flex;align-items:center;justify-content:center;}
 .card:hover{transform:scale(1.05);}
 #prizeSection,#vipModal,#contentSection{display:none;}
 #prizeBoxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:15px;}
-.prizeBox{background:#0d0d1a;border:2px solid #312e81;border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:0.3s;}
+.prizeBox{background:#1b1b2f;border:2px solid #312e81;border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:0.3s;}
 .prizeBox:hover{transform:scale(1.1);}
 #winner{margin-top:10px;text-align:center;color:#22c55e;}
 #profileModal,#vipModal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:280px;background:rgba(0,0,0,0.95);padding:20px;border-radius:16px;border:1px solid #312e81;display:none;z-index:1000;}
@@ -35,7 +35,7 @@ button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:poin
 .sectionToggle{margin-bottom:10px;}
 .content-box{background:rgba(255,255,255,0.05);padding:15px;border-radius:12px;margin-bottom:20px;display:none;line-height:1.6;font-size:14px;}
 .content-box h2{color:#3b82f6;margin-bottom:10px;}
-.backBtn{margin-bottom:10px;background:#2563eb;font-size:14px;padding:6px;border-radius:10px;color:#fff;cursor:pointer;}
+.backBtn{margin-bottom:10px;background:#2563eb;font-size:14px;padding:6px;border-radius:10px;color:#fff;cursor:pointer;width:fit-content;}
 footer{margin-top:20px;text-align:center;font-size:13px;color:#aaa;line-height:1.6;}
 footer a{color:#3b82f6;text-decoration:none;font-weight:500;}
 </style>
@@ -216,12 +216,23 @@ document.querySelectorAll(".prizeBox").forEach(b=>{
   b.onclick=()=>{winnerBox.innerText=prizes[Math.floor(Math.random()*prizes.length)];};
 });
 
-/* Pages Content */
+/* Pages Content with full text */
 const pagesContent = {
-  goldCrypto:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div><h2>💰 طلا یا رمزارز؟</h2><p>...تمام متن شما برای طلا یا رمزارز اینجا...</p>`,
-  cryptoAnalysis:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div><h2>📈 تحلیل رمز ارز</h2><p>...تمام متن تحلیل رمز ارز اینجا...</p>`,
-  buyOpportunity:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div><h2>📊 فرصت‌های خرید</h2><p>...تمام متن فرصت خرید اینجا...</p>`,
-  holdTrade:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div><h2>❓ هولد یا ترید؟</h2><p>...تمام متن هولد یا ترید اینجا...</p>`
+  goldCrypto:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div>
+<h2>💰 طلا یا رمزارز؟</h2>
+<p>حتماً! بیایید به صورت دقیق و ساده تفاوت‌های <b>رمزارز (Cryptocurrency)</b> و <b>طلا</b> را بررسی کنیم...</p>`,
+
+  cryptoAnalysis:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div>
+<h2>📈 تحلیل رمز ارز</h2>
+<p>حتماً! بیایید موضوع تحلیل رمز ارز (Cryptocurrency Analysis) را با دقت و جزئیات بررسی کنیم...</p>`,
+
+  buyOpportunity:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div>
+<h2>📊 فرصت‌های خرید</h2>
+<p>حتماً! بیایید مقایسه‌ای دقیق بین <b>فرصت‌های سرمایه‌گذاری در رمز ارزها و طلا</b> داشته باشیم...</p>`,
+
+  holdTrade:`<div class="backBtn" onclick="showDashboard()">⬅ بازگشت</div>
+<h2>❓ هولد یا ترید؟</h2>
+<p>حتماً! بیایید مفهوم <b>هولد (Hold)</b> و <b>ترید (Trade)</b> در بازارهای مالی، به‌خصوص در رمز ارزها، را با جزئیات بررسی کنیم...</p>`
 };
 
 document.querySelectorAll(".card").forEach(btn=>{
