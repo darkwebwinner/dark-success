@@ -70,6 +70,7 @@ button{background:#6b4226;color:#fff;cursor:pointer;font-weight:700}
 #profile .info button{margin-top:10px}
 .details{margin-top:15px;background:#2a2a2a;border-radius:8px;padding:10px;display:none}
 .details.show{display:block}
+.hidden{display:none}
 </style>
 </head>
 <body>
@@ -79,7 +80,7 @@ button{background:#6b4226;color:#fff;cursor:pointer;font-weight:700}
   <div id="datetime"></div>
 </header>
 
-<div id="profile">
+<div id="profile" class="hidden">
   👤
   <div class="info">
     <div id="userEmail"></div>
@@ -236,10 +237,12 @@ onAuthStateChanged(auth, user=>{
   if(user){
     authBox.classList.add("hidden");
     dashboard.classList.remove("hidden");
+    profile.classList.remove("hidden");
     userEmail.innerText = user.email;
   } else{
     authBox.classList.remove("hidden");
     dashboard.classList.add("hidden");
+    profile.classList.add("hidden");
   }
 });
 
