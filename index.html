@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Vazirmatn',sans-serif;}
-body{background:#1e1e2f;color:#fff;}
+body{background:#1a1a2e;color:#fff;}
 header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid #312e81;}
 header h1{font-size:20px;font-weight:700;color:#22c55e;font-family:'Vazirmatn',sans-serif;}
 header .user-area{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
@@ -17,14 +17,14 @@ header .user-area span{font-size:12px;color:#ccc;}
 .glass{background:rgba(255,255,255,.06);border:1px solid #312e81;border-radius:16px;padding:18px;margin-bottom:18px;}
 .hidden{display:none;}
 input,button{width:100%;padding:10px;margin:6px 0;border-radius:10px;border:none;font-family:inherit;}
-input{background:#1e1e2f;color:#fff;border:1px solid #312e81;}
+input{background:#1a1a2e;color:#fff;border:1px solid #312e81;}
 button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:pointer;font-weight:700;}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:20px;}
-.card{background:#1e1e2f;border:1px solid #312e81;border-radius:14px;padding:18px;text-align:center;transition:0.3s;cursor:pointer;text-decoration:none;color:#fff;display:flex;align-items:center;justify-content:center;}
+.card{background:#1a1a2e;border:1px solid #312e81;border-radius:14px;padding:18px;text-align:center;transition:0.3s;cursor:pointer;text-decoration:none;color:#fff;display:flex;align-items:center;justify-content:center;}
 .card:hover{transform:scale(1.05);}
 #prizeSection,#vipModal,#contentSection{display:none;}
 #prizeBoxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:15px;}
-.prizeBox{background:#1e1e2f;border:2px solid #312e81;border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:0.3s;}
+.prizeBox{background:#1a1a2e;border:2px solid #312e81;border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:0.3s;}
 .prizeBox:hover{transform:scale(1.1);}
 #winner{margin-top:10px;text-align:center;color:#22c55e;}
 #profileModal,#vipModal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:280px;background:rgba(0,0,0,0.95);padding:20px;border-radius:16px;border:1px solid #312e81;display:none;z-index:1000;}
@@ -35,6 +35,7 @@ button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:poin
 .sectionToggle{margin-bottom:10px;}
 .content-box{background:rgba(255,255,255,0.05);padding:15px;border-radius:12px;margin-bottom:20px;display:none;line-height:1.6;font-size:14px;}
 .content-box h2{color:#3b82f6;margin-bottom:10px;}
+.backBtn{margin-bottom:10px;background:#2563eb;font-size:14px;}
 footer{margin-top:20px;text-align:center;font-size:13px;color:#aaa;line-height:1.6;}
 footer a{color:#3b82f6;text-decoration:none;font-weight:500;}
 </style>
@@ -66,7 +67,7 @@ footer a{color:#3b82f6;text-decoration:none;font-weight:500;}
 <div id="dashboard" class="hidden">
   <div class="grid">
     <button class="card" data-target="goldCrypto">💰 طلا یا رمزارز؟</button>
-    <button class="card" data-target="marketAnalysis">📈 تحلیل بازار</button>
+    <button class="card" data-target="cryptoAnalysis">📈 تحلیل رمز ارز</button>
     <button class="card" data-target="buyOpportunity">📊 فرصت‌های خرید</button>
     <button class="card" data-target="holdTrade">❓ هولد یا ترید؟</button>
   </div>
@@ -86,7 +87,7 @@ footer a{color:#3b82f6;text-decoration:none;font-weight:500;}
     <div id="winner"></div>
   </div>
 
-  <div id="contentSection"></div>
+  <div id="contentSection" class="glass"></div>
 
 </div>
 </div>
@@ -178,8 +179,8 @@ closeProfile.onclick = ()=>{profileModal.style.display="none";}
 logoutBtn.onclick = ()=>{signOut(auth); profileModal.style.display="none";}
 
 /* VIP Modal */
-toggleVIPBtn.onclick = ()=>{vipModal.style.display="block";}
-closeVIP.onclick = ()=>{vipModal.style.display="none";}
+toggleVIPBtn.onclick = ()=>{vipModal.style.display = "block";}
+closeVIP.onclick = ()=>{vipModal.style.display = "none";}
 
 /* Prize Section */
 togglePrizeBtn.onclick = ()=>{prizeSection.style.display = prizeSection.style.display==="block"?"none":"block";}
@@ -203,6 +204,7 @@ document.querySelectorAll(".prizeBox").forEach(b=>{
 /* Content Pages */
 const pagesContent = {
   goldCrypto: `
+<button class="backBtn" onclick="showDashboard()">⬅ بازگشت</button>
 <h2>💰 تفاوت رمزارز و طلا</h2>
 <h3>۱. ماهیت</h3>
 <ul>
@@ -236,31 +238,36 @@ const pagesContent = {
 </ul>
 <p><b>جمع‌بندی:</b> طلا = فیزیکی، پایدار، سنتی، کم نوسان. رمزارز = دیجیتال، پرنوسان، سریع، مدرن.</p>
 `,
-
-  marketAnalysis: `<h2>📈 تحلیل بازار</h2><p>این بخش برای تحلیل بازار و نمودارهای مالی طراحی شده است.</p>`,
-
-  buyOpportunity: `<h2>📊 فرصت‌های خرید</h2><p>در این بخش فرصت‌های خرید و سرمایه گذاری نمایش داده می‌شود.</p>`,
-
-  holdTrade: `<h2>❓ هولد یا ترید؟</h2><p>راهنمای تصمیم گیری هولد یا ترید در این بخش.</p>`
-};
-
-document.querySelectorAll('.card').forEach(btn=>{
-  btn.onclick=()=>{
-    const target = btn.getAttribute('data-target');
-    contentSection.innerHTML = pagesContent[target] || '';
-    contentSection.style.display='block';
-    window.scrollTo({top:0,behavior:'smooth'});
-  };
-});
-
-/* Auth state */
-onAuthStateChanged(auth,async user=>{
-  if(!user){authBox.classList.remove("hidden");dashboard.classList.add("hidden");return;}
-  authBox.classList.add("hidden");dashboard.classList.remove("hidden");
-  loadProfile();
-  const snap = await getDoc(doc(db,"users",user.uid));
-  profileBtn.innerText = "👤 "+snap.data()?.displayName;
-});
-</script>
-</body>
-</html>
+  cryptoAnalysis: `
+<button class="backBtn" onclick="showDashboard()">⬅ بازگشت</button>
+<h2>📈 تحلیل رمز ارز</h2>
+<p>تحلیل رمز ارز به دو شاخه اصلی تقسیم می‌شود: <b>تحلیل فاندامنتال</b> و <b>تحلیل تکنیکال</b>.</p>
+<h3>۱. تحلیل فاندامنتال (Fundamental Analysis)</h3>
+<ul>
+<li><b>تیم توسعه و سابقه پروژه:</b> بررسی افراد پشت پروژه و سابقه کاری آنها.</li>
+<li><b>کاربرد و فناوری:</b> ارز دیجیتال چه مشکلی را حل می‌کند؟ آیا فناوری آن نوآورانه و قابل اعتماد است؟</li>
+<li><b>عرضه و تقاضا:</b> محدودیت در تعداد کوین‌ها (مثل بیت‌کوین با سقف ۲۱ میلیون) و میزان تقاضای بازار.</li>
+<li><b>همکاری‌ها و شراکت‌ها:</b> همکاری با شرکت‌ها و صرافی‌ها، پذیرش توسط کسب‌وکارها.</li>
+<li><b>اخبار و رویدادها:</b> قوانین، مقررات و اخبار مثبت یا منفی می‌توانند تاثیر زیادی داشته باشند.</li>
+</ul>
+<h3>۲. تحلیل تکنیکال (Technical Analysis)</h3>
+<ul>
+<li><b>نمودارها و الگوها:</b> شمعی، خطی و نمودارهای شمعی ژاپنی.</li>
+<li><b>اندیکاتورها:</b> میانگین متحرک، RSI، MACD.</li>
+<li><b>حمایت و مقاومت:</b> نقاطی که احتمال بازگشت یا ادامه روند وجود دارد.</li>
+<li><b>حجم معاملات:</b> افزایش یا کاهش حجم معاملات می‌تواند نشانه‌ای از روند آتی باشد.</li>
+</ul>
+<h3>۳. تحلیل ترکیبی</h3>
+<p>معمولاً تحلیل‌گران حرفه‌ای از ترکیب تحلیل فاندامنتال و تکنیکال استفاده می‌کنند.</p>
+<p>💡 نکته مهم: بازار رمز ارزها بسیار ناپایدار و پرریسک است.</p>
+`,
+  buyOpportunity: `
+<button class="backBtn" onclick="showDashboard()">⬅ بازگشت</button>
+<h2>📊 فرصت‌های خرید</h2>
+<ul>
+<li><b>رمز ارز:</b> پتانسیل رشد بالا، دسترسی آسان، تنوع گسترده، فناوری نوین.</li>
+<li><b>معایب رمز ارز:</b> نوسان شدید قیمت، ریسک قانونی و امنیتی، کمبود سابقه تاریخی.</li>
+<li><b>زمان مناسب خرید رمز ارز:</b> وقتی بازار اصلاح شده و پروژه دارای تیم قوی باشد.</li>
+<li><b>طلا:</b> امنیت و ثبات، حفاظت در برابر تورم، نقدشوندگی بالا.</li>
+<li><b>معایب طلا:</b> پتانسیل رشد محدودتر، هزینه نگهداری، بازدهی کوتاه‌مدت کمتر.</li>
+<li><b>زمان مناسب خرید طلا:</b> وقتی بازار ناپایدار است یا قیمت‌ها نسبتاً پایین تاریخی باشد.</li
