@@ -6,42 +6,87 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box; margin:0; padding:0;}
-body{font-family:'Vazirmatn',sans-serif; background:#1e1e2f; color:#fff;}
-header{display:flex; justify-content:space-between; align-items:center; padding:12px 20px; background:#2c2c3d; border-bottom:1px solid #444;}
-header .site-name{color:#00ff7f; font-weight:700; font-size:20px;}
-.container{max-width:1100px;margin:auto;padding:20px;}
-.glass{background:rgba(255,255,255,.05); border:1px solid #444; border-radius:12px; padding:16px; margin-bottom:16px;}
-.hidden{display:none;}
-input,button{width:100%; padding:10px; margin:6px 0; border-radius:8px; border:none; font-family:inherit;}
-input{background:#1e1e2f; color:#fff; border:1px solid #444;}
-button{background:linear-gradient(135deg,#7c3aed,#2563eb); color:#fff; cursor:pointer; font-weight:700;}
-.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px;}
-.card{background:#2c2c3d; border:1px solid #444; border-radius:12px; padding:16px; text-align:center; cursor:pointer; transition:0.3s;}
-.card:hover{transform:translateY(-3px);}
-.profile{position:relative; display:inline-block; cursor:pointer;}
-.profile-box{position:absolute; top:35px; left:0; background:#2c2c3d; border:1px solid #444; border-radius:10px; padding:10px; width:200px; display:none;}
-.profile-box p{margin:6px 0; font-size:14px;}
-.back-btn{margin-bottom:12px; padding:8px; background:#444; border-radius:8px; cursor:pointer;}
-#optionContent{margin-top:20px;}
-footer{text-align:center;padding:20px;border-top:1px solid #444; font-size:14px;}
-a{color:#00ff7f; text-decoration:none;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Vazirmatn',sans-serif;
+  background:#1c1c1c;
+  color:#fff;
+}
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 20px;
+  background:#222;
+  border-bottom:1px solid #444;
+  font-size:18px;
+  font-weight:700;
+}
+header .site-name{color:#00ff00;font-weight:900;font-size:22px}
+.container{max-width:1000px;margin:20px auto;padding:0 10px}
+.glass{
+  background:rgba(255,255,255,.05);
+  border:1px solid #555;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:15px;
+}
+input,button{
+  width:100%;
+  padding:10px;
+  margin:6px 0;
+  border-radius:8px;
+  border:none;
+  font-family:inherit;
+}
+input{background:#222;color:#fff;border:1px solid #555}
+button{background:#6b4226;color:#fff;cursor:pointer;font-weight:700}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:10px;
+}
+.card{
+  background:#222;
+  border:1px solid #555;
+  border-radius:10px;
+  padding:15px;
+  text-align:center;
+  cursor:pointer;
+}
+.card:hover{background:#333}
+#profile{
+  position:fixed;
+  top:10px;
+  left:10px;
+  background:#222;
+  border:1px solid #555;
+  border-radius:50px;
+  padding:10px 15px;
+  cursor:pointer;
+}
+#profile .info{display:none;margin-top:10px;text-align:center}
+#profile.active .info{display:block}
+#profile .info button{margin-top:10px}
+.details{margin-top:15px;background:#2a2a2a;border-radius:8px;padding:10px;display:none}
+.details.show{display:block}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="profile">
-    پروفایل
-    <div class="profile-box" id="profileBox">
-      <p id="profileEmail"></p>
-      <p id="profileVip"></p>
-      <p id="profileTime"></p>
-      <button id="logoutBtn">خروج</button>
-    </div>
-  </div>
   <div class="site-name">Dark Success</div>
+  <div id="datetime"></div>
 </header>
+
+<div id="profile">
+  👤
+  <div class="info">
+    <div id="userEmail"></div>
+    <div id="userTime"></div>
+    <button id="logoutBtn">خروج</button>
+  </div>
+</div>
 
 <div class="container">
 
@@ -59,69 +104,101 @@ a{color:#00ff7f; text-decoration:none;}
 <div id="dashboard" class="hidden">
 
   <div class="grid">
-    <div class="card" data-option="goldCrypto">📈 طلا و رمزارز</div>
-    <div class="card" data-option="buyOpportunities">💰 فرصت‌های خرید</div>
-    <div class="card" data-option="holdTrade">❓ هولد یا ترید</div>
-    <div class="card" id="luckyBtn">🎁 برگ شانس</div>
-    <div class="card" id="vipBtn">⭐ پیوستن به VIP</div>
+    <div class="card" data-target="goldCrypto">💰 طلا و رمز ارز</div>
+    <div class="card" data-target="buyOpportunities">📊 فرصت‌های خرید</div>
+    <div class="card" data-target="holdTrade">❓ هولد یا ترید</div>
+    <div class="card" data-target="vipSection">⭐ پیوستن به VIP</div>
+    <div class="card" data-target="prizes">🎁 جعبه شانس</div>
   </div>
 
-  <!-- Option content -->
-  <div id="optionContent" class="hidden glass"></div>
-
-  <!-- Prize Boxes -->
-  <div id="prizeBoxes" class="glass hidden">
-    <h3>🎁 جعبه‌های شانس</h3>
-    <div class="grid">
-      <div class="card">جعبه ۱</div>
-      <div class="card">جعبه ۲</div>
-      <div class="card">جعبه ۳</div>
-      <div class="card">جعبه ۴</div>
-      <div class="card">جعبه ۵</div>
-    </div>
-    <div id="winner" style="margin-top:10px; color:#ff0"></div>
+  <!-- توضیحات -->
+  <div id="goldCrypto" class="details">
+    <h3>طلا و رمز ارز</h3>
+    <p>
+      <b>طلا:</b><br>
+      ماهیت: یک فلز گرانبها با ارزش ذاتی. هزاران سال به عنوان پول و ذخیره ارزش استفاده شده.<br>
+      ویژگی‌ها: ثبات نسبی، لمس‌پذیر، ذخیره ارزش.<br>
+      معایب: هزینه نگهداری و نقدشوندگی کمتر.<br><br>
+      <b>رمزارز:</b><br>
+      ماهیت: پول دیجیتال مبتنی بر بلاک‌چین، غیرمتمرکز، قابل انتقال و پتانسیل سود بالا.<br>
+      معایب: نوسان شدید، ریسک قانونی و فنی، عدم ارزش ذاتی.
+    </p>
+    <button class="backBtn">بازگشت به صفحه اصلی</button>
   </div>
 
-  <!-- VIP Options -->
-  <div id="vipContent" class="glass hidden">
-    <h3>⭐ پیوستن به VIP</h3>
+  <div id="buyOpportunities" class="details">
+    <h3>فرصت‌های خرید</h3>
+    <p>
+      این یعنی زمانی که شرایط بازار به شکلیه که خرید یک دارایی می‌تونه سودآور باشه.<br>
+      چند نوع فرصت خرید:<br>
+      1. قیمت پایین (Dip Buying)<br>
+      2. رشد آینده (Growth Potential)<br>
+      3. پس از اصلاح یا سقوط کوتاه‌مدت<br>
+      4. اخبار مثبت یا فاندامنتال<br>
+      5. استراتژی‌های تکنیکال<br>
+      نکات مهم: فرصت خرید همیشه تضمین سود نیست؛ مدیریت ریسک ضروری است.
+    </p>
+    <button class="backBtn">بازگشت به صفحه اصلی</button>
+  </div>
+
+  <div id="holdTrade" class="details">
+    <h3>هولد یا ترید</h3>
+    <p>
+      <b>هولد:</b> نگه داشتن یا حفظ سرمایه برای مدت طولانی. کاهش استرس و پتانسیل سود بلندمدت.<br>
+      <b>ترید:</b> خرید و فروش کوتاه‌مدت برای کسب سود از تغییر قیمت‌ها. سود سریع، اما ریسک بالا و نیاز به تحلیل.
+    </p>
+    <button class="backBtn">بازگشت به صفحه اصلی</button>
+  </div>
+
+  <div id="vipSection" class="details">
+    <h3>پیوستن به VIP</h3>
     <p>جهت ملحق شدن به VIP روی طرح مورد نظر کلیک نمایید:</p>
-    <div class="grid">
-      <div class="card" onclick="window.open('https://t.me/cvvx441','_blank')">خرید یک ماه 100 هزار تومان</div>
-      <div class="card" onclick="window.open('https://t.me/cvvx441','_blank')">خرید دو ماه 200 هزار تومان</div>
-      <div class="card" onclick="window.open('https://t.me/cvvx441','_blank')">خرید سه ماه 300 هزار تومان</div>
+    <button onclick="window.open('https://t.me/cvvx441','_blank')">یک ماه 100 هزار تومان</button>
+    <button onclick="window.open('https://t.me/cvvx441','_blank')">دو ماه 200 هزار تومان</button>
+    <button onclick="window.open('https://t.me/cvvx441','_blank')">سه ماه 300 هزار تومان</button>
+    <button class="backBtn">بازگشت به صفحه اصلی</button>
+  </div>
+
+  <div id="prizes" class="details">
+    <h3>جعبه‌های شانس</h3>
+    <p>🎁 روی جعبه مورد نظر کلیک کنید</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <div style="background:#333;padding:15px;border-radius:10px;cursor:pointer" onclick="showPrize(this)">جعبه ۱</div>
+      <div style="background:#333;padding:15px;border-radius:10px;cursor:pointer" onclick="showPrize(this)">جعبه ۲</div>
+      <div style="background:#333;padding:15px;border-radius:10px;cursor:pointer" onclick="showPrize(this)">جعبه ۳</div>
+      <div style="background:#333;padding:15px;border-radius:10px;cursor:pointer" onclick="showPrize(this)">جعبه ۴</div>
+      <div style="background:#333;padding:15px;border-radius:10px;cursor:pointer" onclick="showPrize(this)">جعبه ۵</div>
     </div>
+    <div id="winner" style="margin-top:10px;color:#0f0"></div>
+    <button class="backBtn">بازگشت به صفحه اصلی</button>
   </div>
 
 </div>
 </div>
 
-<footer>
+<footer style="text-align:center;padding:15px;border-top:1px solid #444">
 توسعه داده شده توسط <b>HESAM ALAMi</b><br>
-تماس با ما: <a href="https://t.me/cvvx441" target="_blank">@cvvx441</a>
+تماس با ما: <a href="https://t.me/cvvx441" target="_blank" style="color:#0f0">@cvvx441</a>
 </footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* Firebase config */
 const firebaseConfig = {
   apiKey: "AIzaSyA-jq4jwAhXEuUevcFs3fsX9c8YbNkHZZI",
   authDomain: "dark-success.firebaseapp.com",
   projectId: "dark-success",
-  storageBucket: "dark-success.firebasestorage.app",
+  storageBucket: "dark-success.appspot.com",
   messagingSenderId: "37974176476",
-  appId: "1:37974176476:web:4f01c47c8c70723eef7a19",
-  measurementId: "G-3KFV93N4MK"
+  appId: "1:37974176476:web:4f01c47c8c70723eef7a19"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
 
-/* DOM Elements */
+/* DOM */
 const authBox = document.getElementById("authBox");
 const dashboard = document.getElementById("dashboard");
 const email = document.getElementById("email");
@@ -130,32 +207,15 @@ const registerBtn = document.getElementById("registerBtn");
 const loginBtn = document.getElementById("loginBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 const msg = document.getElementById("msg");
-const profileBox = document.getElementById("profileBox");
-const profileEmail = document.getElementById("profileEmail");
-const profileVip = document.getElementById("profileVip");
-const profileTime = document.getElementById("profileTime");
-const optionContent = document.getElementById("optionContent");
-const luckyBtn = document.getElementById("luckyBtn");
-const prizeBoxes = document.getElementById("prizeBoxes");
-const vipBtn = document.getElementById("vipBtn");
-const vipContent = document.getElementById("vipContent");
-
-/* Profile toggle */
-document.querySelector('.profile').onclick = ()=>{
-  profileBox.style.display = profileBox.style.display==='block'?'none':'block';
-};
-
-/* Clock inside profile */
-setInterval(()=>{
-  const n=new Date();
-  profileTime.innerText = n.toLocaleDateString("fa-IR")+" | "+n.toLocaleTimeString("fa-IR");
-},1000);
+const userEmail = document.getElementById("userEmail");
+const userTime = document.getElementById("userTime");
+const profile = document.getElementById("profile");
+const datetime = document.getElementById("datetime");
 
 /* Auth */
 registerBtn.onclick = async ()=>{
   try{
-    const r = await createUserWithEmailAndPassword(auth,email.value,password.value);
-    await setDoc(doc(db,"users",r.user.uid),{vip:false,createdAt:Date.now()});
+    await createUserWithEmailAndPassword(auth,email.value,password.value);
     msg.innerText="ثبت‌نام موفق بود";
   }catch(e){
     msg.innerText=e.message;
@@ -163,8 +223,8 @@ registerBtn.onclick = async ()=>{
 };
 
 loginBtn.onclick = async ()=>{
-  try{
-    await signInWithEmailAndPassword(auth,email.value,password.value);
+  try{ 
+    await signInWithEmailAndPassword(auth,email.value,password.value); 
   }catch(e){ 
     msg.innerText=e.message;
   }
@@ -172,92 +232,51 @@ loginBtn.onclick = async ()=>{
 
 logoutBtn.onclick = ()=>signOut(auth);
 
-onAuthStateChanged(auth, async user=>{
-  if(!user){
+onAuthStateChanged(auth, user=>{
+  if(user){
+    authBox.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+    userEmail.innerText = user.email;
+  } else{
     authBox.classList.remove("hidden");
     dashboard.classList.add("hidden");
-    return;
-  }
-  authBox.classList.add("hidden");
-  dashboard.classList.remove("hidden");
-  profileEmail.innerText="ایمیل: "+user.email;
-  const snap = await getDoc(doc(db,"users",user.uid));
-  const d = snap.data();
-  profileVip.innerText = (d && d.vip)? "VIP فعال":"VIP غیرفعال";
-});
-
-/* Option pages content */
-const options = {
-  goldCrypto: `<div class="back-btn" onclick="showDashboard()">بازگشت</div>
-<h2>طلا و رمزارز</h2>
-<p><b>طلا</b><br>ماهیت: یک فلز گرانبها با ارزش ذاتی.<br>هزاران سال است که به عنوان پول، ذخیره ارزش و زیورآلات استفاده می‌شود.<br>
-ویژگی‌ها: ثبات نسبی، ذخیره ارزش، لمس‌پذیر، ناپذیر از اینترنت.<br>
-معایب: هزینه نگهداری و نقدشوندگی کمتر.</p>
-<p><b>رمزارز</b><br>ماهیت: پول دیجیتال مبتنی بر فناوری بلاک‌چین (مثل بیت‌کوین، اتریوم).<br>
-ویژگی‌ها: غیرمتمرکز، قابل تقسیم و انتقال آسان، پتانسیل سود بالا، شفافیت و امنیت بلاک‌چین.<br>
-معایب: نوسان شدید، ریسک قانونی و فنی، عدم ارزش ذاتی.</p>`,
-
-  buyOpportunities: `<div class="back-btn" onclick="showDashboard()">بازگشت</div>
-<h2>فرصت‌های خرید</h2>
-<p>این یعنی زمانی که شرایط بازار به شکلیه که خرید یک دارایی می‌تونه سودآور باشه.</p>
-<p><b>چند نوع فرصت خرید</b></p>
-<ul>
-<li>قیمت پایین (Dip Buying)</li>
-<li>رشد آینده (Growth Potential)</li>
-<li>پس از اصلاح یا سقوط کوتاه‌مدت (Correction Opportunity)</li>
-<li>خبرهای مثبت یا فاندامنتال (Fundamental Opportunities)</li>
-<li>استراتژی‌های تکنیکال (Technical Entry Points)</li>
-</ul>
-<p>نکات مهم: فرصت خرید همیشه تضمین سود نیست؛ تحلیل بنیادی و تکنیکال با هم ترکیب شود.</p>`,
-
-  holdTrade: `<div class="back-btn" onclick="showDashboard()">بازگشت</div>
-<h2>هولد یا ترید</h2>
-<h3>هولد (Hold)</h3>
-<p>معنی: نگه داشتن یا حفظ سرمایه برای مدت طولانی.<br>
-ویژگی‌ها: کاهش استرس، پتانسیل سود بلندمدت، ریسک کمتر.<br>
-معایب: ممکن است طول بکشد تا سرمایه به ارزش اولیه برگردد.</p>
-<h3>ترید (Trade)</h3>
-<p>معنی: خرید و فروش کوتاه‌مدت برای کسب سود از تغییر قیمت‌ها.<br>
-ویژگی‌ها: پتانسیل سود سریع، انعطاف‌پذیری.<br>
-معایب: ریسک بالا، نیاز به تحلیل و زمان، استرس بیشتر.</p>`
-};
-
-/* Show option content */
-document.querySelectorAll('.card[data-option]').forEach(card=>{
-  card.onclick=()=>{
-    dashboard.style.display='none';
-    optionContent.innerHTML = options[card.getAttribute('data-option')];
-    optionContent.classList.remove('hidden');
-    prizeBoxes.classList.add('hidden');
-    vipContent.classList.add('hidden');
   }
 });
 
-function showDashboard(){
-  dashboard.style.display='grid';
-  optionContent.classList.add('hidden');
-}
+/* Clock */
+setInterval(()=>{
+  const n=new Date();
+  const timeStr=n.toLocaleTimeString("fa-IR");
+  const dateStr=n.toLocaleDateString("fa-IR");
+  datetime.innerText = dateStr + " | " + timeStr;
+  userTime.innerText = dateStr + " | " + timeStr;
+},1000);
 
-/* Lucky box */
+/* Profile toggle */
+profile.onclick = ()=> profile.classList.toggle("active");
+
+/* Show details */
+document.querySelectorAll(".card").forEach(card=>{
+  card.onclick = ()=>{
+    const targetId=card.getAttribute("data-target");
+    document.querySelectorAll(".details").forEach(d=>{
+      if(d.id===targetId) d.classList.add("show");
+      else d.classList.remove("show");
+    });
+  };
+});
+
+/* Back buttons */
+document.querySelectorAll(".backBtn").forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll(".details").forEach(d=>d.classList.remove("show"));
+  };
+});
+
+/* Prize */
 const prizes=["پوچ","VIP 5 روزه","1 دلار","VIP 10 روزه"];
-document.querySelectorAll('#prizeBoxes .card').forEach(b=>{
-  b.onclick=()=>document.getElementById("winner").innerText=
-    prizes[Math.floor(Math.random()*prizes.length)];
-});
-
-luckyBtn.onclick = ()=>{
-  dashboard.style.display='none';
-  prizeBoxes.classList.remove('hidden');
-  optionContent.classList.add('hidden');
-  vipContent.classList.add('hidden');
-};
-
-/* VIP */
-vipBtn.onclick = ()=>{
-  dashboard.style.display='none';
-  vipContent.classList.remove('hidden');
-  optionContent.classList.add('hidden');
-  prizeBoxes.classList.add('hidden');
+window.showPrize=(el)=>{
+  document.getElementById("winner").innerText = prizes[Math.floor(Math.random()*prizes.length)];
 };
 </script>
 
