@@ -7,9 +7,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Vazirmatn',sans-serif;}
-body{background:linear-gradient(180deg,#020617,#0f172a);color:#fff;}
+body{background:#4B3621;color:#fff;}
 header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid #312e81;}
-header h1{font-size:18px;font-family:'Vazirmatn',sans-serif;font-weight:700;color:#3b82f6;}
+header h1{font-size:18px;font-weight:700;color:#22c55e;}
 header .user-area{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
 header .user-area button{background:none;border:none;color:#fff;cursor:pointer;font-size:16px;padding:4px;}
 header .user-area span{font-size:12px;color:#ccc;}
@@ -17,25 +17,25 @@ header .user-area span{font-size:12px;color:#ccc;}
 .glass{background:rgba(255,255,255,.06);border:1px solid #312e81;border-radius:16px;padding:18px;margin-bottom:18px;}
 .hidden{display:none;}
 input,button{width:100%;padding:10px;margin:6px 0;border-radius:10px;border:none;font-family:inherit;}
-input{background:#020617;color:#fff;border:1px solid #312e81;}
+input{background:#4B3621;color:#fff;border:1px solid #312e81;}
 button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:pointer;font-weight:700;}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:20px;}
-.card{background:#020617;border:1px solid #312e81;border-radius:14px;padding:18px;text-align:center;transition:0.3s;cursor:pointer;}
+.card{background:#4B3621;border:1px solid #312e81;border-radius:14px;padding:18px;text-align:center;transition:0.3s;cursor:pointer;}
 .card:hover{transform:scale(1.05);}
-#prizeSection,#vipSection{display:none;}
+#prizeSection,#vipModal{display:none;}
 #prizeBoxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:15px;}
-.prizeBox{background:#020617;border:2px solid #312e81;border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:0.3s;}
+.prizeBox{background:#4B3621;border:2px solid #312e81;border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:0.3s;}
 .prizeBox:hover{transform:scale(1.1);}
-#winner{margin-top:10px;text-align:center;color:#facc15;}
-#profileModal,#vipModal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:320px;background:rgba(0,0,0,0.95);padding:20px;border-radius:16px;border:1px solid #312e81;display:none;z-index:1000;}
+#winner{margin-top:10px;text-align:center;color:#22c55e;}
+#profileModal,#vipModal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;background:rgba(0,0,0,0.95);padding:20px;border-radius:16px;border:1px solid #312e81;display:none;z-index:1000;}
 #profileModal h3,#vipModal h3{text-align:center;margin-bottom:10px;font-size:16px;}
 #profileModal button.closeModal,#vipModal button.closeModal{background:#7c3aed;margin-top:10px;width:100%;font-size:14px;}
 .profile-row{margin-bottom:6px;}
 .profile-row span{display:block;font-weight:500;margin-bottom:2px;font-size:13px;}
 #profilePhoto{width:50px;height:50px;border-radius:50%;border:1px solid #312e81;margin-bottom:8px;}
-.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;z-index:999;}
 .sectionToggle{margin-bottom:10px;}
 footer{margin-top:20px;text-align:center;font-size:12px;color:#aaa;}
+footer a{color:#22c55e;text-decoration:none;}
 </style>
 </head>
 <body>
@@ -106,14 +106,14 @@ footer{margin-top:20px;text-align:center;font-size:12px;color:#aaa;}
 <div id="vipModal">
   <h3>⭐ ملحق شدن به VIP</h3>
   <p style="font-size:13px;margin-bottom:10px;">جهت ملحق شدن به VIP روی طرح مورد نظر کلیک نمایید</p>
-  <button class="vipOption">خرید یک ماه - 100 هزار تومان</button>
-  <button class="vipOption">خرید دو ماه - 200 هزار تومان</button>
-  <button class="vipOption">خرید سه ماه - 300 هزار تومان</button>
+  <button class="vipOption" onclick="window.open('https://t.me/cvvx441','_blank')">خرید یک ماه - 100 هزار تومان</button>
+  <button class="vipOption" onclick="window.open('https://t.me/cvvx441','_blank')">خرید دو ماه - 200 هزار تومان</button>
+  <button class="vipOption" onclick="window.open('https://t.me/cvvx441','_blank')">خرید سه ماه - 300 هزار تومان</button>
   <button class="closeModal" id="closeVIP">بستن</button>
 </div>
 
 <footer>
-درباره ما: توسعه داده شده توسط HESAM ALAMi | <a href="https://t.me/cvvx441" target="_blank" style="color:#7c3aed;text-decoration:none;">@cvvx441</a>
+درباره ما: <a href="https://t.me/cvvx441" target="_blank">@cvvx441</a> | توسعه داده شده توسط HESAM ALAMi
 </footer>
 
 <script type="module">
