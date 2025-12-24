@@ -85,6 +85,9 @@ button{
   cursor:pointer;
 }
 #winner{margin-top:15px;text-align:center;color:#facc15}
+
+/* Profile */
+#profileBox input{width:100%;margin:4px 0}
 </style>
 </head>
 
@@ -99,6 +102,7 @@ button{
   <h2>ورود / ثبت‌نام</h2>
   <input id="email" type="email" placeholder="ایمیل">
   <input id="password" type="password" placeholder="رمز عبور">
+  <input id="displayNameInput" type="text" placeholder="نام کاربری (یکبار انتخاب)">
   <button id="registerBtn">ثبت‌نام</button>
   <button id="loginBtn">ورود</button>
   <div id="msg"></div>
@@ -112,6 +116,18 @@ button{
     <div id="vipInfo"></div>
     <div id="dateTime"></div>
     <button id="logoutBtn">خروج</button>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="glass" id="profileBox">
+    <h3>👤 پروفایل شما</h3>
+    <div>
+      <label>عکس پروفایل (URL):</label>
+      <input type="text" id="photoURL" placeholder="آدرس عکس">
+    </div>
+    <button id="saveProfileBtn">ذخیره پروفایل</button>
+    <div id="profileMsg"></div>
+    <div id="profileInfo"></div>
   </div>
 
   <div class="grid">
@@ -169,6 +185,7 @@ const authBox = document.getElementById("authBox");
 const dashboard = document.getElementById("dashboard");
 const email = document.getElementById("email");
 const password = document.getElementById("password");
+const displayNameInput = document.getElementById("displayNameInput");
 const registerBtn = document.getElementById("registerBtn");
 const loginBtn = document.getElementById("loginBtn");
 const logoutBtn = document.getElementById("logoutBtn");
@@ -177,12 +194,27 @@ const vipInfo = document.getElementById("vipInfo");
 const dateTime = document.getElementById("dateTime");
 const msg = document.getElementById("msg");
 
+/* Profile DOM */
+const photoURL = document.getElementById("photoURL");
+const saveProfileBtn = document.getElementById("saveProfileBtn");
+const profileMsg = document.getElementById("profileMsg");
+const profileInfo = document.getElementById("profileInfo");
+
 /* Auth */
 registerBtn.onclick = async ()=>{
+  if(!displayNameInput.value.trim()){
+    msg.innerText = "لطفاً نام کاربری را وارد کنید";
+    return;
+  }
   try{
     const r = await createUserWithEmailAndPassword(auth,email.value,password.value);
     await setDoc(doc(db,"users",r.user.uid),{
-      vip:false,vipExpire:0,role:"user",createdAt:Date.now()
+      vip:false,
+      vipExpire:0,
+      role:"user",
+      createdAt:Date.now(),
+      displayName: displayNameInput.value.trim(),
+      photoURL:""
     });
     msg.innerText="ثبت‌نام موفق بود";
   }catch(e){
@@ -217,24 +249,6 @@ loginBtn.onclick = async ()=>{
 
 logoutBtn.onclick = ()=>signOut(auth);
 
-onAuthStateChanged(auth, async user=>{
-  if(!user){
-    authBox.classList.remove("hidden");
-    dashboard.classList.add("hidden");
-    return;
-  }
-  authBox.classList.add("hidden");
-  dashboard.classList.remove("hidden");
-  welcome.innerText="خوش آمدید "+user.email;
-
-  const snap = await getDoc(doc(db,"users",user.uid));
-  const d = snap.data();
-  vipInfo.innerHTML =
-    (d && d.vip && Date.now()<d.vipExpire)
-    ? '<span class="badge vip">VIP فعال</span>'
-    : '<span class="badge free">VIP غیرفعال</span>';
-});
-
 /* Clock */
 setInterval(()=>{
   const n=new Date();
@@ -250,6 +264,58 @@ const prizes=["پوچ","VIP 5 روزه","1 دلار","VIP 10 روزه"];
 document.querySelectorAll(".prizeBox").forEach(b=>{
   b.onclick=()=>document.getElementById("winner").innerText=
     prizes[Math.floor(Math.random()*prizes.length)];
+});
+
+/* Load profile */
+async function loadProfile() {
+  const user = auth.currentUser;
+  if(!user) return;
+  const snap = await getDoc(doc(db,"users",user.uid));
+  const d = snap.data();
+  photoURL.value = d?.photoURL || "";
+  profileInfo.innerHTML = `
+    <p>نام کاربری: ${d?.displayName || ""}</p>
+    <p>ایمیل: ${user.email}</p>
+    <p>VIP: ${(d?.vip && Date.now()<d?.vipExpire) ? "فعال" : "غیرفعال"}</p>
+    <p>تاریخ ثبت‌نام: ${new Date(d?.createdAt).toLocaleDateString("fa-IR")}</p>
+  `;
+}
+
+/* Save profile */
+saveProfileBtn.onclick = async ()=>{
+  const user = auth.currentUser;
+  if(!user) return;
+  try{
+    await setDoc(doc(db,"users",user.uid),{
+      photoURL: photoURL.value || "",
+      updatedAt: Date.now()
+    }, {merge:true});
+    profileMsg.innerText = "پروفایل با موفقیت ذخیره شد";
+    loadProfile();
+  }catch(e){
+    profileMsg.innerText = "خطا در ذخیره پروفایل: " + e.message;
+  }
+}
+
+/* Auth state */
+onAuthStateChanged(auth, async user=>{
+  if(!user){
+    authBox.classList.remove("hidden");
+    dashboard.classList.add("hidden");
+    return;
+  }
+  authBox.classList.add("hidden");
+  dashboard.classList.remove("hidden");
+
+  const snap = await getDoc(doc(db,"users",user.uid));
+  const d = snap.data();
+  welcome.innerText="خوش آمدید "+(d?.displayName || user.email);
+  vipInfo.innerHTML =
+    (d && d.vip && Date.now()<d.vipExpire)
+      ? '<span class="badge vip">VIP فعال</span>'
+      : '<span class="badge free">VIP غیرفعال</span>';
+
+  loadProfile();
 });
 </script>
 
