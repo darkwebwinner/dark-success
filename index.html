@@ -2,52 +2,57 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Dark Success</title>
+<title>🌑 Dark Success</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Vazirmatn',sans-serif;}
 body{background:linear-gradient(180deg,#020617,#0f172a);color:#fff;}
-header{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid #312e81;}
-header h1{font-size:22px;font-weight:700;}
-header .user-area{display:flex;align-items:center;gap:10px;}
-header .user-area button{background:none;border:none;color:#fff;cursor:pointer;font-size:16px;}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid #312e81;}
+header h1{font-size:18px;font-family:'Vazirmatn',sans-serif;font-weight:700;color:#7c3aed;}
+header .user-area{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
+header .user-area button{background:none;border:none;color:#fff;cursor:pointer;font-size:16px;padding:4px;}
+header .user-area span{font-size:12px;color:#ccc;}
 .container{max-width:1100px;margin:auto;padding:20px;}
 .glass{background:rgba(255,255,255,.06);border:1px solid #312e81;border-radius:16px;padding:18px;margin-bottom:18px;}
 .hidden{display:none;}
 input,button{width:100%;padding:10px;margin:6px 0;border-radius:10px;border:none;font-family:inherit;}
 input{background:#020617;color:#fff;border:1px solid #312e81;}
 button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:pointer;font-weight:700;}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:20px;}
 .card{background:#020617;border:1px solid #312e81;border-radius:14px;padding:18px;text-align:center;transition:0.3s;cursor:pointer;}
 .card:hover{transform:scale(1.05);}
 .badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:13px;}
 .badge.vip{background:#facc15;color:#020617;}
 .badge.free{background:#334155;}
+#prizeSection{display:none;}
 #prizeBoxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:15px;}
 .prizeBox{background:#020617;border:2px solid #312e81;border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:0.3s;}
 .prizeBox:hover{transform:scale(1.1);}
 #winner{margin-top:10px;text-align:center;color:#facc15;}
-#profileModal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.95);padding:20px;border-radius:16px;border:1px solid #312e81;width:90%;max-width:400px;display:none;z-index:1000;}
-#profileModal h3{text-align:center;margin-bottom:10px;}
-#profileModal button.closeModal{background:#7c3aed;margin-top:10px;width:100%;}
-.profile-row{margin-bottom:8px;}
-.profile-row span{display:block;font-weight:500;margin-bottom:2px;}
+#profileModal{position:absolute;top:50px;right:20px;width:280px;background:rgba(0,0,0,0.95);padding:15px;border-radius:16px;border:1px solid #312e81;display:none;z-index:1000;}
+#profileModal h3{text-align:center;margin-bottom:10px;font-size:16px;}
+#profileModal button.closeModal{background:#7c3aed;margin-top:10px;width:100%;font-size:14px;}
+.profile-row{margin-bottom:6px;}
+.profile-row span{display:block;font-weight:500;margin-bottom:2px;font-size:13px;}
+#profilePhoto{width:50px;height:50px;border-radius:50%;border:1px solid #312e81;margin-bottom:8px;}
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;z-index:999;}
+#dashboard button.sectionToggle{margin-bottom:10px;}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🌑 Dark Success</h1>
+  <h1>Dark Success</h1>
   <div class="user-area">
+    <button id="profileBtn">👤</button>
     <span id="clock"></span>
-    <button id="profileBtn">👤 پروفایل</button>
   </div>
 </header>
 
 <div class="container">
 
+<!-- AUTH -->
 <div id="authBox" class="glass">
   <h2>ورود / ثبت‌نام</h2>
   <input id="email" type="email" placeholder="ایمیل">
@@ -58,7 +63,9 @@ button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:poin
   <div id="msg"></div>
 </div>
 
+<!-- DASHBOARD -->
 <div id="dashboard" class="hidden">
+
   <div class="grid">
     <div class="card">📊 فرصت‌های خرید</div>
     <div class="card">📈 تحلیل بازار</div>
@@ -66,14 +73,10 @@ button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:poin
     <div class="card">❓ هولد یا ترید؟</div>
   </div>
 
-  <div class="glass">
-    <h3>⭐ اشتراک VIP</h3>
-    <button onclick="goTelegram()">اشتراک VIP ۳۰ روزه</button>
-    <button onclick="goTelegram()">اشتراک VIP ۹۰ روزه</button>
-  </div>
+  <button class="sectionToggle" id="togglePrizeBtn">🎁 برگ شانس</button>
 
-  <div class="glass">
-    <h3>🎁 جعبه‌های شانس</h3>
+  <div id="prizeSection" class="glass">
+    <h3>جعبه‌های شانس</h3>
     <div id="prizeBoxes">
       <div class="prizeBox">جعبه ۱</div>
       <div class="prizeBox">جعبه ۲</div>
@@ -83,18 +86,19 @@ button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:poin
     </div>
     <div id="winner"></div>
   </div>
+
 </div>
 </div>
 
-<div class="overlay" id="overlay"></div>
+<!-- PROFILE MODAL -->
 <div id="profileModal">
   <h3>👤 پروفایل شما</h3>
+  <img id="profilePhoto">
   <div class="profile-row"><span>نام کاربری:</span> <div id="profileName"></div></div>
   <div class="profile-row"><span>ایمیل:</span> <div id="profileEmail"></div></div>
   <div class="profile-row"><span>VIP:</span> <div id="profileVIP"></div></div>
   <div class="profile-row"><span>تاریخ ثبت‌نام:</span> <div id="profileCreated"></div></div>
   <div class="profile-row"><span>تاریخچه جعبه‌ها:</span> <div id="profilePrizes"></div></div>
-  <div class="profile-row"><span>عکس پروفایل:</span> <img id="profilePhoto" style="width:60px;height:60px;border-radius:50%;border:1px solid #312e81;"></div>
   <input type="text" id="photoURL" placeholder="آدرس عکس پروفایل">
   <button id="saveProfileBtn">ذخیره عکس</button>
   <button class="closeModal" id="closeProfile">بستن</button>
@@ -130,10 +134,11 @@ const displayNameInput = document.getElementById("displayNameInput");
 const registerBtn = document.getElementById("registerBtn");
 const loginBtn = document.getElementById("loginBtn");
 const profileBtn = document.getElementById("profileBtn");
-const overlay = document.getElementById("overlay");
 const profileModal = document.getElementById("profileModal");
 const closeProfile = document.getElementById("closeProfile");
 const clock = document.getElementById("clock");
+const togglePrizeBtn = document.getElementById("togglePrizeBtn");
+const prizeSection = document.getElementById("prizeSection");
 
 const profileName = document.getElementById("profileName");
 const profileEmail = document.getElementById("profileEmail");
@@ -147,10 +152,7 @@ const saveProfileBtn = document.getElementById("saveProfileBtn");
 const winnerBox = document.getElementById("winner");
 
 /* Clock */
-setInterval(()=>{
-  const n = new Date();
-  clock.innerText = n.toLocaleTimeString("fa-IR");
-},1000);
+setInterval(()=>{clock.innerText=new Date().toLocaleTimeString("fa-IR");},1000);
 
 /* Auth */
 registerBtn.onclick = async ()=>{
@@ -158,46 +160,41 @@ registerBtn.onclick = async ()=>{
   try{
     const r = await createUserWithEmailAndPassword(auth,email.value,password.value);
     await setDoc(doc(db,"users",r.user.uid),{
-      vip:false,
-      vipExpire:0,
-      role:"user",
-      createdAt:Date.now(),
-      displayName: displayNameInput.value.trim(),
-      photoURL:"",
-      prizeHistory:[]
+      vip:false,vipExpire:0,role:"user",createdAt:Date.now(),displayName: displayNameInput.value.trim(),photoURL:"",prizeHistory:[]
     });
-    // ورود خودکار بعد از ثبت‌نام
     await signInWithEmailAndPassword(auth,email.value,password.value);
   }catch(e){alert(e.message);}
 };
 
 loginBtn.onclick = async ()=>{
-  try{ await signInWithEmailAndPassword(auth,email.value,password.value);} 
+  try{await signInWithEmailAndPassword(auth,email.value,password.value);} 
   catch(e){alert(e.message);}
 };
 
-profileBtn.onclick = ()=>{overlay.style.display="block";profileModal.style.display="block";}
-closeProfile.onclick = ()=>{overlay.style.display="none";profileModal.style.display="none";}
+profileBtn.onclick = ()=>{profileModal.style.display = profileModal.style.display === "block"?"none":"block";}
+closeProfile.onclick = ()=>{profileModal.style.display="none";}
+
+/* Toggle Prize Section */
+togglePrizeBtn.onclick = ()=>{prizeSection.style.display = prizeSection.style.display==="block"?"none":"block";}
 
 /* Load profile */
-async function loadProfile() {
+async function loadProfile(){
   const user = auth.currentUser; if(!user) return;
   const snap = await getDoc(doc(db,"users",user.uid));
   const d = snap.data();
-  profileName.innerText = d?.displayName || "";
-  profileEmail.innerText = user.email;
-  profileVIP.innerText = (d?.vip && Date.now()<d?.vipExpire) ? "فعال" : "غیرفعال";
-  profileCreated.innerText = new Date(d?.createdAt).toLocaleDateString("fa-IR");
-  profilePhoto.src = d?.photoURL || "";
-  profilePrizes.innerHTML = d?.prizeHistory?.map(p=>`${p.time} | ${p.prize}`).join("<br>") || "هیچ جعبه‌ای باز نشده";
+  profileName.innerText=d?.displayName||"";
+  profileEmail.innerText=user.email;
+  profileVIP.innerText=(d?.vip && Date.now()<d?.vipExpire)?"فعال":"غیرفعال";
+  profileCreated.innerText=new Date(d?.createdAt).toLocaleDateString("fa-IR");
+  profilePhoto.src=d?.photoURL||"";
+  profilePrizes.innerHTML=d?.prizeHistory?.map(p=>`${p.time} | ${p.prize}`).join("<br>")||"هیچ جعبه‌ای باز نشده";
 }
 
 /* Save profile photo */
-saveProfileBtn.onclick = async ()=>{
-  const user = auth.currentUser; if(!user) return;
+saveProfileBtn.onclick=async ()=>{
+  const user=auth.currentUser; if(!user)return;
   await updateDoc(doc(db,"users",user.uid),{photoURL:photoURL.value||""});
-  loadProfile();
-  alert("عکس پروفایل ذخیره شد");
+  loadProfile();alert("عکس پروفایل ذخیره شد");
 }
 
 /* Prize */
@@ -205,14 +202,15 @@ const prizes=["پوچ","VIP 5 روزه","1 دلار","VIP 10 روزه"];
 document.querySelectorAll(".prizeBox").forEach((b,i)=>{
   b.onclick=async ()=>{
     const user = auth.currentUser; if(!user) return;
-    const prize = prizes[Math.floor(Math.random()*prizes.length)];
-    winnerBox.innerText = prize;
-    await updateDoc(doc(db,"users",user.uid),{prizeHistory: arrayUnion({prize,time:new Date().toLocaleString("fa-IR")})});
+    const prize=prizes[Math.floor(Math.random()*prizes.length)];
+    winnerBox.innerText=prize;
+    await updateDoc(doc(db,"users",user.uid),{prizeHistory:arrayUnion({prize,time:new Date().toLocaleString("fa-IR")})});
+    loadProfile();
   };
 });
 
 /* Auth state */
-onAuthStateChanged(auth, async user=>{
+onAuthStateChanged(auth,async user=>{
   if(!user){authBox.classList.remove("hidden");dashboard.classList.add("hidden");return;}
   authBox.classList.add("hidden");dashboard.classList.remove("hidden");
   loadProfile();
