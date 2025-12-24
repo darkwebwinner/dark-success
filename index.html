@@ -1,77 +1,77 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>Dark Success</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:'Vazirmatn',sans-serif;
-      background:#1c1c1c;
-      color:#fff;
-    }
-    header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:10px 20px;
-      background:#222;
-      border-bottom:1px solid #444;
-      font-size:18px;
-      font-weight:700;
-    }
-    header .site-name{color:#00ff00;font-weight:900;font-size:22px}
-    .container{max-width:1000px;margin:20px auto;padding:0 10px}
-    .glass{
-      background:rgba(255,255,255,.05);
-      border:1px solid #555;
-      border-radius:12px;
-      padding:15px;
-      margin-bottom:15px;
-    }
-    input,button{
-      width:100%;
-      padding:10px;
-      margin:6px 0;
-      border-radius:8px;
-      border:none;
-      font-family:inherit;
-    }
-    input{background:#222;color:#fff;border:1px solid #555}
-    button{background:#6b4226;color:#fff;cursor:pointer;font-weight:700}
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:10px;
-    }
-    .card{
-      background:#222;
-      border:1px solid #555;
-      border-radius:10px;
-      padding:15px;
-      text-align:center;
-      cursor:pointer;
-    }
-    .card:hover{background:#333}
-    #profile{
-      position:fixed;
-      top:10px;
-      left:10px;
-      background:#222;
-      border:1px solid #555;
-      border-radius:50px;
-      padding:10px 15px;
-      cursor:pointer;
-    }
-    #profile .info{display:none;margin-top:10px;text-align:center}
-    #profile.active .info{display:block}
-    #profile .info button{margin-top:10px}
-    .details{margin-top:15px;background:#2a2a2a;border-radius:8px;padding:10px;display:none}
-    .details.show{display:block}
-    .hidden{display:none}
-  </style>
+<meta charset="UTF-8">
+<title>Dark Success</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Vazirmatn',sans-serif;
+  background:#1c1c1c;
+  color:#fff;
+}
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 20px;
+  background:#222;
+  border-bottom:1px solid #444;
+  font-size:18px;
+  font-weight:700;
+}
+header .site-name{color:#00ff00;font-weight:900;font-size:22px}
+.container{max-width:1000px;margin:20px auto;padding:0 10px}
+.glass{
+  background:rgba(255,255,255,.05);
+  border:1px solid #555;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:15px;
+}
+input,button{
+  width:100%;
+  padding:10px;
+  margin:6px 0;
+  border-radius:8px;
+  border:none;
+  font-family:inherit;
+}
+input{background:#222;color:#fff;border:1px solid #555}
+button{background:#6b4226;color:#fff;cursor:pointer;font-weight:700}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:10px;
+}
+.card{
+  background:#222;
+  border:1px solid #555;
+  border-radius:10px;
+  padding:15px;
+  text-align:center;
+  cursor:pointer;
+}
+.card:hover{background:#333}
+#profile{
+  position:fixed;
+  top:10px;
+  left:10px;
+  background:#222;
+  border:1px solid #555;
+  border-radius:50px;
+  padding:10px 15px;
+  cursor:pointer;
+}
+#profile .info{display:none;margin-top:10px;text-align:center}
+#profile.active .info{display:block}
+#profile .info button{margin-top:10px}
+.details{margin-top:15px;background:#2a2a2a;border-radius:8px;padding:10px;display:none}
+.details.show{display:block}
+.hidden{display:none}
+</style>
 </head>
 <body>
 
@@ -110,6 +110,7 @@
     <div class="card" data-target="holdTrade">❓ هولد یا ترید</div>
     <div class="card" data-target="vipSection">⭐ پیوستن به VIP</div>
     <div class="card" data-target="prizes">🎁 جعبه شانس</div>
+    <div class="card" data-target="youtubeVideo">🎥 ویدیو یوتیوب</div> <!-- اضافه کردن ویدیو یوتیوب به منو -->
   </div>
 
   <!-- توضیحات -->
@@ -129,61 +130,52 @@
 
   <div id="buyOpportunities" class="details">
     <h3>فرصت‌های خرید</h3>
-    <p>...</p>
+    <p>
+      این یعنی زمانی که شرایط بازار به شکلیه که خرید یک دارایی می‌تونه سودآور باشه.<br>
+      چند نوع فرصت خرید:<br>
+      1. قیمت پایین (Dip Buying)<br>
+      2. رشد آینده (Growth Potential)<br>
+      3. پس از اصلاح یا سقوط کوتاه‌مدت<br>
+      4. اخبار مثبت یا فاندامنتال<br>
+      5. استراتژی‌های تکنیکال<br>
+      نکات مهم: فرصت خرید همیشه تضمین سود نیست؛ مدیریت ریسک ضروری است.
+    </p>
     <button class="backBtn">بازگشت به صفحه اصلی</button>
   </div>
 
   <div id="holdTrade" class="details">
     <h3>هولد یا ترید</h3>
-    <p>...</p>
+    <p>
+      <b>هولد:</b> نگه داشتن یا حفظ سرمایه برای مدت طولانی. کاهش استرس و پتانسیل سود بلندمدت.<br>
+      <b>ترید:</b> خرید و فروش کوتاه‌مدت برای کسب سود از تغییر قیمت‌ها. سود سریع، اما ریسک بالا و نیاز به تحلیل.
+    </p>
     <button class="backBtn">بازگشت به صفحه اصلی</button>
   </div>
 
   <div id="vipSection" class="details">
     <h3>پیوستن به VIP</h3>
-    <p>...</p>
+    <p>جهت ملحق شدن به VIP روی طرح مورد نظر کلیک نمایید:</p>
+    <button onclick="window.open('https://t.me/cvvx441','_blank')">یک ماه 100 هزار تومان</button>
+    <button onclick="window.open('https://t.me/cvvx441','_blank')">دو ماه 200 هزار تومان</button>
+    <button onclick="window.open('https://t.me/cvvx441','_blank')">سه ماه 300 هزار تومان</button>
     <button class="backBtn">بازگشت به صفحه اصلی</button>
   </div>
 
   <div id="prizes" class="details">
     <h3>جعبه‌های شانس</h3>
     <p>🎁 روی جعبه مورد نظر کلیک کنید</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <div style="background:#333;padding:15px;border-radius:10px;cursor:pointer" onclick="showPrize(this)">جعبه ۱</div>
+      <div style="background:#333;padding:15px;border-radius:10px;cursor:pointer" onclick="showPrize(this)">جعبه ۲</div>
+      <div style="background:#333;padding:15px;border-radius:10px;cursor:pointer" onclick="showPrize(this)">جعبه ۳</div>
+      <div style="background:#333;padding:15px;border-radius:10px;cursor:pointer" onclick="showPrize(this)">جعبه ۴</div>
+      <div style="background:#333;padding:15px;border-radius:10px;cursor:pointer" onclick="showPrize(this)">جعبه ۵</div>
+    </div>
+    <div id="winner" style="margin-top:10px;color:#0f0"></div>
     <button class="backBtn">بازگشت به صفحه اصلی</button>
   </div>
 
-</div>
-</div>
-
-<footer style="text-align:center;padding:15px;border-top:1px solid #444">
-توسعه داده شده توسط <b>HESAM ALAMi</b><br>
-تماس با ما: <a href="https://t.me/cvvx441" target="_blank" style="color:#0f0">@cvvx441</a>
-</footer>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-/* Firebase config */
-const firebaseConfig = {
-  apiKey: "AIzaSyA-jq4jwAhXEuUevcFs3fsX9c8YbNkHZZI",
-  authDomain: "dark-success.firebaseapp.com",
-  projectId: "dark-success",
-  storageBucket: "dark-success.appspot.com",
-  messagingSenderId: "37974176476",
-  appId: "1:37974176476:web:4f01c47c8c70723eef7a19"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-/* DOM */
-const authBox = document.getElementById("authBox");
-const dashboard = document.getElementById("dashboard");
-const email = document.getElementById("email");
-const password = document.getElementById("password");
-const registerBtn = document.getElementById("registerBtn");
-const loginBtn = document.getElementById("loginBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-const msg = document.getElementById("msg");
-const userEmail = document.getElementById("userEmail");
-const userTime = document.getElementById("user
+  <!-- ویدیو یوتیوب -->
+  <div id="youtubeVideo" class="details">
+    <h3>ویدیو یوتیوب</h3>
+    <!-- اینجا لینک ویدیو
