@@ -2,14 +2,14 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>🌑 Dark Success</title>
+<title>Dark Success</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Vazirmatn',sans-serif;}
 body{background:linear-gradient(180deg,#020617,#0f172a);color:#fff;}
 header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid #312e81;}
-header h1{font-size:18px;font-family:'Vazirmatn',sans-serif;font-weight:700;color:#7c3aed;}
+header h1{font-size:18px;font-family:'Vazirmatn',sans-serif;font-weight:700;color:#3b82f6;}
 header .user-area{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
 header .user-area button{background:none;border:none;color:#fff;cursor:pointer;font-size:16px;padding:4px;}
 header .user-area span{font-size:12px;color:#ccc;}
@@ -22,22 +22,20 @@ button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:poin
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:20px;}
 .card{background:#020617;border:1px solid #312e81;border-radius:14px;padding:18px;text-align:center;transition:0.3s;cursor:pointer;}
 .card:hover{transform:scale(1.05);}
-.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:13px;}
-.badge.vip{background:#facc15;color:#020617;}
-.badge.free{background:#334155;}
-#prizeSection{display:none;}
+#prizeSection,#vipSection{display:none;}
 #prizeBoxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:15px;}
 .prizeBox{background:#020617;border:2px solid #312e81;border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:0.3s;}
 .prizeBox:hover{transform:scale(1.1);}
 #winner{margin-top:10px;text-align:center;color:#facc15;}
-#profileModal{position:absolute;top:50px;right:20px;width:280px;background:rgba(0,0,0,0.95);padding:15px;border-radius:16px;border:1px solid #312e81;display:none;z-index:1000;}
-#profileModal h3{text-align:center;margin-bottom:10px;font-size:16px;}
-#profileModal button.closeModal{background:#7c3aed;margin-top:10px;width:100%;font-size:14px;}
+#profileModal,#vipModal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:320px;background:rgba(0,0,0,0.95);padding:20px;border-radius:16px;border:1px solid #312e81;display:none;z-index:1000;}
+#profileModal h3,#vipModal h3{text-align:center;margin-bottom:10px;font-size:16px;}
+#profileModal button.closeModal,#vipModal button.closeModal{background:#7c3aed;margin-top:10px;width:100%;font-size:14px;}
 .profile-row{margin-bottom:6px;}
 .profile-row span{display:block;font-weight:500;margin-bottom:2px;font-size:13px;}
 #profilePhoto{width:50px;height:50px;border-radius:50%;border:1px solid #312e81;margin-bottom:8px;}
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;z-index:999;}
-#dashboard button.sectionToggle{margin-bottom:10px;}
+.sectionToggle{margin-bottom:10px;}
+footer{margin-top:20px;text-align:center;font-size:12px;color:#aaa;}
 </style>
 </head>
 <body>
@@ -65,7 +63,6 @@ button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:poin
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="hidden">
-
   <div class="grid">
     <div class="card">📊 فرصت‌های خرید</div>
     <div class="card">📈 تحلیل بازار</div>
@@ -74,6 +71,7 @@ button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:poin
   </div>
 
   <button class="sectionToggle" id="togglePrizeBtn">🎁 برگ شانس</button>
+  <button class="sectionToggle" id="toggleVIPBtn">⭐ پیوستن به VIP</button>
 
   <div id="prizeSection" class="glass">
     <h3>جعبه‌های شانس</h3>
@@ -104,13 +102,23 @@ button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:poin
   <button class="closeModal" id="closeProfile">بستن</button>
 </div>
 
-<footer style="text-align:center;padding:20px;border-top:1px solid #312e81">
-درباره ما: <b><a href="https://t.me/cvvx441" target="_blank" style="color:#7c3aed;text-decoration:none;">@cvvx441</a></b>
+<!-- VIP MODAL -->
+<div id="vipModal">
+  <h3>⭐ ملحق شدن به VIP</h3>
+  <p style="font-size:13px;margin-bottom:10px;">جهت ملحق شدن به VIP روی طرح مورد نظر کلیک نمایید</p>
+  <button class="vipOption">خرید یک ماه - 100 هزار تومان</button>
+  <button class="vipOption">خرید دو ماه - 200 هزار تومان</button>
+  <button class="vipOption">خرید سه ماه - 300 هزار تومان</button>
+  <button class="closeModal" id="closeVIP">بستن</button>
+</div>
+
+<footer>
+درباره ما: توسعه داده شده توسط HESAM ALAMi | <a href="https://t.me/cvvx441" target="_blank" style="color:#7c3aed;text-decoration:none;">@cvvx441</a>
 </footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -136,10 +144,13 @@ const loginBtn = document.getElementById("loginBtn");
 const profileBtn = document.getElementById("profileBtn");
 const profileModal = document.getElementById("profileModal");
 const closeProfile = document.getElementById("closeProfile");
-const clock = document.getElementById("clock");
+const vipModal = document.getElementById("vipModal");
+const closeVIP = document.getElementById("closeVIP");
 const togglePrizeBtn = document.getElementById("togglePrizeBtn");
+const toggleVIPBtn = document.getElementById("toggleVIPBtn");
 const prizeSection = document.getElementById("prizeSection");
 
+const clock = document.getElementById("clock");
 const profileName = document.getElementById("profileName");
 const profileEmail = document.getElementById("profileEmail");
 const profileVIP = document.getElementById("profileVIP");
@@ -159,22 +170,21 @@ registerBtn.onclick = async ()=>{
   if(!displayNameInput.value.trim()){alert("لطفاً نام کاربری را وارد کنید");return;}
   try{
     const r = await createUserWithEmailAndPassword(auth,email.value,password.value);
-    await setDoc(doc(db,"users",r.user.uid),{
-      vip:false,vipExpire:0,role:"user",createdAt:Date.now(),displayName: displayNameInput.value.trim(),photoURL:"",prizeHistory:[]
-    });
+    await setDoc(doc(db,"users",r.user.uid),{vip:false,vipExpire:0,role:"user",createdAt:Date.now(),displayName: displayNameInput.value.trim(),photoURL:"",prizeHistory:[]});
     await signInWithEmailAndPassword(auth,email.value,password.value);
   }catch(e){alert(e.message);}
 };
+loginBtn.onclick = async ()=>{try{await signInWithEmailAndPassword(auth,email.value,password.value);} catch(e){alert(e.message);}};
 
-loginBtn.onclick = async ()=>{
-  try{await signInWithEmailAndPassword(auth,email.value,password.value);} 
-  catch(e){alert(e.message);}
-};
-
-profileBtn.onclick = ()=>{profileModal.style.display = profileModal.style.display === "block"?"none":"block";}
+/* Profile Modal */
+profileBtn.onclick = ()=>{profileModal.style.display = profileModal.style.display==="block"?"none":"block";}
 closeProfile.onclick = ()=>{profileModal.style.display="none";}
 
-/* Toggle Prize Section */
+/* VIP Modal */
+toggleVIPBtn.onclick = ()=>{vipModal.style.display="block";}
+closeVIP.onclick = ()=>{vipModal.style.display="none";}
+
+/* Prize Section */
 togglePrizeBtn.onclick = ()=>{prizeSection.style.display = prizeSection.style.display==="block"?"none":"block";}
 
 /* Load profile */
@@ -199,7 +209,7 @@ saveProfileBtn.onclick=async ()=>{
 
 /* Prize */
 const prizes=["پوچ","VIP 5 روزه","1 دلار","VIP 10 روزه"];
-document.querySelectorAll(".prizeBox").forEach((b,i)=>{
+document.querySelectorAll(".prizeBox").forEach(b=>{
   b.onclick=async ()=>{
     const user = auth.currentUser; if(!user) return;
     const prize=prizes[Math.floor(Math.random()*prizes.length)];
@@ -218,6 +228,5 @@ onAuthStateChanged(auth,async user=>{
   profileBtn.innerText = "👤 "+snap.data()?.displayName;
 });
 </script>
-
 </body>
 </html>
