@@ -70,7 +70,6 @@ button{background:#6b4226;color:#fff;cursor:pointer;font-weight:700}
 #profile .info button{margin-top:10px}
 .details{margin-top:15px;background:#2a2a2a;border-radius:8px;padding:10px;display:none}
 .details.show{display:block}
-.hidden{display:none}
 </style>
 </head>
 <body>
@@ -80,7 +79,7 @@ button{background:#6b4226;color:#fff;cursor:pointer;font-weight:700}
   <div id="datetime"></div>
 </header>
 
-<div id="profile" class="hidden">
+<div id="profile">
   👤
   <div class="info">
     <div id="userEmail"></div>
@@ -110,7 +109,6 @@ button{background:#6b4226;color:#fff;cursor:pointer;font-weight:700}
     <div class="card" data-target="holdTrade">❓ هولد یا ترید</div>
     <div class="card" data-target="vipSection">⭐ پیوستن به VIP</div>
     <div class="card" data-target="prizes">🎁 جعبه شانس</div>
-    <div class="card" data-target="youtubeVideo">🎥 ویدیو یوتیوب</div> <!-- اضافه کردن ویدیو یوتیوب به منو -->
   </div>
 
   <!-- توضیحات -->
@@ -175,7 +173,112 @@ button{background:#6b4226;color:#fff;cursor:pointer;font-weight:700}
     <button class="backBtn">بازگشت به صفحه اصلی</button>
   </div>
 
-  <!-- ویدیو یوتیوب -->
-  <div id="youtubeVideo" class="details">
-    <h3>ویدیو یوتیوب</h3>
-    <!-- اینجا لینک ویدیو
+</div>
+</div>
+
+<footer style="text-align:center;padding:15px;border-top:1px solid #444">
+توسعه داده شده توسط <b>HESAM ALAMi</b><br>
+تماس با ما: <a href="https://t.me/cvvx441" target="_blank" style="color:#0f0">@cvvx441</a>
+</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+/* Firebase config */
+const firebaseConfig = {
+  apiKey: "AIzaSyA-jq4jwAhXEuUevcFs3fsX9c8YbNkHZZI",
+  authDomain: "dark-success.firebaseapp.com",
+  projectId: "dark-success",
+  storageBucket: "dark-success.appspot.com",
+  messagingSenderId: "37974176476",
+  appId: "1:37974176476:web:4f01c47c8c70723eef7a19"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+/* DOM */
+const authBox = document.getElementById("authBox");
+const dashboard = document.getElementById("dashboard");
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+const registerBtn = document.getElementById("registerBtn");
+const loginBtn = document.getElementById("loginBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const msg = document.getElementById("msg");
+const userEmail = document.getElementById("userEmail");
+const userTime = document.getElementById("userTime");
+const profile = document.getElementById("profile");
+const datetime = document.getElementById("datetime");
+
+/* Auth */
+registerBtn.onclick = async ()=>{
+  try{
+    await createUserWithEmailAndPassword(auth,email.value,password.value);
+    msg.innerText="ثبت‌نام موفق بود";
+  }catch(e){
+    msg.innerText=e.message;
+  }
+};
+
+loginBtn.onclick = async ()=>{
+  try{ 
+    await signInWithEmailAndPassword(auth,email.value,password.value); 
+  }catch(e){ 
+    msg.innerText=e.message;
+  }
+};
+
+logoutBtn.onclick = ()=>signOut(auth);
+
+onAuthStateChanged(auth, user=>{
+  if(user){
+    authBox.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+    userEmail.innerText = user.email;
+  } else{
+    authBox.classList.remove("hidden");
+    dashboard.classList.add("hidden");
+  }
+});
+
+/* Clock */
+setInterval(()=>{
+  const n=new Date();
+  const timeStr=n.toLocaleTimeString("fa-IR");
+  const dateStr=n.toLocaleDateString("fa-IR");
+  datetime.innerText = dateStr + " | " + timeStr;
+  userTime.innerText = dateStr + " | " + timeStr;
+},1000);
+
+/* Profile toggle */
+profile.onclick = ()=> profile.classList.toggle("active");
+
+/* Show details */
+document.querySelectorAll(".card").forEach(card=>{
+  card.onclick = ()=>{
+    const targetId=card.getAttribute("data-target");
+    document.querySelectorAll(".details").forEach(d=>{
+      if(d.id===targetId) d.classList.add("show");
+      else d.classList.remove("show");
+    });
+  };
+});
+
+/* Back buttons */
+document.querySelectorAll(".backBtn").forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll(".details").forEach(d=>d.classList.remove("show"));
+  };
+});
+
+/* Prize */
+const prizes=["پوچ","VIP 5 روزه","1 دلار","VIP 10 روزه"];
+window.showPrize=(el)=>{
+  document.getElementById("winner").innerText = prizes[Math.floor(Math.random()*prizes.length)];
+};
+</script>
+
+</body>
+</html>
