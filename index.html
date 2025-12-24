@@ -20,7 +20,7 @@ input,button{width:100%;padding:10px;margin:6px 0;border-radius:10px;border:none
 input{background:#1e1e2f;color:#fff;border:1px solid #312e81;}
 button{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;cursor:pointer;font-weight:700;}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:20px;}
-.card{background:#1e1e2f;border:1px solid #312e81;border-radius:14px;padding:18px;text-align:center;transition:0.3s;cursor:pointer;}
+.card{background:#1e1e2f;border:1px solid #312e81;border-radius:14px;padding:18px;text-align:center;transition:0.3s;cursor:pointer;text-decoration:none;color:#fff;display:flex;align-items:center;justify-content:center;}
 .card:hover{transform:scale(1.05);}
 #prizeSection,#vipModal{display:none;}
 #prizeBoxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:15px;}
@@ -63,10 +63,10 @@ footer a{color:#3b82f6;text-decoration:none;font-weight:500;}
 <!-- DASHBOARD -->
 <div id="dashboard" class="hidden">
   <div class="grid">
-    <div class="card">📊 فرصت‌های خرید</div>
-    <div class="card">📈 تحلیل بازار</div>
-    <div class="card">💰 طلا یا رمز ارز؟</div>
-    <div class="card">❓ هولد یا ترید؟</div>
+    <a href="gold-or-crypto.html" target="_blank" class="card">💰 طلا یا رمزارز؟</a>
+    <a href="market-analysis.html" target="_blank" class="card">📈 تحلیل بازار</a>
+    <a href="buy-opportunity.html" target="_blank" class="card">📊 فرصت‌های خرید</a>
+    <a href="hold-or-trade.html" target="_blank" class="card">❓ هولد یا ترید؟</a>
   </div>
 
   <button class="sectionToggle" id="togglePrizeBtn">🎁 برگ شانس</button>
@@ -93,6 +93,7 @@ footer a{color:#3b82f6;text-decoration:none;font-weight:500;}
   <div class="profile-row"><span>نام کاربری:</span> <div id="profileName"></div></div>
   <div class="profile-row"><span>ایمیل:</span> <div id="profileEmail"></div></div>
   <div class="profile-row"><span>VIP:</span> <div id="profileVIP"></div></div>
+  <button class="closeModal" id="logoutBtn">خروج</button>
   <button class="closeModal" id="closeProfile">بستن</button>
 </div>
 
@@ -113,7 +114,7 @@ footer a{color:#3b82f6;text-decoration:none;font-weight:500;}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -128,7 +129,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* DOM */
 const authBox = document.getElementById("authBox");
 const dashboard = document.getElementById("dashboard");
 const email = document.getElementById("email");
@@ -139,6 +139,7 @@ const loginBtn = document.getElementById("loginBtn");
 const profileBtn = document.getElementById("profileBtn");
 const profileModal = document.getElementById("profileModal");
 const closeProfile = document.getElementById("closeProfile");
+const logoutBtn = document.getElementById("logoutBtn");
 const vipModal = document.getElementById("vipModal");
 const closeVIP = document.getElementById("closeVIP");
 const togglePrizeBtn = document.getElementById("togglePrizeBtn");
@@ -149,7 +150,6 @@ const clock = document.getElementById("clock");
 const profileName = document.getElementById("profileName");
 const profileEmail = document.getElementById("profileEmail");
 const profileVIP = document.getElementById("profileVIP");
-
 const winnerBox = document.getElementById("winner");
 
 /* Clock */
@@ -164,11 +164,13 @@ registerBtn.onclick = async ()=>{
     await signInWithEmailAndPassword(auth,email.value,password.value);
   }catch(e){alert(e.message);}
 };
+
 loginBtn.onclick = async ()=>{try{await signInWithEmailAndPassword(auth,email.value,password.value);} catch(e){alert(e.message);}};
 
 /* Profile Modal */
 profileBtn.onclick = ()=>{profileModal.style.display = profileModal.style.display==="block"?"none":"block";}
 closeProfile.onclick = ()=>{profileModal.style.display="none";}
+logoutBtn.onclick = ()=>{signOut(auth); profileModal.style.display="none";}
 
 /* VIP Modal */
 toggleVIPBtn.onclick = ()=>{vipModal.style.display="block";}
