@@ -6,102 +6,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:'Vazirmatn',sans-serif;
-  background:#1e1b16;
-  color:#fff;
-}
-header{
-  padding:12px 16px;
-  font-size:18px;
-  font-weight:700;
-  text-align:center;
-  background:#111;
-  color:#0f0;
-  position:sticky;
-  top:0;
-}
-.container{max-width:1100px;margin:auto;padding:20px}
-.glass{
-  background:rgba(255,255,255,.05);
-  border:1px solid #444;
-  border-radius:16px;
-  padding:18px;
-  margin-bottom:18px;
-}
-.hidden{display:none}
-input,button{
-  width:100%;
-  padding:12px;
-  margin:6px 0;
-  border-radius:10px;
-  border:none;
-  font-family:inherit;
-}
-input{
-  background:#1e1b16;
-  color:#fff;
-  border:1px solid #444;
-}
-button{
-  background:linear-gradient(135deg,#7c3aed,#2563eb);
-  color:#fff;
-  cursor:pointer;
-  font-weight:700;
-}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:14px;
-}
-.card{
-  background:#111;
-  border:1px solid #444;
-  border-radius:14px;
-  padding:18px;
-  text-align:center;
-  cursor:pointer;
-}
-.profile-box{
-  position:fixed;
-  top:60px;
-  left:10px;
-  background:#111;
-  padding:12px;
-  border-radius:12px;
-  width:180px;
-  cursor:pointer;
-  text-align:right;
-  z-index:1000;
-}
-.profile-content{
-  display:none;
-  background:#111;
-  padding:12px;
-  border-radius:12px;
-  position:fixed;
-  top:100px;
-  left:10px;
-  width:300px;
-  max-height:400px;
-  overflow:auto;
-  z-index:1000;
-}
-.back-btn{
-  margin-top:12px;
-  background:#444;
-}
-.option-page{
-  display:none;
-  padding:20px;
-}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{font-family:'Vazirmatn',sans-serif; background:#1e1e2f; color:#fff;}
+header{display:flex; justify-content:space-between; align-items:center; padding:12px 20px; background:#2c2c3d; border-bottom:1px solid #444;}
+header .site-name{color:#00ff7f; font-weight:700; font-size:20px;}
+.container{max-width:1100px;margin:auto;padding:20px;}
+.glass{background:rgba(255,255,255,.05); border:1px solid #444; border-radius:12px; padding:16px; margin-bottom:16px;}
+.hidden{display:none;}
+input,button{width:100%; padding:10px; margin:6px 0; border-radius:8px; border:none; font-family:inherit;}
+input{background:#1e1e2f; color:#fff; border:1px solid #444;}
+button{background:linear-gradient(135deg,#7c3aed,#2563eb); color:#fff; cursor:pointer; font-weight:700;}
+.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px;}
+.card{background:#2c2c3d; border:1px solid #444; border-radius:12px; padding:16px; text-align:center; cursor:pointer; transition:0.3s;}
+.card:hover{transform:translateY(-3px);}
+.profile{position:relative; display:inline-block; cursor:pointer;}
+.profile-box{position:absolute; top:35px; left:0; background:#2c2c3d; border:1px solid #444; border-radius:10px; padding:10px; width:200px; display:none;}
+.profile-box p{margin:6px 0; font-size:14px;}
+.back-btn{margin-bottom:12px; padding:8px; background:#444; border-radius:8px; cursor:pointer;}
+#optionContent{margin-top:20px;}
+footer{text-align:center;padding:20px;border-top:1px solid #444; font-size:14px;}
+a{color:#00ff7f; text-decoration:none;}
 </style>
 </head>
 <body>
 
-<header>Dark <span style="color:#0f0">Success</span></header>
+<header>
+  <div class="profile">
+    پروفایل
+    <div class="profile-box" id="profileBox">
+      <p id="profileEmail"></p>
+      <p id="profileVip"></p>
+      <p id="profileTime"></p>
+      <button id="logoutBtn">خروج</button>
+    </div>
+  </div>
+  <div class="site-name">Dark Success</div>
+</header>
 
 <div class="container">
 
@@ -115,77 +55,50 @@ button{
   <div id="msg"></div>
 </div>
 
-<!-- PROFILE -->
-<div class="profile-box" id="profileBtn">پروفایل</div>
-<div class="profile-content" id="profileContent">
-  <div id="welcome"></div>
-  <div id="vipInfo"></div>
-  <div id="dateTime"></div>
-  <button id="logoutBtn">خروج</button>
-</div>
-
 <!-- DASHBOARD -->
 <div id="dashboard" class="hidden">
+
   <div class="grid">
-    <div class="card" data-option="crypto">📈 طلا یا رمز ارز</div>
-    <div class="card" data-option="opportunities">📊 فرصت‌های خرید</div>
-    <div class="card" data-option="hodltrade">❓ هولد یا ترید</div>
-    <div class="card" data-option="vip">⭐ پیوستن به VIP</div>
+    <div class="card" data-option="goldCrypto">📈 طلا و رمزارز</div>
+    <div class="card" data-option="buyOpportunities">💰 فرصت‌های خرید</div>
+    <div class="card" data-option="holdTrade">❓ هولد یا ترید</div>
+    <div class="card" id="luckyBtn">🎁 برگ شانس</div>
+    <div class="card" id="vipBtn">⭐ پیوستن به VIP</div>
   </div>
-</div>
 
-<!-- OPTION PAGES -->
-<div class="option-page" id="cryptoPage">
-  <h3>طلا یا رمز ارز</h3>
-  <p>
-  حتماً! بیایید به صورت دقیق و ساده تفاوت‌های رمزارز (Cryptocurrency) و طلا را بررسی کنیم:
-  <br><br>
-  <!-- متن کامل توضیح رمز ارز و طلا اینجا -->
-  ۱. ماهیت: طلا فیزیکی، رمز ارز دیجیتال.<br>
-  ۲. ذخیره ارزش: طلا کم نوسان، رمز ارز پرنوسان.<br>
-  ۳. عرضه و محدودیت: طلا محدود، رمز ارز بسته به نوع محدود/نامحدود.<br>
-  ۴. نقدشوندگی و استفاده: طلا کند، رمز ارز سریع.<br>
-  ۵. امنیت و ذخیره: طلا باید فیزیکی نگهداری شود، رمز ارز با کیف پول دیجیتال.<br>
-  ۶. تنظیمات قانونی: طلا شناخته شده، رمز ارز وضعیت قانونی متفاوت.<br>
-  <br>
-  جمع‌بندی: طلا = پایدار، رمز ارز = دیجیتال و مدرن.
-  </p>
-  <button class="back-btn">بازگشت به صفحه اصلی</button>
-</div>
+  <!-- Option content -->
+  <div id="optionContent" class="hidden glass"></div>
 
-<div class="option-page" id="opportunitiesPage">
-  <h3>فرصت‌های خرید</h3>
-  <p>
-  حتماً! بیایید مقایسه‌ای دقیق بین فرصت‌های سرمایه‌گذاری در رمز ارزها و طلا داشته باشیم:
-  <br><br>
-  <!-- متن کامل توضیح فرصت‌های خرید -->
-  </p>
-  <button class="back-btn">بازگشت به صفحه اصلی</button>
-</div>
+  <!-- Prize Boxes -->
+  <div id="prizeBoxes" class="glass hidden">
+    <h3>🎁 جعبه‌های شانس</h3>
+    <div class="grid">
+      <div class="card">جعبه ۱</div>
+      <div class="card">جعبه ۲</div>
+      <div class="card">جعبه ۳</div>
+      <div class="card">جعبه ۴</div>
+      <div class="card">جعبه ۵</div>
+    </div>
+    <div id="winner" style="margin-top:10px; color:#ff0"></div>
+  </div>
 
-<div class="option-page" id="hodltradePage">
-  <h3>هولد یا ترید</h3>
-  <p>
-  حتماً! بیایید مفهوم هولد (Hold) و ترید (Trade) در بازارهای مالی بررسی کنیم:
-  <br><br>
-  <!-- متن کامل توضیح هولد یا ترید -->
-  </p>
-  <button class="back-btn">بازگشت به صفحه اصلی</button>
-</div>
-
-<div class="option-page" id="vipPage">
-  <h3>پیوستن به VIP</h3>
-  <p>جهت ملحق شدن به VIP روی طرح مورد نظر کلیک نمایید:</p>
-  <button onclick="window.open('https://t.me/cvvx441','_blank')">خرید یک ماه 100 هزار تومان</button>
-  <button onclick="window.open('https://t.me/cvvx441','_blank')">خرید دو ماه 200 هزار تومان</button>
-  <button onclick="window.open('https://t.me/cvvx441','_blank')">خرید سه ماه 300 هزار تومان</button>
-  <button class="back-btn">بازگشت به صفحه اصلی</button>
-</div>
+  <!-- VIP Options -->
+  <div id="vipContent" class="glass hidden">
+    <h3>⭐ پیوستن به VIP</h3>
+    <p>جهت ملحق شدن به VIP روی طرح مورد نظر کلیک نمایید:</p>
+    <div class="grid">
+      <div class="card" onclick="window.open('https://t.me/cvvx441','_blank')">خرید یک ماه 100 هزار تومان</div>
+      <div class="card" onclick="window.open('https://t.me/cvvx441','_blank')">خرید دو ماه 200 هزار تومان</div>
+      <div class="card" onclick="window.open('https://t.me/cvvx441','_blank')">خرید سه ماه 300 هزار تومان</div>
+    </div>
+  </div>
 
 </div>
+</div>
 
-<footer style="text-align:center;padding:20px;border-top:1px solid #444">
-  توسعه داده شده توسط HESAM ALAMi | تماس: <a href="https://t.me/cvvx441" style="color:#0f0;text-decoration:none;">@cvvx441</a>
+<footer>
+توسعه داده شده توسط <b>HESAM ALAMi</b><br>
+تماس با ما: <a href="https://t.me/cvvx441" target="_blank">@cvvx441</a>
 </footer>
 
 <script type="module">
@@ -193,7 +106,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* Firebase Config */
+/* Firebase config */
 const firebaseConfig = {
   apiKey: "AIzaSyA-jq4jwAhXEuUevcFs3fsX9c8YbNkHZZI",
   authDomain: "dark-success.firebaseapp.com",
@@ -208,7 +121,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* DOM */
+/* DOM Elements */
 const authBox = document.getElementById("authBox");
 const dashboard = document.getElementById("dashboard");
 const email = document.getElementById("email");
@@ -217,19 +130,32 @@ const registerBtn = document.getElementById("registerBtn");
 const loginBtn = document.getElementById("loginBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 const msg = document.getElementById("msg");
-const profileBtn = document.getElementById("profileBtn");
-const profileContent = document.getElementById("profileContent");
-const welcome = document.getElementById("welcome");
-const vipInfo = document.getElementById("vipInfo");
-const dateTime = document.getElementById("dateTime");
+const profileBox = document.getElementById("profileBox");
+const profileEmail = document.getElementById("profileEmail");
+const profileVip = document.getElementById("profileVip");
+const profileTime = document.getElementById("profileTime");
+const optionContent = document.getElementById("optionContent");
+const luckyBtn = document.getElementById("luckyBtn");
+const prizeBoxes = document.getElementById("prizeBoxes");
+const vipBtn = document.getElementById("vipBtn");
+const vipContent = document.getElementById("vipContent");
+
+/* Profile toggle */
+document.querySelector('.profile').onclick = ()=>{
+  profileBox.style.display = profileBox.style.display==='block'?'none':'block';
+};
+
+/* Clock inside profile */
+setInterval(()=>{
+  const n=new Date();
+  profileTime.innerText = n.toLocaleDateString("fa-IR")+" | "+n.toLocaleTimeString("fa-IR");
+},1000);
 
 /* Auth */
 registerBtn.onclick = async ()=>{
   try{
     const r = await createUserWithEmailAndPassword(auth,email.value,password.value);
-    await setDoc(doc(db,"users",r.user.uid),{
-      vip:false,vipExpire:0,role:"user",createdAt:Date.now()
-    });
+    await setDoc(doc(db,"users",r.user.uid),{vip:false,createdAt:Date.now()});
     msg.innerText="ثبت‌نام موفق بود";
   }catch(e){
     msg.innerText=e.message;
@@ -239,61 +165,101 @@ registerBtn.onclick = async ()=>{
 loginBtn.onclick = async ()=>{
   try{
     await signInWithEmailAndPassword(auth,email.value,password.value);
-  }catch(e){
+  }catch(e){ 
     msg.innerText=e.message;
   }
 };
 
 logoutBtn.onclick = ()=>signOut(auth);
 
-onAuthStateChanged(auth,user=>{
-  if(user){
-    authBox.classList.add("hidden");
-    dashboard.classList.remove("hidden");
-    welcome.innerText="خوش آمدید "+user.email;
-    profileContent.style.display="none";
-    // VIP info
-    getDoc(doc(db,"users",user.uid)).then(snap=>{
-      const d = snap.data();
-      vipInfo.innerHTML=(d&&d.vip&&Date.now()<d.vipExpire)
-        ? 'VIP فعال'
-        : 'VIP غیرفعال';
-    });
-  }else{
+onAuthStateChanged(auth, async user=>{
+  if(!user){
     authBox.classList.remove("hidden");
     dashboard.classList.add("hidden");
+    return;
   }
+  authBox.classList.add("hidden");
+  dashboard.classList.remove("hidden");
+  profileEmail.innerText="ایمیل: "+user.email;
+  const snap = await getDoc(doc(db,"users",user.uid));
+  const d = snap.data();
+  profileVip.innerText = (d && d.vip)? "VIP فعال":"VIP غیرفعال";
 });
 
-/* Profile toggle */
-profileBtn.onclick = ()=>{
-  profileContent.style.display = profileContent.style.display==="none"?"block":"none";
+/* Option pages content */
+const options = {
+  goldCrypto: `<div class="back-btn" onclick="showDashboard()">بازگشت</div>
+<h2>طلا و رمزارز</h2>
+<p><b>طلا</b><br>ماهیت: یک فلز گرانبها با ارزش ذاتی.<br>هزاران سال است که به عنوان پول، ذخیره ارزش و زیورآلات استفاده می‌شود.<br>
+ویژگی‌ها: ثبات نسبی، ذخیره ارزش، لمس‌پذیر، ناپذیر از اینترنت.<br>
+معایب: هزینه نگهداری و نقدشوندگی کمتر.</p>
+<p><b>رمزارز</b><br>ماهیت: پول دیجیتال مبتنی بر فناوری بلاک‌چین (مثل بیت‌کوین، اتریوم).<br>
+ویژگی‌ها: غیرمتمرکز، قابل تقسیم و انتقال آسان، پتانسیل سود بالا، شفافیت و امنیت بلاک‌چین.<br>
+معایب: نوسان شدید، ریسک قانونی و فنی، عدم ارزش ذاتی.</p>`,
+
+  buyOpportunities: `<div class="back-btn" onclick="showDashboard()">بازگشت</div>
+<h2>فرصت‌های خرید</h2>
+<p>این یعنی زمانی که شرایط بازار به شکلیه که خرید یک دارایی می‌تونه سودآور باشه.</p>
+<p><b>چند نوع فرصت خرید</b></p>
+<ul>
+<li>قیمت پایین (Dip Buying)</li>
+<li>رشد آینده (Growth Potential)</li>
+<li>پس از اصلاح یا سقوط کوتاه‌مدت (Correction Opportunity)</li>
+<li>خبرهای مثبت یا فاندامنتال (Fundamental Opportunities)</li>
+<li>استراتژی‌های تکنیکال (Technical Entry Points)</li>
+</ul>
+<p>نکات مهم: فرصت خرید همیشه تضمین سود نیست؛ تحلیل بنیادی و تکنیکال با هم ترکیب شود.</p>`,
+
+  holdTrade: `<div class="back-btn" onclick="showDashboard()">بازگشت</div>
+<h2>هولد یا ترید</h2>
+<h3>هولد (Hold)</h3>
+<p>معنی: نگه داشتن یا حفظ سرمایه برای مدت طولانی.<br>
+ویژگی‌ها: کاهش استرس، پتانسیل سود بلندمدت، ریسک کمتر.<br>
+معایب: ممکن است طول بکشد تا سرمایه به ارزش اولیه برگردد.</p>
+<h3>ترید (Trade)</h3>
+<p>معنی: خرید و فروش کوتاه‌مدت برای کسب سود از تغییر قیمت‌ها.<br>
+ویژگی‌ها: پتانسیل سود سریع، انعطاف‌پذیری.<br>
+معایب: ریسک بالا، نیاز به تحلیل و زمان، استرس بیشتر.</p>`
 };
 
-/* Clock */
-setInterval(()=>{
-  const n=new Date();
-  dateTime.innerText=n.toLocaleDateString("fa-IR")+" | "+n.toLocaleTimeString("fa-IR");
-},1000);
-
-/* Option pages */
-document.querySelectorAll(".card").forEach(c=>{
-  c.onclick = ()=>{
-    dashboard.classList.add("hidden");
-    document.querySelectorAll(".option-page").forEach(op=>op.style.display="none");
-    const opt = c.dataset.option;
-    document.getElementById(opt+"Page").style.display="block";
-    window.scrollTo({top:0,behavior:"smooth"});
+/* Show option content */
+document.querySelectorAll('.card[data-option]').forEach(card=>{
+  card.onclick=()=>{
+    dashboard.style.display='none';
+    optionContent.innerHTML = options[card.getAttribute('data-option')];
+    optionContent.classList.remove('hidden');
+    prizeBoxes.classList.add('hidden');
+    vipContent.classList.add('hidden');
   }
 });
 
-document.querySelectorAll(".back-btn").forEach(b=>{
-  b.onclick = ()=>{
-    document.querySelectorAll(".option-page").forEach(op=>op.style.display="none");
-    dashboard.classList.remove("hidden");
-    window.scrollTo({top:0,behavior:"smooth"});
-  }
+function showDashboard(){
+  dashboard.style.display='grid';
+  optionContent.classList.add('hidden');
+}
+
+/* Lucky box */
+const prizes=["پوچ","VIP 5 روزه","1 دلار","VIP 10 روزه"];
+document.querySelectorAll('#prizeBoxes .card').forEach(b=>{
+  b.onclick=()=>document.getElementById("winner").innerText=
+    prizes[Math.floor(Math.random()*prizes.length)];
 });
+
+luckyBtn.onclick = ()=>{
+  dashboard.style.display='none';
+  prizeBoxes.classList.remove('hidden');
+  optionContent.classList.add('hidden');
+  vipContent.classList.add('hidden');
+};
+
+/* VIP */
+vipBtn.onclick = ()=>{
+  dashboard.style.display='none';
+  vipContent.classList.remove('hidden');
+  optionContent.classList.add('hidden');
+  prizeBoxes.classList.add('hidden');
+};
 </script>
+
 </body>
 </html>
